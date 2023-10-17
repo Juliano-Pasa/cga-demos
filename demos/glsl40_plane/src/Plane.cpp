@@ -15,7 +15,7 @@ char keyOnce[GLFW_KEY_LAST + 1];
 
 Plane::Plane(GLFWwindow* window, int size){
 	this->size = 0.2f;
-	this->numCircles = 100;
+	this->numCircles = 3;
 	this->primitiveRestartIndex = -1; // numero magico
 	this->window = window;
 	this->wireframe = false;
@@ -222,20 +222,23 @@ void Plane::CheckHashCollisions()
 		int index = HashFunction(centerPos);
 		cout << "valor hash " << index << endl;
 		vec3 hashInfo = hashPivots[index];
+		cout << "hashInfo " << hashInfo.x << " " << hashInfo.z << endl;
 
-		for (int j = hashInfo.x; j < hashInfo.z; j++)
+		for (int j = hashInfo.x; j < hashInfo.x + hashInfo.z; j++)
 		{
-			if (j != 0)
+			int curveIndex = hashTable[j];
+
+			if (curveIndex != 0)
 			{
-				if (CollidesWithCurve(centerPos, curveVertices[j - 1], curveVertices[j]))
+				if (CollidesWithCurve(centerPos, curveVertices[curveIndex - 1], curveVertices[curveIndex]))
 				{
 					PaintCollidedCircle(centerIndex);
 					break;
 				}
 			}
-			if (j != curveVertices.size() - 1)
+			if (curveIndex != curveVertices.size() - 1)
 			{
-				if (CollidesWithCurve(centerPos, curveVertices[j], curveVertices[j+1]))
+				if (CollidesWithCurve(centerPos, curveVertices[curveIndex], curveVertices[curveIndex + 1]))
 				{
 					PaintCollidedCircle(centerIndex);
 					break;
@@ -243,6 +246,7 @@ void Plane::CheckHashCollisions()
 			}
 		}
 	}
+	genCirclesBuffers();
 }
 
 void Plane::GenerateHashTable()
@@ -253,7 +257,6 @@ void Plane::GenerateHashTable()
 	for (size_t i = 0; i < curveVertices.size(); i++)
 	{
 		int index = HashFunction(curveVertices[i]);
-		cout << "valor hash geracao" << index << endl;
 		objectsIndex.push_back(index);
 		usedIndex[index] += 1;
 	}
