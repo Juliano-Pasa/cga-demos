@@ -378,8 +378,28 @@ void Plane::processInput(double deltaTime)
 		CheckHashCollisions();
 		return;
 	}
+	if (glfwGetKeyOnce(window, '4'))
+	{
+		genCircles();
+		genCirclesBuffers();
+		return;
+	}
 	if (glfwGetKeyOnce(window, 'R'))
 	{
+		size += 0.25f;
+		cout << "Tamanho do circulo: " << size << endl;
+		genCircles();
+		genCirclesBuffers();
+		return;
+	}
+	if (glfwGetKeyOnce(window, 'F'))
+	{
+		size -= 0.25f;
+		if (size < 0.5f)
+		{
+			size = 0.5f;
+		}
+		cout << "Tamanho do circulo: " << size << endl;
 		genCircles();
 		genCirclesBuffers();
 		return;
@@ -387,6 +407,7 @@ void Plane::processInput(double deltaTime)
 	if (glfwGetKeyOnce(window, 'T'))
 	{
 		numCircles += 50;
+		cout << "Total de circulos: " << numCircles << endl;
 		genCircles();
 		genCirclesBuffers();
 		return;
@@ -398,8 +419,29 @@ void Plane::processInput(double deltaTime)
 		{
 			numCircles = 50;
 		}
+		cout << "Total de circulos: " << numCircles << endl;
 		genCircles();
 		genCirclesBuffers();
+		return;
+	}
+	if (glfwGetKeyOnce(window, 'Y'))
+	{
+		curveSteps += 50.0f;
+		cout << "Total de divisoes da curva: " << curveSteps << endl;
+		genCurve();
+		genCurveBuffers();
+		return;
+	}
+	if (glfwGetKeyOnce(window, 'H'))
+	{
+		curveSteps -= 50.0f;
+		if (curveSteps < 50.0f)
+		{
+			curveSteps = 50;
+		}
+		cout << "Total de divisoes da curva: " << curveSteps << endl;
+		genCurve();
+		genCurveBuffers();
 		return;
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
@@ -511,8 +553,14 @@ void Plane::PrintCommands()
 	cout << "S: Anda pra tras" << endl;
 	cout << endl << "D: Anda pra direita" << endl;
 	cout << "A: Anda pra esquerda" << endl;
-	cout << endl << "R: Reinicia pontos" << endl;
+	cout << endl << "T: Aumenta 50 pontos" << endl;
+	cout << "G: Diminui 50 pontos" << endl;
+	cout << endl << "Y: Aumenta 50 divisoes da curva" << endl;
+	cout << "H: Diminui 50 divisoes da curva" << endl;
+	cout << endl << "R: Aumenta tamanho dos circulos" << endl;
+	cout << "F: Diminui tamanho dos circulos" << endl;
 	cout << endl << "1: Alterna entre malha e preenchimento" << endl;
 	cout << "2: Faz checagem por forca bruta" << endl;
 	cout << "3: Faz checagem por hash table" << endl;
+	cout << "4: Reinicia pontos" << endl;
 }
