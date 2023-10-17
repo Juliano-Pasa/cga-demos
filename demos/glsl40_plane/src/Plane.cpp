@@ -14,8 +14,8 @@ char keyOnce[GLFW_KEY_LAST + 1];
      (keyOnce[KEY] = false))
 
 Plane::Plane(GLFWwindow* window, int size){
-	this->size = 0.2f;
-	this->numCircles = 3;
+	this->size = 0.1f;
+	this->numCircles = 300;
 	this->primitiveRestartIndex = -1; // numero magico
 	this->window = window;
 	this->wireframe = false;
@@ -24,6 +24,10 @@ Plane::Plane(GLFWwindow* window, int size){
 	this->planePos = vec3(0.0f, 0.0f, 2.5f);
 	this->hashDimension = 10;
 	this->hashSize = 50.0f;
+	this->curveSteps = 1000.0f;
+	this->circleSteps = 128;
+	this->maxCoords = 50.0f;
+	this->numControlPoints = 200;
 }
 
 void Plane::init(){
@@ -136,7 +140,6 @@ void Plane::resize(int x, int y){
 
 void Plane::genCircles()
 {
-	circleSteps = 128;
 	float radius = size;
 	float increment = 6.28 / (float)circleSteps;
 	float ang = 0.0;
@@ -147,7 +150,10 @@ void Plane::genCircles()
 
 	for (int i = 0; i < numCircles; i++)
 	{
-		vec2 center = vec2(rand() % 50, rand() % 50);
+		float xPos = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / maxCoords));
+		float yPos = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / maxCoords));
+
+		vec2 center = vec2(xPos, yPos);
 		int baseIndex = i * (circleSteps + 1);
 
 		circlesVertices.push_back(vec3(center, 0.0f));
@@ -171,13 +177,14 @@ void Plane::genCircles()
 
 void Plane::genCurve()
 {
-	int totalPoints = 100;
-	float curveSteps = 100.0f;
 	Curva curve = Curva(curveSteps);
 
-	for (int i = 0; i < totalPoints; i++)
+	for (int i = 0; i < numControlPoints; i++)
 	{
-		vec3 point = vec3((rand() % totalPoints/2), (rand() % totalPoints/2), 0.0f);
+		float xPos = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / maxCoords));
+		float yPos = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / maxCoords));
+
+		vec3 point = vec3(xPos, yPos, 0.0f);
 		curve.addControlPoint(point);
 	}
 
@@ -185,7 +192,7 @@ void Plane::genCurve()
 	for (vec3 &point : curve.curvePoints)
 	{
 		curveVertices.push_back(point);
-		curveColors.push_back(point / (float)(totalPoints/2));
+		curveColors.push_back(vec3(1.0f / (point.x * point.y), point.x * point.x / (point.y * point.y), point.y * point.y / (point.x * point.x)));
 		curveIndices.push_back(i);
 		i++;
 	}
@@ -220,9 +227,7 @@ void Plane::CheckHashCollisions()
 		vec3 centerPos = circlesVertices[centerIndex];
 
 		int index = HashFunction(centerPos);
-		cout << "valor hash " << index << endl;
 		vec3 hashInfo = hashPivots[index];
-		cout << "hashInfo " << hashInfo.x << " " << hashInfo.z << endl;
 
 		for (int j = hashInfo.x; j < hashInfo.x + hashInfo.z; j++)
 		{
@@ -287,10 +292,9 @@ int Plane::HashFunction(vec3 point)
 	return (int) (point.x / factor) + hashDimension * (int) (point.y / factor);
 }
 
-
 bool Plane::CollidesWithCurve(vec3 centerPos, vec3 point1, vec3 point2)
 {
-	vec3 threshold = vec3(0.00001f, 0.00001f, 0.00001f);
+	vec3 threshold = vec3(0.000030517578125f, 0.000030517578125f, 0.000030517578125f); // 1 / 2^15
 
 	vec3 vecDir = point2 - point1 + threshold;
 	vecDir = glm::normalize(vecDir);
@@ -320,7 +324,7 @@ void Plane::PaintCollidedCircle(int centerIndex)
 {
 	for (int k = centerIndex; k <= centerIndex + circleSteps; k++)
 	{
-		circlesColors[k] = vec3(0.0f, 0.0f, 0.0f);
+		circlesColors[k] = vec3(1.0f, 0.0f, 0.0f);
 	}
 }
 
@@ -367,11 +371,11 @@ void Plane::processInput(double deltaTime)
 	}
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 	{
-		camPos[2] += camSpeed * deltaTime;
+		camPos[2] += camSpeed * deltaTime * 2;
 	}
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 	{
-		camPos[2] -= camSpeed * deltaTime;
+		camPos[2] -= camSpeed * deltaTime * 2;
 	}
 	UpdateViewMatrix();
 }

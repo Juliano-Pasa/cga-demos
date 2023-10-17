@@ -66,9 +66,12 @@ private:
 
 	float camSpeed;
 	float size;
+	float curveSteps;
+	float maxCoords;
 
 	int circleSteps;
 	int numCircles;
+	int numControlPoints;
 	GLuint primitiveRestartIndex;
 
 	bool wireframe;
