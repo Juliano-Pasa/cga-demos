@@ -189,6 +189,8 @@ void Plane::genCurve()
 		curveIndices.push_back(i);
 		i++;
 	}
+
+	GenerateHashTable();
 }
 
 void Plane::CheckAllCollisions()
@@ -217,7 +219,9 @@ void Plane::CheckHashCollisions()
 		int centerIndex = i * (circleSteps + 1);
 		vec3 centerPos = circlesVertices[centerIndex];
 
-		vec3 hashInfo = hashPivots[HashFunction(centerPos)];
+		int index = HashFunction(centerPos);
+		cout << "valor hash " << index << endl;
+		vec3 hashInfo = hashPivots[index];
 
 		for (int j = hashInfo.x; j < hashInfo.z; j++)
 		{
@@ -231,7 +235,7 @@ void Plane::CheckHashCollisions()
 			}
 			if (j != curveVertices.size() - 1)
 			{
-				if (CollidesWithCurve(centerPos, curveVertices[j - 1], curveVertices[j]))
+				if (CollidesWithCurve(centerPos, curveVertices[j], curveVertices[j+1]))
 				{
 					PaintCollidedCircle(centerIndex);
 					break;
@@ -249,6 +253,7 @@ void Plane::GenerateHashTable()
 	for (size_t i = 0; i < curveVertices.size(); i++)
 	{
 		int index = HashFunction(curveVertices[i]);
+		cout << "valor hash geracao" << index << endl;
 		objectsIndex.push_back(index);
 		usedIndex[index] += 1;
 	}
@@ -276,7 +281,7 @@ void Plane::GenerateHashTable()
 int Plane::HashFunction(vec3 point)
 {
 	int factor = hashSize / hashDimension;
-	return point.x / factor + hashDimension * point.y / factor;
+	return (int) (point.x / factor) + hashDimension * (int) (point.y / factor);
 }
 
 
