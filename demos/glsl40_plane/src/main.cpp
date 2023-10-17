@@ -126,10 +126,10 @@ int main(void)
 	initGLEW();
 	initializeGL();
 
+	std::cout << std::endl << "1: wireframe" << std::endl;
+
 	plane = new Plane(window, 1);
 	plane->init();
-
-	std::cout << std::endl << "Q: wireframe" << std::endl;
 
 	mainLoop();
 

@@ -14,7 +14,7 @@ char keyOnce[GLFW_KEY_LAST + 1];
      (keyOnce[KEY] = false))
 
 Plane::Plane(GLFWwindow* window, int size){
-	this->size = 0.1f;
+	this->size = 0.5f;
 	this->numCircles = 300;
 	this->primitiveRestartIndex = -1; // numero magico
 	this->window = window;
@@ -23,28 +23,20 @@ Plane::Plane(GLFWwindow* window, int size){
 	this->camPos = vec3(25.0f, 25, -30.0f);
 	this->planePos = vec3(0.0f, 0.0f, 2.5f);
 	this->hashDimension = 10;
-	this->hashSize = 50.0f;
 	this->curveSteps = 1000.0f;
-	this->circleSteps = 128;
-	this->maxCoords = 50.0f;
+	this->circleSteps = 64;
+	this->maxCoords = 100.0f;
 	this->numControlPoints = 200;
+	this->LODFactor = 1;
 }
 
 void Plane::init(){
 	srand(time(0));
 
-	glPrimitiveRestartIndex(primitiveRestartIndex);
-	genCurve();
-	genCircles();
-
-	glGenVertexArrays(2, vaoIDs);
-	genCirclesBuffers();
-	genCurveBuffers();
-
 	// init matrices
 	modelMatrix = glm::mat4(1.0f);
 	UpdateViewMatrix();
-	projectionMatrix = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 100.0f);
+	projectionMatrix = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 200.0f);
 
 	// load shaders
 	try {
@@ -61,7 +53,13 @@ void Plane::init(){
 	}
 	shader.printActiveAttribs();
 
-	glfwSetScrollCallback(window, MouseScrollCallback);
+	glPrimitiveRestartIndex(primitiveRestartIndex);
+	genCurve();
+	genCircles();
+
+	glGenVertexArrays(2, vaoIDs);
+	genCirclesBuffers();
+	genCurveBuffers();
 }
 
 void Plane::update(double deltaTime){
@@ -204,6 +202,10 @@ void Plane::genCurve()
 
 void Plane::CheckAllCollisions()
 {
+	double start = glfwGetTime();
+	double startColoring = 0.0;
+	double timeSpentColoring = 0.0;
+
 	for (int i = 0; i < numCircles; i++)
 	{
 		int centerIndex = i * (circleSteps + 1);
@@ -213,16 +215,23 @@ void Plane::CheckAllCollisions()
 		{
 			if (CollidesWithCurve(centerPos, curveVertices[j], curveVertices[j + 1]))
 			{
+				startColoring = glfwGetTime();
 				PaintCollidedCircle(centerIndex);
+				timeSpentColoring += glfwGetTime() - startColoring;
 				break;
 			}			
 		}
 	}
+	cout << "Tempo checando colisoes por forca bruta: " << glfwGetTime() - start - timeSpentColoring << endl;
 	genCirclesBuffers();
 }
 
 void Plane::CheckHashCollisions()
 {
+	double start = glfwGetTime();
+	double startColoring = 0.0;
+	double timeSpentColoring = 0.0;
+
 	for (int i = 0; i < numCircles; i++)
 	{
 		int centerIndex = i * (circleSteps + 1);
@@ -239,7 +248,9 @@ void Plane::CheckHashCollisions()
 			{
 				if (CollidesWithCurve(centerPos, curveVertices[curveIndex - 1], curveVertices[curveIndex]))
 				{
+					startColoring = glfwGetTime();
 					PaintCollidedCircle(centerIndex);
+					timeSpentColoring += glfwGetTime() - startColoring;
 					break;
 				}
 			}
@@ -247,17 +258,22 @@ void Plane::CheckHashCollisions()
 			{
 				if (CollidesWithCurve(centerPos, curveVertices[curveIndex], curveVertices[curveIndex + 1]))
 				{
+					startColoring = glfwGetTime();
 					PaintCollidedCircle(centerIndex);
+					timeSpentColoring += glfwGetTime() - startColoring;
 					break;
 				}
 			}
 		}
 	}
+	cout << "Tempo checando colisoes por hash table: " << glfwGetTime() - start - timeSpentColoring << endl;
 	genCirclesBuffers();
 }
 
 void Plane::GenerateHashTable()
 {
+	double start = glfwGetTime();
+
 	std::vector<int> objectsIndex;
 	std::vector<int> usedIndex(hashDimension*hashDimension, 0);
 
@@ -286,11 +302,13 @@ void Plane::GenerateHashTable()
 		hashTable[hashPivots[objectsIndex[i]].y - 1] = i;
 		hashPivots[objectsIndex[i]].y -= 1;
 	}
+
+	cout << "Tempo de geracao da tabela Hash: " << glfwGetTime() - start << endl;
 }
 
 int Plane::HashFunction(vec3 point)
 {
-	int factor = hashSize / hashDimension;
+	int factor = maxCoords / hashDimension;
 	return (int) (point.x / factor) + hashDimension * (int) (point.y / factor);
 }
 
@@ -341,19 +359,23 @@ void Plane::processInput(double deltaTime)
 		else {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
+		return;
 	}
 	if (glfwGetKeyOnce(window, '2'))
 	{
 		CheckAllCollisions();
+		return;
 	}
 	if (glfwGetKeyOnce(window, '3'))
 	{
 		CheckHashCollisions();
+		return;
 	}
 	if (glfwGetKeyOnce(window, 'R'))
 	{
 		genCircles();
 		genCirclesBuffers();
+		return;
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
@@ -374,10 +396,12 @@ void Plane::processInput(double deltaTime)
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 	{
 		camPos.z += camSpeed * deltaTime * 2;
+		CheckLODChange();
 	}
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 	{
 		camPos.z -= camSpeed * deltaTime * 2;
+		CheckLODChange();
 	}
 	UpdateViewMatrix();
 }
@@ -392,14 +416,39 @@ void Plane::UpdateViewMatrix()
 		vec3(0.0f, 1.0f, 0.0f)); //up
 }
 
-void Plane::MouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+void Plane::CheckLODChange()
 {
-	if (yoffset > 0)
+	float levelSize = maxCoords/2.5f;
+
+	int power = abs(camPos.z) / levelSize;
+	int factor = pow(2, power);
+
+	if (factor != LODFactor)
 	{
-		cout << yoffset << " maior" << endl;
+		LODFactor = factor;
+		UpdateLOD(factor);
 	}
-	else
+}
+
+void Plane::UpdateLOD(int factor)
+{
+	if (circleSteps / factor < 4)
 	{
-		cout << yoffset << " menor" << endl;
+		return;
 	}
+
+	circlesIndices = std::vector<unsigned int>();
+	for (int i = 0; i < numCircles; i++)
+	{
+		int baseIndex = i * (circleSteps + 1);
+		circlesIndices.push_back(baseIndex);
+
+		for (int j = 0; j < circleSteps; j += factor)
+		{
+			circlesIndices.push_back(baseIndex + j + 1);
+		}
+		circlesIndices.push_back(baseIndex + 1);
+		circlesIndices.push_back(primitiveRestartIndex);
+	}
+	genCirclesBuffers();
 }

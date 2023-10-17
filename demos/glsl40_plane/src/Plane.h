@@ -28,9 +28,11 @@ private:
 	void CheckHashCollisions();
 	void UpdateViewMatrix();
 	void PaintCollidedCircle(int centerIndex);
+	bool CollidesWithCurve(vec3 centerPos, vec3 point1, vec3 point2);
 
 	void processInput(double deltaTime);
-	static void MouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+	void UpdateLOD(int factor);
+	void CheckLODChange();
 
 	// Hash
 	void GenerateHashTable();
@@ -39,9 +41,6 @@ private:
 	float hashSize;
 	std::vector<glm::ivec3> hashPivots;
 	std::vector<int> hashTable;
-
-
-	bool CollidesWithCurve(vec3 centerPos, vec3 point1, vec3 point2);
 
 	GLuint vaoIDs[2];
 	std::vector<vec3> normals;
@@ -74,6 +73,7 @@ private:
 	int circleSteps;
 	int numCircles;
 	int numControlPoints;
+	int LODFactor;
 	GLuint primitiveRestartIndex;
 
 	bool wireframe;
