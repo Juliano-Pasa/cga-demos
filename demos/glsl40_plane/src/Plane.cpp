@@ -200,15 +200,11 @@ void Plane::CheckAllCollisions()
 
 		for (size_t j = 0; j < curveVertices.size() - 1; j++)
 		{
-			if (!CollidesWithCurve(centerPos, curveVertices[j], curveVertices[j+1]))
+			if (CollidesWithCurve(centerPos, curveVertices[j], curveVertices[j + 1]))
 			{
-				continue;
-			}
-
-			for (int k = centerIndex; k <= centerIndex + circleSteps; k++)
-			{
-				circlesColors[k] = vec3(0.0f, 0.0f, 0.0f);
-			}
+				PaintCollidedCircle(centerIndex);
+				break;
+			}			
 		}
 	}
 	genCirclesBuffers();
@@ -216,7 +212,33 @@ void Plane::CheckAllCollisions()
 
 void Plane::CheckHashCollisions()
 {
+	for (int i = 0; i < numCircles; i++)
+	{
+		int centerIndex = i * (circleSteps + 1);
+		vec3 centerPos = circlesVertices[centerIndex];
 
+		vec3 hashInfo = hashPivots[HashFunction(centerPos)];
+
+		for (int j = hashInfo.x; j < hashInfo.z; j++)
+		{
+			if (j != 0)
+			{
+				if (CollidesWithCurve(centerPos, curveVertices[j - 1], curveVertices[j]))
+				{
+					PaintCollidedCircle(centerIndex);
+					break;
+				}
+			}
+			if (j != curveVertices.size() - 1)
+			{
+				if (CollidesWithCurve(centerPos, curveVertices[j - 1], curveVertices[j]))
+				{
+					PaintCollidedCircle(centerIndex);
+					break;
+				}
+			}
+		}
+	}
 }
 
 void Plane::GenerateHashTable()
@@ -242,11 +264,11 @@ void Plane::GenerateHashTable()
 		hashPivots[i].z = hashPivots[i].y - hashPivots[i].x;
 	}
 
-	hashTable = std::vector<vec3>(curveVertices.size());
+	hashTable = std::vector<int>(curveVertices.size());
 
 	for (size_t i = 0; i < curveVertices.size(); i++)
 	{
-		hashTable[hashPivots[objectsIndex[i]].y - 1] = curveVertices[i];
+		hashTable[hashPivots[objectsIndex[i]].y - 1] = i;
 		hashPivots[objectsIndex[i]].y -= 1;
 	}
 }
@@ -260,7 +282,7 @@ int Plane::HashFunction(vec3 point)
 
 bool Plane::CollidesWithCurve(vec3 centerPos, vec3 point1, vec3 point2)
 {
-	vec3 threshold = vec3(0.001f, 0.001f, 0.001f);
+	vec3 threshold = vec3(0.00001f, 0.00001f, 0.00001f);
 
 	vec3 vecDir = point2 - point1 + threshold;
 	vecDir = glm::normalize(vecDir);
@@ -286,6 +308,14 @@ bool Plane::CollidesWithCurve(vec3 centerPos, vec3 point1, vec3 point2)
 	
 }
 
+void Plane::PaintCollidedCircle(int centerIndex)
+{
+	for (int k = centerIndex; k <= centerIndex + circleSteps; k++)
+	{
+		circlesColors[k] = vec3(0.0f, 0.0f, 0.0f);
+	}
+}
+
 void Plane::processInput(double deltaTime)
 {
 	if (glfwGetKeyOnce(window, '1'))
@@ -303,6 +333,10 @@ void Plane::processInput(double deltaTime)
 		CheckAllCollisions();
 	}
 	if (glfwGetKeyOnce(window, '3'))
+	{
+		CheckHashCollisions();
+	}
+	if (glfwGetKeyOnce(window, 'R'))
 	{
 		genCircles();
 		genCirclesBuffers();

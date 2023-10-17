@@ -28,6 +28,7 @@ private:
 	void CheckHashCollisions();
 	void UpdateViewMatrix();
 	void processInput(double deltaTime);
+	void PaintCollidedCircle(int centerIndex);
 
 	// Hash
 	void GenerateHashTable();
@@ -35,7 +36,7 @@ private:
 	int hashDimension;
 	float hashSize;
 	std::vector<glm::ivec3> hashPivots;
-	std::vector<vec3> hashTable;
+	std::vector<int> hashTable;
 
 
 	bool CollidesWithCurve(vec3 centerPos, vec3 point1, vec3 point2);
