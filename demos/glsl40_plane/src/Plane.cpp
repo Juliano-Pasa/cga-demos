@@ -222,7 +222,7 @@ void Plane::CheckAllCollisions()
 			}			
 		}
 	}
-	cout << "Tempo checando colisoes por forca bruta: " << glfwGetTime() - start - timeSpentColoring << endl;
+	cout << endl << "Tempo checando colisoes por forca bruta: " << glfwGetTime() - start - timeSpentColoring << endl;
 	genCirclesBuffers();
 }
 
@@ -266,7 +266,7 @@ void Plane::CheckHashCollisions()
 			}
 		}
 	}
-	cout << "Tempo checando colisoes por hash table: " << glfwGetTime() - start - timeSpentColoring << endl;
+	cout << endl << "Tempo checando colisoes por hash table: " << glfwGetTime() - start - timeSpentColoring << endl;
 	genCirclesBuffers();
 }
 
@@ -303,7 +303,7 @@ void Plane::GenerateHashTable()
 		hashPivots[objectsIndex[i]].y -= 1;
 	}
 
-	cout << "Tempo de geracao da tabela Hash: " << glfwGetTime() - start << endl;
+	cout << endl << "Tempo de geracao da tabela Hash: " << glfwGetTime() - start << endl;
 }
 
 int Plane::HashFunction(vec3 point)
