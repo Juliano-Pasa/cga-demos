@@ -221,7 +221,15 @@ void Plane::CheckHashCollisions()
 
 void Plane::GenerateHashTable()
 {
+	std::vector<int> objectsIndex;
+	std::vector<int> usedIndex(hashDimension*hashDimension, 0);
 
+	for (size_t i = 0; i < curveVertices.size(); i++)
+	{
+		int index = HashFunction(curveVertices[i]);
+		objectsIndex.push_back(index);
+		usedIndex[index] += 1;
+	}
 }
 
 int Plane::HashFunction(vec3 point)
