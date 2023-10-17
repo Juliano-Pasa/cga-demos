@@ -27,8 +27,10 @@ private:
 	void CheckAllCollisions();
 	void CheckHashCollisions();
 	void UpdateViewMatrix();
-	void processInput(double deltaTime);
 	void PaintCollidedCircle(int centerIndex);
+
+	void processInput(double deltaTime);
+	static void MouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
 	// Hash
 	void GenerateHashTable();

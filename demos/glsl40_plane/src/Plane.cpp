@@ -60,6 +60,8 @@ void Plane::init(){
 		exit(EXIT_FAILURE);
 	}
 	shader.printActiveAttribs();
+
+	glfwSetScrollCallback(window, MouseScrollCallback);
 }
 
 void Plane::update(double deltaTime){
@@ -355,27 +357,27 @@ void Plane::processInput(double deltaTime)
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		camPos[0] += camSpeed * deltaTime;
+		camPos.x += camSpeed * deltaTime;
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		camPos[0] -= camSpeed * deltaTime;
+		camPos.x -= camSpeed * deltaTime;
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		camPos[1] += camSpeed * deltaTime;
+		camPos.y += camSpeed * deltaTime;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		camPos[1] -= camSpeed * deltaTime;
+		camPos.y -= camSpeed * deltaTime;
 	}
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 	{
-		camPos[2] += camSpeed * deltaTime * 2;
+		camPos.z += camSpeed * deltaTime * 2;
 	}
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
 	{
-		camPos[2] -= camSpeed * deltaTime * 2;
+		camPos.z -= camSpeed * deltaTime * 2;
 	}
 	UpdateViewMatrix();
 }
@@ -388,4 +390,16 @@ void Plane::UpdateViewMatrix()
 		camPos, //eye
 		centerPos, //center
 		vec3(0.0f, 1.0f, 0.0f)); //up
+}
+
+void Plane::MouseScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	if (yoffset > 0)
+	{
+		cout << yoffset << " maior" << endl;
+	}
+	else
+	{
+		cout << yoffset << " menor" << endl;
+	}
 }
