@@ -1,0 +1,120 @@
+// Tessellation Control Shader
+
+#version 400
+
+layout(vertices = 4) out;
+
+uniform vec3 camPos;
+
+uniform int maxTess;
+uniform int minTess;
+uniform float maxDist;
+
+uniform int tcsMode;
+uniform int centerPatch;
+uniform int centerPatchTessLevel;
+uniform vec4 surroundingPatches;
+
+// Funcao que altera somente o refinamento do patch central (gera t-vertex)
+void ModifyCenterPatch()
+{
+	int tessLevel = minTess;
+
+	if (gl_PrimitiveID == centerPatch)
+	{
+		tessLevel *= 3;
+	}
+
+	if (gl_InvocationID == 0)
+	{
+		gl_TessLevelOuter[0] = tessLevel; // Left
+		gl_TessLevelOuter[1] = tessLevel; // Top
+		gl_TessLevelOuter[2] = tessLevel; // Right
+		gl_TessLevelOuter[3] = tessLevel; // Bottom
+		gl_TessLevelInner[0] = tessLevel;
+		gl_TessLevelInner[1] = tessLevel;
+	} 
+}
+
+// Funcao que altera o refinamento do patch central e dos seus vizinhos (evita t-vertex)
+void ReactToCenterPatch()
+{
+	int tessLevel = minTess;
+
+	if (gl_InvocationID == 0)
+	{
+		if (gl_PrimitiveID == centerPatch)
+		{
+			tessLevel = centerPatchTessLevel;
+		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			if (gl_PrimitiveID == surroundingPatches[i])
+			{
+				gl_TessLevelOuter[i] = centerPatchTessLevel;
+			}
+			else
+			{
+				gl_TessLevelOuter[i] = tessLevel;
+			}
+		}
+		gl_TessLevelInner[0] = tessLevel;
+		gl_TessLevelInner[1] = tessLevel;
+	}
+}
+
+// Funcao que calcula refinamento com base na distancia da camera
+// Foi usado esse video como base para entender o calculo da distancia:
+// https://www.youtube.com/watch?v=21gfE-zUym8&ab_channel=VictorGordan
+void ReactToCamera()
+{
+	vec4 homoCamPos = vec4(camPos, 1.0f);
+
+	// Vamos modificar o inner e outer apenas para o primeiro vértice do Patch
+	if (gl_InvocationID == 0)
+	{
+		// Calcula o centro das arestas
+		vec4 edge0 = (gl_in[0].gl_Position + gl_in[1].gl_Position) / 2.0f; // Top
+		vec4 edge1 = (gl_in[1].gl_Position + gl_in[2].gl_Position) / 2.0f; // Right
+		vec4 edge2 = (gl_in[2].gl_Position + gl_in[3].gl_Position) / 2.0f; // Bottom
+		vec4 edge3 = (gl_in[3].gl_Position + gl_in[0].gl_Position) / 2.0f; // Left
+
+		float dist0 = length(homoCamPos - edge0);
+		float dist1 = length(homoCamPos - edge1);
+		float dist2 = length(homoCamPos - edge2);
+		float dist3 = length(homoCamPos - edge3);
+
+		int tess0 = int(mix(maxTess, minTess, clamp(dist0/maxDist, 0.0, 1.0)));
+		int tess1 = int(mix(maxTess, minTess, clamp(dist1/maxDist, 0.0, 1.0)));
+		int tess2 = int(mix(maxTess, minTess, clamp(dist2/maxDist, 0.0, 1.0)));
+		int tess3 = int(mix(maxTess, minTess, clamp(dist3/maxDist, 0.0, 1.0)));
+
+		gl_TessLevelOuter[0] = tess3; // Left
+		gl_TessLevelOuter[1] = tess0; // Top
+		gl_TessLevelOuter[2] = tess1; // Right
+		gl_TessLevelOuter[3] = tess2; // Bottom
+
+		gl_TessLevelInner[0] = max(tess0, tess2);
+		gl_TessLevelInner[1] = max(tess1, tess3);
+	}
+}
+
+void main()
+{
+	// Precisamos passar adiante todos os vértices do Patch
+	gl_out[ gl_InvocationID ].gl_Position = gl_in[  gl_InvocationID  ].gl_Position;
+
+	if (tcsMode == 0)
+	{
+		ReactToCamera();
+	}
+	else if (tcsMode == 1)
+	{
+		ReactToCenterPatch();
+	}
+	else if (tcsMode == 2)
+	{
+		ModifyCenterPatch();
+	}
+}
