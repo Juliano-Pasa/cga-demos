@@ -230,6 +230,25 @@ void Plane::GenerateHashTable()
 		objectsIndex.push_back(index);
 		usedIndex[index] += 1;
 	}
+
+	int count = 0;
+	hashPivots = std::vector<glm::ivec3>(hashDimension * hashDimension);
+
+	for (size_t i = 0; i < usedIndex.size(); i++)
+	{
+		hashPivots[i].x = count;
+		count += usedIndex[i];
+		hashPivots[i].y = count;
+		hashPivots[i].z = hashPivots[i].y - hashPivots[i].x;
+	}
+
+	hashTable = std::vector<vec3>(curveVertices.size());
+
+	for (size_t i = 0; i < curveVertices.size(); i++)
+	{
+		hashTable[hashPivots[objectsIndex[i]].y - 1] = curveVertices[i];
+		hashPivots[objectsIndex[i]].y -= 1;
+	}
 }
 
 int Plane::HashFunction(vec3 point)

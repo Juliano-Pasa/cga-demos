@@ -34,6 +34,8 @@ private:
 	int HashFunction(vec3 point);
 	int hashDimension;
 	float hashSize;
+	std::vector<glm::ivec3> hashPivots;
+	std::vector<vec3> hashTable;
 
 
 	bool CollidesWithCurve(vec3 centerPos, vec3 point1, vec3 point2);
