@@ -127,17 +127,6 @@ int main(void)
 	initGLEW();
 	initializeGL();
 
-	cout << endl << "Q: Sobe a camera" << endl;
-	cout << "E: Desce a camera" << endl;
-	cout << endl << "W: Anda pra frente" << endl;
-	cout << "S: Anda pra tras" << endl;
-	cout << endl << "D: Anda pra direita" << endl;
-	cout << "A: Anda pra esquerda" << endl;
-	cout << endl << "R: Reinicia pontos" << endl;
-	cout << endl << "1: Alterna entre malha e preenchimento" << endl;
-	cout << "2: Faz checagem por forca bruta" << endl;
-	cout << "3: Faz checagem por hash table" << endl;
-
 	plane = new Plane(window, 1);
 	plane->init();
 

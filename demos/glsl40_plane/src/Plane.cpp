@@ -15,17 +15,17 @@ char keyOnce[GLFW_KEY_LAST + 1];
 
 Plane::Plane(GLFWwindow* window, int size){
 	this->size = 0.5f;
+	this->circleSteps = 64;
 	this->numCircles = 300;
+	this->curveSteps = 1000.0f;
 	this->primitiveRestartIndex = -1; // numero magico
 	this->window = window;
 	this->wireframe = false;
-	this->camSpeed = 10.0f;
-	this->camPos = vec3(25.0f, 25, -30.0f);
+	this->camSpeed = 20.0f;
 	this->planePos = vec3(0.0f, 0.0f, 2.5f);
 	this->hashDimension = 10;
-	this->curveSteps = 1000.0f;
-	this->circleSteps = 64;
 	this->maxCoords = 100.0f;
+	this->camPos = vec3(maxCoords / 2.0f, maxCoords / 2.0f, -75.0f);
 	this->numControlPoints = 200;
 	this->LODFactor = 1;
 }
@@ -52,6 +52,9 @@ void Plane::init(){
 		exit(EXIT_FAILURE);
 	}
 	shader.printActiveAttribs();
+
+	PrintParameters();
+	PrintCommands();
 
 	glPrimitiveRestartIndex(primitiveRestartIndex);
 	genCurve();
@@ -189,6 +192,10 @@ void Plane::genCurve()
 	}
 
 	unsigned int i = 0;
+	curveVertices = std::vector<vec3>();
+	curveColors = std::vector<vec3>();
+	curveIndices = std::vector<unsigned int>();
+
 	for (vec3 &point : curve.curvePoints)
 	{
 		curveVertices.push_back(point);
@@ -377,6 +384,24 @@ void Plane::processInput(double deltaTime)
 		genCirclesBuffers();
 		return;
 	}
+	if (glfwGetKeyOnce(window, 'T'))
+	{
+		numCircles += 50;
+		genCircles();
+		genCirclesBuffers();
+		return;
+	}
+	if (glfwGetKeyOnce(window, 'G'))
+	{
+		numCircles -= 50;
+		if (numCircles < 50)
+		{
+			numCircles = 50;
+		}
+		genCircles();
+		genCirclesBuffers();
+		return;
+	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		camPos.x += camSpeed * deltaTime;
@@ -438,6 +463,8 @@ void Plane::UpdateLOD(int factor)
 	}
 
 	circlesIndices = std::vector<unsigned int>();
+	curveIndices = std::vector<unsigned int>();
+
 	for (int i = 0; i < numCircles; i++)
 	{
 		int baseIndex = i * (circleSteps + 1);
@@ -450,5 +477,42 @@ void Plane::UpdateLOD(int factor)
 		circlesIndices.push_back(baseIndex + 1);
 		circlesIndices.push_back(primitiveRestartIndex);
 	}
+	for (size_t i = 0; i < curveVertices.size(); i += factor)
+	{
+		curveIndices.push_back(i);
+	}
+	genCurveBuffers();
 	genCirclesBuffers();
+}
+
+void Plane::PrintParameters()
+{
+	cout << endl << "Principais parametros inicializados" << endl;
+
+	cout << endl << "Parametros dos circulos" << endl;
+	cout << "Raio: " << size << endl;
+	cout << "Divisoes maximas: " << circleSteps << endl;
+	cout << "Total de circulos: " << numCircles << endl;
+
+	cout << endl << "Parametros da curva" << endl;
+	cout << "Pontos de controle: " << numControlPoints << endl;
+	cout << "Divisoes: " << curveSteps << endl;
+
+	cout << endl << "Parametros do hash" << endl;
+	cout << "Dimensao: " << hashDimension << endl;
+	cout << "Tamanho de cada celula: " << maxCoords / hashDimension << endl;
+}
+
+void Plane::PrintCommands()
+{
+	cout << endl << "Q: Sobe a camera" << endl;
+	cout << "E: Desce a camera" << endl;
+	cout << endl << "W: Anda pra frente" << endl;
+	cout << "S: Anda pra tras" << endl;
+	cout << endl << "D: Anda pra direita" << endl;
+	cout << "A: Anda pra esquerda" << endl;
+	cout << endl << "R: Reinicia pontos" << endl;
+	cout << endl << "1: Alterna entre malha e preenchimento" << endl;
+	cout << "2: Faz checagem por forca bruta" << endl;
+	cout << "3: Faz checagem por hash table" << endl;
 }

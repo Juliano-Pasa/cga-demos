@@ -28,6 +28,8 @@ private:
 	void CheckHashCollisions();
 	void UpdateViewMatrix();
 	void PaintCollidedCircle(int centerIndex);
+	void PrintParameters();
+	void PrintCommands();
 	bool CollidesWithCurve(vec3 centerPos, vec3 point1, vec3 point2);
 
 	void processInput(double deltaTime);
