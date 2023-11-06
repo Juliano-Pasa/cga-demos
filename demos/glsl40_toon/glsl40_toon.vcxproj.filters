@@ -6,11 +6,20 @@
     <ClCompile Include="..\..\utils\TextureManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\GameManager.cpp" />
+    <ClCompile Include="src\PlayingState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
     <ClInclude Include="..\..\utils\TextureManager.h" />
     <ClInclude Include="src\Sphere.h" />
+    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Transform.h" />
+    <ClInclude Include="src\GamerManager.h" />
+    <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\PlayingState.h" />
+    <ClInclude Include="src\GameStates.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\glsl40_toon.frag">

@@ -17,12 +17,18 @@ using std::string;
 
 #include <glm/glm.hpp>
 using glm::vec2;
+using glm::ivec2;
+using glm::dvec2;
+
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 using glm::mat3;
 
+#include<glm/gtc/quaternion.hpp>
+
 #include <stdexcept>
+using glm::quat;
 
 class GLSLProgramException : public std::runtime_error {
 public:

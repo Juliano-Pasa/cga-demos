@@ -26,7 +26,7 @@ void Sphere::init(){
 		vec3(0.0f, 0.0f, -1.0f), //eye
 		vec3(0.0f, 0.0f, 0.0f), //center
 		vec3(0.0f, 1.0f, 0.0f)); //up
-	projectionMatrix = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 100.0f);
+	projectionMatrix = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 200.0f);
 
 	// load shaders
 	try {

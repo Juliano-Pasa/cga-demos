@@ -22,6 +22,7 @@ May 2016 - Tiago Augusto Engel - tengel@inf.ufsm.br
 #include <string>
 #include <iostream>
 #include "Sphere.h"
+#include "GameState.h"
 #include <ctime>
 
 #define WINDOW_WIDTH	600
