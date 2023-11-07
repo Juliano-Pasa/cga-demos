@@ -26,6 +26,8 @@ using glm::mat4;
 using glm::mat3;
 
 #include<glm/gtc/quaternion.hpp>
+#include<glm/gtx/quaternion.hpp>
+#include<glm/gtc/matrix_transform.hpp>
 
 #include <stdexcept>
 using glm::quat;
