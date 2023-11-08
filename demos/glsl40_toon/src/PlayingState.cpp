@@ -1,5 +1,6 @@
 #include "PlayingState.h"
 #include "PlayerCube.h"
+#include "TerrainGenerator.h"
 #include <ctime>
 
 char keyOnce[GLFW_KEY_LAST + 1];
@@ -21,6 +22,10 @@ PlayingState::PlayingState(GLFWwindow* window) : GameState()
 
 void PlayingState::OnStart()
 {
+	TerrainGenerator terrain = TerrainGenerator(8, vector<unsigned char>{128, 128, 128, 128}, 256, 0.4f, 42);
+	terrain.GenerateDiamondSquare();
+	terrain.WriteToCSV("..\\..\\resources\\map.csv");
+
 	InitializeGL();
 	srand((unsigned)time(NULL));
 

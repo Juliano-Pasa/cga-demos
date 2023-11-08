@@ -110,6 +110,17 @@ void Camera::ReadMouseInputs()
 	vec3 currentAngles = transform.angles();
 	currentAngles.x += glm::radians((float) delta.y * sensitivity);
 	currentAngles.y += glm::radians((float) delta.x * sensitivity);
+
+	float maxVerticalAngle = glm::radians(90.0f);
+	if (currentAngles.x > maxVerticalAngle)
+	{
+		currentAngles.x = maxVerticalAngle;
+	}
+	else if (currentAngles.x < -maxVerticalAngle)
+	{
+		currentAngles.x = -maxVerticalAngle;
+	}
+
 	transform.angles(currentAngles);
 }
 

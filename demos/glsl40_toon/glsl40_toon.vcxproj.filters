@@ -6,25 +6,43 @@
     <ClCompile Include="..\..\utils\TextureManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
-    <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\GameManager.cpp" />
-    <ClCompile Include="src\PlayingState.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="src\PlayerCube.cpp" />
+    <ClCompile Include="src\PlayingState.cpp">
+      <Filter>GameStateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>CameraModule</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TerrainGenerator.cpp">
+      <Filter>TerrainModule</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
     <ClInclude Include="..\..\utils\TextureManager.h" />
     <ClInclude Include="src\Sphere.h" />
-    <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Transform.h" />
     <ClInclude Include="src\GamerManager.h" />
-    <ClInclude Include="src\GameState.h" />
-    <ClInclude Include="src\PlayingState.h" />
-    <ClInclude Include="src\GameStates.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\PlayerCube.h" />
+    <ClInclude Include="src\GameState.h">
+      <Filter>GameStateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameStates.h">
+      <Filter>GameStateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlayingState.h">
+      <Filter>GameStateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera.h">
+      <Filter>CameraModule</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TerrainGenerator.h">
+      <Filter>TerrainModule</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\glsl40_toon.frag">
@@ -37,6 +55,15 @@
   <ItemGroup>
     <Filter Include="shaders">
       <UniqueIdentifier>{9694a283-b4d6-4ff3-affc-701e7ca3e73b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameStateMachine">
+      <UniqueIdentifier>{6b4b44c4-e8f4-4e0c-95ac-d97732aa24ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TerrainModule">
+      <UniqueIdentifier>{ef9a2760-2db8-4c26-adeb-07c86528916c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CameraModule">
+      <UniqueIdentifier>{b43be6de-139d-45b4-8097-1e7c607a7a2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
