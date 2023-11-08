@@ -1,7 +1,10 @@
 #include "Entity.h"
 
-Entity::Entity()
+Entity::Entity(vec3 position, vec3 rotation, vec3 scale)
 {
+	transform.position(position);
+	transform.angles(rotation);
+	transform.scale(scale);
 	parent = nullptr;
 }
 

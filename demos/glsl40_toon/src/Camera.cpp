@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#include <iostream>
 
 Camera::Camera(GLFWwindow* window, vec3 position)
 {
@@ -10,12 +11,12 @@ Camera::Camera(GLFWwindow* window, vec3 position)
 	this->orientation = vec3(1.0f, 0.0f, 0.0f);
 	this->up = vec3(0.0f, 1.0f, 0.0f);
 
-	this->sensitivity = 100.0f;
+	this->sensitivity = 0.5f;
 	this->smoothness = 5.0f;
 	this->speed = 5.0f;
 	this->freeCamMode = false;
 
-	this->viewMatrix = glm::lookAt(position, position + orientation, up);
+	GenerateViewMatrix();
 }
 
 void Camera::GenerateViewMatrix()
@@ -39,7 +40,10 @@ void Camera::Update(double deltaTime)
 {
 	ReadKeyboardInputs((float)deltaTime);
 	ReadMouseInputs();
-	GenerateViewMatrix();
+	if (transform.hasChanged())
+	{
+		GenerateViewMatrix();
+	}
 }
 
 #pragma endregion
@@ -59,11 +63,11 @@ void Camera::ReadKeyboardInputs(float deltaTime)
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		transform.position(transform.position() + speed * deltaTime * glm::normalize(glm::cross(orientation, up)));
+		transform.position(transform.position() - speed * deltaTime * glm::normalize(glm::cross(orientation, up)));
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		transform.position(transform.position() - speed * deltaTime * glm::normalize(glm::cross(orientation, up)));
+		transform.position(transform.position() + speed * deltaTime * glm::normalize(glm::cross(orientation, up)));
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
@@ -73,6 +77,7 @@ void Camera::ReadKeyboardInputs(float deltaTime)
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE)
 	{
 		freeCamMode = false;
+		firstMouseMove = true;
 	}
 }
 
@@ -97,9 +102,14 @@ void Camera::ReadMouseInputs()
 	lastMouseCoords.x = xCoord;
 	lastMouseCoords.y = yCoord;
 
+	if (delta.x * delta.x + delta.y * delta.y < 0.001)
+	{
+		return;
+	}
+
 	vec3 currentAngles = transform.angles();
-	currentAngles.x += (float) yCoord * sensitivity;
-	currentAngles.y += (float) xCoord * sensitivity;
+	currentAngles.x += glm::radians((float) delta.y * sensitivity);
+	currentAngles.y += glm::radians((float) delta.x * sensitivity);
 	transform.angles(currentAngles);
 }
 

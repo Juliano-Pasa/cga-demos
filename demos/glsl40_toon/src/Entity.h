@@ -15,10 +15,14 @@ private:
 public:
 	Transform transform;
 
-	Entity();
+	Entity(vec3 position, vec3 rotation, vec3 scale);
 
 	template<typename... TArgs>
 	void AddChild(const TArgs&... args);
 
 	void UpdateSelfAndChildren(bool hasParentChanged);
+
+	virtual void Initialize() = 0;
+	virtual void Update(double deltaTime) = 0;
+	virtual void Render(mat4 projection, mat4 view) = 0;
 };

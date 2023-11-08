@@ -11,6 +11,7 @@
     <ClCompile Include="src\PlayingState.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Transform.cpp" />
+    <ClCompile Include="src\PlayerCube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="src\PlayingState.h" />
     <ClInclude Include="src\GameStates.h" />
     <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\PlayerCube.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\glsl40_toon.frag">

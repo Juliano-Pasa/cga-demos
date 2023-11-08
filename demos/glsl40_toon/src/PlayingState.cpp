@@ -1,4 +1,5 @@
 #include "PlayingState.h"
+#include "PlayerCube.h"
 #include <ctime>
 
 char keyOnce[GLFW_KEY_LAST + 1];
@@ -12,7 +13,7 @@ PlayingState::PlayingState(GLFWwindow* window) : GameState()
 	loaded = false;
 	camera = nullptr;
 	wireframe = false;
-	scenes = vector<Scene*>();
+	entities = vector<Entity*>();
 	this->window = window;
 }
 
@@ -23,11 +24,14 @@ void PlayingState::OnStart()
 	InitializeGL();
 	srand((unsigned)time(NULL));
 
-	scenes.push_back(new Sphere(window, 100, glm::vec3(-1, 0, -5)));
-	scenes.back()->init();
+	camera = new Camera(window, vec3(0, 0, 0));
+	projectionMatrix = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 200.0f);
 
-	scenes.push_back(new Sphere(window, 50, glm::vec3(1, 0, -5)));
-	scenes.back()->init();
+	entities.push_back(new PlayerCube(vec3(5, 0, 1), vec3(0, 0, 0), vec3(1, 1, 1)));
+	entities.back()->Initialize();
+
+	entities.push_back(new PlayerCube(vec3(5, 0, -1), vec3(0, 0, 0), vec3(1, 1, 1)));
+	entities.back()->Initialize();
 
 	loaded = true;
 	OnPlay();
@@ -40,7 +44,7 @@ void PlayingState::OnPlay()
 		return;
 	}
 
-	double thisTime;
+	double deltaTime;
 	double lastTime = glfwGetTime();
 	do
 	{
@@ -56,17 +60,19 @@ void PlayingState::OnPlay()
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// set deltatime and call update
-		thisTime = glfwGetTime();
-		for (Scene* scene : scenes)
-		{
-			scene->update(thisTime - lastTime);
-		}
-		lastTime = thisTime;
+		
+		deltaTime = glfwGetTime() - lastTime;
+		camera->Update(deltaTime);
 
-		for (Scene* scene : scenes)
+		for (Entity* entity : entities)
 		{
-			scene->render();
+			entity->Update(deltaTime);
+		}
+		lastTime += deltaTime;
+
+		for (Entity* entity : entities)
+		{
+			entity->Render(projectionMatrix, camera->viewMatrix);
 		}
 
 		glfwSwapBuffers(window);

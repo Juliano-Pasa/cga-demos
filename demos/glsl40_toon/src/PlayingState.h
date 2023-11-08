@@ -5,8 +5,7 @@
 
 #include "GameState.h"
 #include "Camera.h"
-#include "Sphere.h"
-#include "Scene.h"
+#include "Entity.h"
 
 #include <vector>
 
@@ -16,11 +15,13 @@ class PlayingState : public GameState
 {
 private:
 	Camera* camera;
-	vector<Scene*> scenes;
+	vector<Entity*> entities;
 	bool loaded;
 	bool wireframe;
 
 	GLFWwindow* window;
+
+	mat4 projectionMatrix;
 
 	void InitializeGL();
 
