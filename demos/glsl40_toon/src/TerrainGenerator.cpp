@@ -3,13 +3,13 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
+#include "lodepng.h"
 
 
 TerrainGenerator::TerrainGenerator(int power, vector<unsigned char> initialValues, int scale, float smoothness, float seed)
 {
 	this->scale = scale;
 	this->smoothness = pow(2, -smoothness);
-	cout << "smoothness: " << this->smoothness << endl;
 
 	size = pow(2, power) + 1;
 	map = vector<vector<unsigned char>>(size, vector<unsigned char>(size));
@@ -108,6 +108,61 @@ void TerrainGenerator::SquareStep(int i, int j, int centerOffset)
 #pragma endregion
 
 
+#pragma region NormalMapFunctions
+
+void TerrainGenerator::GenerateNormalMap()
+{
+	normalMap = vector<vector<vec3>>(size, vector<vec3>(size));
+
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			normalMap[i][j] = CalculateNormal(i, j);
+		}
+	}
+}
+
+vec3 TerrainGenerator::CalculateNormal(int i, int j)
+{
+	vec3 midPoint = vec3(j, map[i][j], i);
+	vec3 up = midPoint;
+	vec3 down = midPoint;
+	vec3 right = midPoint;
+	vec3 left = midPoint;
+
+	if (i - 1 >= 0)
+	{
+		up = vec3(j, map[i - 1][j], i - 1);
+	}
+	if (i + 1 < size)
+	{
+		down = vec3(j, map[i + 1][j], i + 1);
+	}
+	if (j - 1 >= 0)
+	{
+		left = vec3(j - 1, map[i][j - 1], i);
+	}
+	if (j + 1 < size)
+	{
+		right = vec3(j + 1, map[i][j + 1], i);
+	}
+
+	vec3 zVec = up - down;
+	vec3 xVec = right - left;
+
+	return glm::normalize(glm::cross(zVec, xVec));
+}
+
+string TerrainGenerator::NormalToString(vec3 normal)
+{
+	normal = (normal + 1.0f) / 2.0f;
+	return to_string(normal.x) + ";" + to_string(normal.y) + ";" + to_string(normal.z);
+}
+
+#pragma endregion
+
+
 #pragma region OutputFunctions
 
 void TerrainGenerator::PrintMap()
@@ -122,7 +177,7 @@ void TerrainGenerator::PrintMap()
 	}
 }
 
-void TerrainGenerator::WriteToCSV(string path)
+void TerrainGenerator::WriteHeightMapToCSV(string path)
 {
 	ofstream outputFile(path);
 
@@ -135,6 +190,59 @@ void TerrainGenerator::WriteToCSV(string path)
 		outputFile << (int)line[line.size() - 1] << "\n";
 	}
 	outputFile.close();
+}
+
+void TerrainGenerator::WriteNormalMapToCSV(string path)
+{
+	ofstream outputFile(path);
+
+	for (auto& line : normalMap)
+	{
+		for (size_t i = 0; i < line.size() - 1; i++)
+		{
+			outputFile << NormalToString(line[i]) << ",";
+		}
+		outputFile << NormalToString(line[line.size() - 1]) << "\n";
+	}
+	outputFile.close();
+}
+
+void TerrainGenerator::WriteHeightMapToPNG(string path)
+{
+	vector<unsigned char> image;
+
+	for (size_t i = 0; i < map.size(); i++)
+	{
+		for (size_t j = 0; j < map[i].size(); j++)
+		{
+			image.push_back(map[i][j]); // R
+			image.push_back(map[i][j]); // G
+			image.push_back(map[i][j]); // B
+			image.push_back((unsigned char)255); // A
+		}
+	}
+
+	lodepng::encode(path, image, size, size);
+}
+
+void TerrainGenerator::WriteNormalMapToPNG(string path)
+{
+	vector<unsigned char> image;
+
+	for (size_t i = 0; i < normalMap.size(); i++)
+	{
+		for (size_t j = 0; j < normalMap[i].size(); j++)
+		{
+			vec3 current = normalMap[i][j];
+			current = current * 255.0f;
+			image.push_back((unsigned char)current.x); // R
+			image.push_back((unsigned char)current.y); // G
+			image.push_back((unsigned char)current.z); // B
+			image.push_back((unsigned char)255); // A
+		}
+	}
+
+	lodepng::encode(path, image, size, size);
 }
 
 #pragma endregion

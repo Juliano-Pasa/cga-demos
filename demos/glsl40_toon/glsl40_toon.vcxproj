@@ -25,10 +25,12 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\GameManager.cpp" />
+    <ClCompile Include="src\lodepng.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PlayerCube.cpp" />
     <ClCompile Include="src\PlayingState.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
+    <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TerrainGenerator.cpp" />
     <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
@@ -39,10 +41,12 @@
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\GamerManager.h" />
     <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\lodepng.h" />
     <ClInclude Include="src\PlayerCube.h" />
     <ClInclude Include="src\PlayingState.h" />
     <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\GameStates.h" />
+    <ClInclude Include="src\Terrain.h" />
     <ClInclude Include="src\TerrainGenerator.h" />
     <ClInclude Include="src\Transform.h" />
   </ItemGroup>

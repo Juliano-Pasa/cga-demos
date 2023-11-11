@@ -19,6 +19,12 @@
     <ClCompile Include="src\TerrainGenerator.cpp">
       <Filter>TerrainModule</Filter>
     </ClCompile>
+    <ClCompile Include="src\Terrain.cpp">
+      <Filter>TerrainModule</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lodepng.cpp">
+      <Filter>LodePNG</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
@@ -43,6 +49,12 @@
     <ClInclude Include="src\TerrainGenerator.h">
       <Filter>TerrainModule</Filter>
     </ClInclude>
+    <ClInclude Include="src\Terrain.h">
+      <Filter>TerrainModule</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lodepng.h">
+      <Filter>LodePNG</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\glsl40_toon.frag">
@@ -64,6 +76,9 @@
     </Filter>
     <Filter Include="CameraModule">
       <UniqueIdentifier>{b43be6de-139d-45b4-8097-1e7c607a7a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LodePNG">
+      <UniqueIdentifier>{1eb00f5c-0e9e-4625-b371-cdc988989aba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

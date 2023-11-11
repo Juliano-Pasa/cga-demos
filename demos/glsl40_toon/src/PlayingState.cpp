@@ -15,7 +15,9 @@ PlayingState::PlayingState(GLFWwindow* window) : GameState()
 	camera = nullptr;
 	wireframe = false;
 	entities = vector<Entity*>();
+
 	this->window = window;
+	glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 }
 
 #pragma region StateTransitions
@@ -24,13 +26,15 @@ void PlayingState::OnStart()
 {
 	TerrainGenerator terrain = TerrainGenerator(8, vector<unsigned char>{128, 128, 128, 128}, 256, 0.4f, 42);
 	terrain.GenerateDiamondSquare();
-	terrain.WriteToCSV("..\\..\\resources\\map.csv");
+	terrain.WriteHeightMapToPNG("..\\..\\resources\\heightMap.png");
+	terrain.GenerateNormalMap();
+	terrain.WriteNormalMapToPNG("..\\..\\resources\\normalMap.png");
 
 	InitializeGL();
 	srand((unsigned)time(NULL));
 
 	camera = new Camera(window, vec3(0, 0, 0));
-	projectionMatrix = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 200.0f);
+	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)windowWidth/(float)windowHeight, 0.1f, 200.0f);
 
 	entities.push_back(new PlayerCube(vec3(5, 0, 1), vec3(0, 0, 0), vec3(1, 1, 1)));
 	entities.back()->Initialize();

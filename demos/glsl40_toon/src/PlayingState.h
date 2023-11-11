@@ -20,6 +20,8 @@ private:
 	bool wireframe;
 
 	GLFWwindow* window;
+	int windowWidth;
+	int windowHeight;
 
 	mat4 projectionMatrix;
 
