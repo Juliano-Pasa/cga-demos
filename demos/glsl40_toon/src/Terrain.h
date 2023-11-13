@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Entity.h"
+#include "Camera.h"
+#include "WorldLight.h"
 #include "TextureManager.h"
 #include <string>
 #include <vector>
@@ -21,14 +23,19 @@ private:
 	vector<unsigned int> indices;
 
 	TextureManager* textureManager;
+	GLSLProgram shader;
+
+	Camera* camera;
 
 	void GenerateVertices();
 	void GenerateBuffers();
 
 public:
-	Terrain(int width, int height, int scaleDown, string heightMapPath, string normalMapPath);
+	Terrain(int width, int height, int scaleDown, Camera* camera, string heightMapPath, string normalMapPath);
 
 	void Initialize();
 	void Update(double deltaTime);
 	void Render(mat4 projection, mat4 view);
+
+	WorldLight* worldLight;
 };

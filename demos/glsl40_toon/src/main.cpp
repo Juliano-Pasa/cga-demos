@@ -21,7 +21,6 @@ May 2016 - Tiago Augusto Engel - tengel@inf.ufsm.br
 #include <cstdio>
 #include <string>
 #include <iostream>
-#include "Sphere.h"
 #include "GameState.h"
 #include <ctime>
 

@@ -29,10 +29,10 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PlayerCube.cpp" />
     <ClCompile Include="src\PlayingState.cpp" />
-    <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TerrainGenerator.cpp" />
     <ClCompile Include="src\Transform.cpp" />
+    <ClCompile Include="src\WorldLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
@@ -44,11 +44,11 @@
     <ClInclude Include="src\lodepng.h" />
     <ClInclude Include="src\PlayerCube.h" />
     <ClInclude Include="src\PlayingState.h" />
-    <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\GameStates.h" />
     <ClInclude Include="src\Terrain.h" />
     <ClInclude Include="src\TerrainGenerator.h" />
     <ClInclude Include="src\Transform.h" />
+    <ClInclude Include="src\WorldLight.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\glsl40_toon.frag">
@@ -57,6 +57,10 @@
     <None Include="shader\glsl40_toon.vert">
       <FileType>Document</FileType>
     </None>
+    <None Include="shader\TerrainShaders\Terrain.frag" />
+    <None Include="shader\TerrainShaders\Terrain.tcs" />
+    <None Include="shader\TerrainShaders\Terrain.tes" />
+    <None Include="shader\TerrainShaders\Terrain.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{469021DE-0F85-4E0C-8A8C-FB1975DF4F65}</ProjectGuid>

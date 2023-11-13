@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Transform.h"
-#include <list>
+#include <vector>
 #include <memory>
 
 using namespace std;
@@ -9,7 +9,7 @@ using namespace std;
 class Entity
 {
 private:
-	list<unique_ptr<Entity>> children;
+	vector<Entity*> children;
 	Entity* parent;
 
 public:
@@ -17,8 +17,7 @@ public:
 
 	Entity(vec3 position, vec3 rotation, vec3 scale);
 
-	template<typename... TArgs>
-	void AddChild(const TArgs&... args);
+	void AddChild(Entity* entity);
 
 	void UpdateSelfAndChildren(bool hasParentChanged);
 

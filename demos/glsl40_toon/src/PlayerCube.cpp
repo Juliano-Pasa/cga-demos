@@ -38,11 +38,13 @@ void PlayerCube::Initialize()
 
 void PlayerCube::Update(double deltaTime)
 {
+	shader.use();
 	UpdateSelfAndChildren(false);
 }
 
 void PlayerCube::Render(mat4 projection, mat4 view)
 {
+	shader.use();
 	mat4 MVPMatrix = projection * view * transform.modelMatrix();
 	shader.setUniform("MVP", MVPMatrix);
 

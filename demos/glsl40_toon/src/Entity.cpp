@@ -8,10 +8,9 @@ Entity::Entity(vec3 position, vec3 rotation, vec3 scale)
 	parent = nullptr;
 }
 
-template<typename... TArgs>
-void Entity::AddChild(const TArgs&... args)
+void Entity::AddChild(Entity* entity)
 {
-	children.emplace_back(std::make_unique<Entity>(args...));
+	children.push_back(entity);
 	children.back()->parent = this;
 }
 
@@ -28,14 +27,14 @@ void Entity::UpdateSelfAndChildren(bool hasParentChanged)
 			transform.ComputeModelMatrix();
 		}
 
-		for (unique_ptr<Entity>& child : children)
+		for (Entity* child : children)
 		{
 			child->UpdateSelfAndChildren(true);
 		}
 		return;
 	}
 
-	for (unique_ptr<Entity>& child : children)
+	for (Entity* child : children)
 	{
 		child->UpdateSelfAndChildren(false);
 	}

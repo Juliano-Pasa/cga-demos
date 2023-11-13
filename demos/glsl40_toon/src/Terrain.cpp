@@ -1,12 +1,14 @@
 #include "Terrain.h"
 #include <iostream>
 
-Terrain::Terrain(int width, int height, int scaleDown, string heightMapPath, string normalMapPath) : Entity(vec3(0), vec3(0), vec3(1))
+Terrain::Terrain(int width, int height, int scaleDown, Camera* camera, string heightMapPath, string normalMapPath) : Entity(vec3(0), vec3(0), vec3(1))
 {
 	this->width = width;
 	this->height = height;
 	this->scaleDown = scaleDown;
 	this->vaoID = 0;
+	this->camera = camera;
+	transform.ComputeModelMatrix();
 }
 
 #pragma region EntityFunctions
@@ -16,6 +18,22 @@ void Terrain::Initialize()
 	GenerateVertices();
 	GenerateBuffers();
 
+	try {
+		shader.compileShader("shader/TerrainShaders/Terrain.vert", GLSLShader::VERTEX);
+		shader.compileShader("shader/TerrainShaders/Terrain.tcs", GLSLShader::TESS_CONTROL);
+		shader.compileShader("shader/TerrainShaders/Terrain.tes", GLSLShader::TESS_EVALUATION);
+		shader.compileShader("shader/TerrainShaders/Terrain.frag", GLSLShader::FRAGMENT);
+
+		shader.link();
+		shader.use();
+	}
+	catch (GLSLProgramException& e) {
+		cerr << e.what() << endl;
+		system("pause");
+		exit(EXIT_FAILURE);
+	}
+	shader.printActiveAttribs();
+
 	textureManager = TextureManager::Inst();
 
 	glActiveTexture(GL_TEXTURE0);
@@ -23,17 +41,35 @@ void Terrain::Initialize()
 		cout << "Failed to load texture." << endl;
 
 	glActiveTexture(GL_TEXTURE1);
-	if (!textureManager->LoadTexture("..\\..\\resources\\normalMap.csv", 1))
+	if (!textureManager->LoadTexture("..\\..\\resources\\normalMap.png", 1))
 		cout << "Failed to load texture." << endl;
 }
 
 void Terrain::Update(double deltaTime)
 {
+	shader.use();
+	shader.setUniform("minTess", 4);
+	shader.setUniform("maxTess", 64);
+	shader.setUniform("maxDist", 100.0f);
+	shader.setUniform("camPos", camera->CameraPosition());
 
+	shader.setUniform("maxHeight", 100.0f);
+	shader.setUniform("heighMapSampler", 0);
+	shader.setUniform("normalMapSampler", 1);
+
+	shader.setUniform("color", vec3(0.36f, 0.96f, 0.6f));
+	shader.setUniform("lightPos", worldLight->GetPosition());
 }
 
 void Terrain::Render(mat4 projection, mat4 view)
 {
+	shader.use();
+	mat4 MVPMatrix = projection * view * transform.modelMatrix();
+	mat3 nm = mat3(glm::inverse(glm::transpose(view * transform.modelMatrix())));
+
+	shader.setUniform("MVP", MVPMatrix);
+	shader.setUniform("NM", nm);
+
 	glActiveTexture(GL_TEXTURE0);
 	textureManager->BindTexture(0);
 	
@@ -52,27 +88,27 @@ void Terrain::Render(mat4 projection, mat4 view)
 
 void Terrain::GenerateVertices()
 {
-	for (int i = 0; i < height; i += scaleDown)
+	int heightLimit = height / scaleDown;
+	int widthLimit = width / scaleDown;
+
+	for (int i = 0; i < heightLimit; i++)
 	{
-		for (int j = 0; j < width; j += scaleDown)
+		for (int j = 0; j < widthLimit; j++)
 		{
-			vertices.push_back(vec3(j, 0, i));
-			texCoords.push_back(vec2(i / (float)(height - 1), j / (float)(width - 1)));
+			vertices.push_back(vec3(j*15, 0, i*15));
+			texCoords.push_back(vec2(i*scaleDown / (float)(height - 1), j*scaleDown / (float)(width - 1)));
 		}
 	}
 
-	int indexHeight = height / scaleDown;
-	int indexWidth = width / scaleDown;
-
-	for (int i = 0; i < indexHeight - 1; i++)
+	for (int i = 0; i < heightLimit - 1; i++)
 	{
-		for (int j = 0; j < indexWidth - 1; j++)
+		for (int j = 0; j < widthLimit - 1; j++)
 		{
-			int startingPoint = i * indexWidth + j;
+			int startingPoint = i * widthLimit + j;
 			indices.push_back(startingPoint);
 			indices.push_back(startingPoint + 1);
-			indices.push_back(startingPoint + indexWidth + 1);
-			indices.push_back(startingPoint + indexWidth);
+			indices.push_back(startingPoint + widthLimit + 1);
+			indices.push_back(startingPoint + widthLimit);
 		}
 	}
 }

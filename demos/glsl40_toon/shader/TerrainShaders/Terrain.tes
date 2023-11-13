@@ -1,0 +1,66 @@
+// TES Shader //
+
+#version 400
+
+layout(quads, equal_spacing, cw) in;
+
+in vec2 tcsTextureCoordinate[];
+
+uniform mat3 NM;
+uniform mat4 MVP;
+uniform vec3 lightPosition;
+uniform sampler2D heightMapSampler;
+uniform sampler2D normalMapSampler;
+uniform float maxHeight;
+
+out vec3 lightDirection;
+out vec3 normalVector;
+
+vec4 CalculateInterpolatedPosition(float u, float v);
+vec2 CalculateInterpolatedTexture(float u, float v);
+
+void main()
+{
+	float u = gl_TessCoord.x;
+	float v = gl_TessCoord.y;
+
+	vec4 interpolatedPosition = CalculateInterpolatedPosition(u, v);
+	vec2 interpolatedTexture = CalculateInterpolatedTexture(u, v);
+
+	float clampedHeight = texture(heightMapSampler, interpolatedTexture).y;
+	interpolatedPosition.y = clampedHeight * maxHeight;
+
+	vec3 normal = texture(normalMapSampler, interpolatedTexture).rgb;
+	normal = normal * 2.0 + 1.0;
+
+	normalVector = NM * normal;
+	gl_Position = MVP * interpolatedPosition;
+	vec4 homoLightPos = MVP * vec4(lightPosition, 1.0);
+	lightDirection = normalize(gl_Position - homoLightPos).xyz;
+}
+
+vec4 CalculateInterpolatedPosition(float u, float v)
+{
+	vec4 p0 = gl_in[0].gl_Position;
+	vec4 p1 = gl_in[1].gl_Position;
+	vec4 p2 = gl_in[2].gl_Position;
+	vec4 p3 = gl_in[3].gl_Position;
+
+	return  p0 * (1 - u) * (1 - v) +
+			p1 * u * (1 - v) +
+			p3 * v * (1 - u) +
+			p2 * u * v;
+}
+
+vec2 CalculateInterpolatedTexture(float u, float v)
+{
+	vec2 t0 = tcsTextureCoordinate[0];
+	vec2 t1 = tcsTextureCoordinate[1];
+	vec2 t2 = tcsTextureCoordinate[2];
+	vec2 t3 = tcsTextureCoordinate[3];
+
+	return	t0 * (1 - u) * (1 - v) +
+			t1 * u * (1 - v) +
+			t3 * v * (1 - u) +
+			t2 * u * v;
+}

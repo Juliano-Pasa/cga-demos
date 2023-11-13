@@ -33,4 +33,5 @@ public:
 	Camera(GLFWwindow* window, vec3 position);
 
 	void Update(double deltaTime);
+	const vec3& CameraPosition();
 };

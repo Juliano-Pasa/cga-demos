@@ -13,7 +13,7 @@ Camera::Camera(GLFWwindow* window, vec3 position)
 
 	this->sensitivity = 0.5f;
 	this->smoothness = 5.0f;
-	this->speed = 5.0f;
+	this->speed = 50.0f;
 	this->freeCamMode = false;
 
 	GenerateViewMatrix();
@@ -27,7 +27,7 @@ void Camera::GenerateViewMatrix()
 	newOrientation = glm::rotate(newOrientation, transform.angles().x, uVector);
 	orientation = glm::normalize(newOrientation);
 
-	vec3 newUp = glm::cross(orientation, uVector);
+	vec3 newUp = glm::cross(uVector, orientation);
 	up = glm::normalize(newUp);
 
 	viewMatrix = glm::lookAt(transform.position(), transform.position() + orientation, up);
@@ -108,8 +108,8 @@ void Camera::ReadMouseInputs()
 	}
 
 	vec3 currentAngles = transform.angles();
-	currentAngles.x += glm::radians((float) delta.y * sensitivity);
-	currentAngles.y += glm::radians((float) delta.x * sensitivity);
+	currentAngles.x -= glm::radians((float) delta.y * sensitivity);
+	currentAngles.y -= glm::radians((float) delta.x * sensitivity);
 
 	float maxVerticalAngle = glm::radians(90.0f);
 	if (currentAngles.x > maxVerticalAngle)
@@ -138,3 +138,9 @@ void Camera::InitTransform(vec3 position)
 }
 
 #pragma endregion
+
+const vec3& Camera::CameraPosition()
+{
+	std::cout << transform.position().y << std::endl;
+	return transform.position();
+}

@@ -5,11 +5,8 @@
     <ClCompile Include="..\..\utils\GLUtils.cpp" />
     <ClCompile Include="..\..\utils\TextureManager.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\GameManager.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Transform.cpp" />
-    <ClCompile Include="src\PlayerCube.cpp" />
     <ClCompile Include="src\PlayingState.cpp">
       <Filter>GameStateMachine</Filter>
     </ClCompile>
@@ -25,15 +22,19 @@
     <ClCompile Include="src\lodepng.cpp">
       <Filter>LodePNG</Filter>
     </ClCompile>
+    <ClCompile Include="src\PlayerCube.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WorldLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
     <ClInclude Include="..\..\utils\TextureManager.h" />
-    <ClInclude Include="src\Sphere.h" />
     <ClInclude Include="src\Transform.h" />
     <ClInclude Include="src\GamerManager.h" />
-    <ClInclude Include="src\Entity.h" />
-    <ClInclude Include="src\PlayerCube.h" />
     <ClInclude Include="src\GameState.h">
       <Filter>GameStateMachine</Filter>
     </ClInclude>
@@ -55,6 +56,13 @@
     <ClInclude Include="src\lodepng.h">
       <Filter>LodePNG</Filter>
     </ClInclude>
+    <ClInclude Include="src\PlayerCube.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WorldLight.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\glsl40_toon.frag">
@@ -62,6 +70,18 @@
     </None>
     <None Include="shader\glsl40_toon.vert">
       <Filter>shaders</Filter>
+    </None>
+    <None Include="shader\TerrainShaders\Terrain.frag">
+      <Filter>shaders\TerrainShaders</Filter>
+    </None>
+    <None Include="shader\TerrainShaders\Terrain.tcs">
+      <Filter>shaders\TerrainShaders</Filter>
+    </None>
+    <None Include="shader\TerrainShaders\Terrain.tes">
+      <Filter>shaders\TerrainShaders</Filter>
+    </None>
+    <None Include="shader\TerrainShaders\Terrain.vert">
+      <Filter>shaders\TerrainShaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +99,12 @@
     </Filter>
     <Filter Include="LodePNG">
       <UniqueIdentifier>{1eb00f5c-0e9e-4625-b371-cdc988989aba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\TerrainShaders">
+      <UniqueIdentifier>{5fada6df-59e3-4e98-b5d4-c3c25dfae370}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{83dd857e-d8a8-450e-949a-52d2376a5481}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

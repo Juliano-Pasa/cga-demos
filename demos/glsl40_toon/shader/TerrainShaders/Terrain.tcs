@@ -1,0 +1,69 @@
+// TCS Shader //
+
+#version 400
+
+layout (vertices = 4) out;
+
+in vec2 vTextureCoordinate[];
+
+uniform vec3 camPos;
+uniform int minTess;
+uniform int maxTess;
+uniform float maxDist;
+
+out vec2 tcsTextureCoordinate[];
+
+#define ID gl_InvocationID
+
+void ReactToCamera();
+void Preset();
+
+void main()
+{
+	tcsTextureCoordinate[ID] = vTextureCoordinate[ID];
+	gl_out[ID].gl_Position = gl_in[ID].gl_Position;
+
+	if (ID == 0)
+	{
+		//ReactToCamera();
+		Preset();
+	}
+}
+
+void Preset()
+{
+	gl_TessLevelOuter[0] = 10;
+	gl_TessLevelOuter[1] = 10;
+	gl_TessLevelOuter[2] = 10;
+	gl_TessLevelOuter[3] = 10;
+	gl_TessLevelInner[0] = 10;
+	gl_TessLevelInner[1] = 10;
+}
+
+void ReactToCamera()
+{
+	vec4 homoCamPos = vec4(camPos, 1.0f);
+
+	vec4 edge0 = (gl_in[0].gl_Position + gl_in[1].gl_Position) / 2.0f; // Top
+	vec4 edge1 = (gl_in[1].gl_Position + gl_in[2].gl_Position) / 2.0f; // Right
+	vec4 edge2 = (gl_in[2].gl_Position + gl_in[3].gl_Position) / 2.0f; // Bottom
+	vec4 edge3 = (gl_in[3].gl_Position + gl_in[0].gl_Position) / 2.0f; // Left
+
+	float dist0 = length(homoCamPos - edge0);
+	float dist1 = length(homoCamPos - edge1);
+	float dist2 = length(homoCamPos - edge2);
+	float dist3 = length(homoCamPos - edge3);
+
+	int tess0 = int(mix(maxTess, minTess, clamp(dist0/maxDist, 0.0, 1.0)));
+	int tess1 = int(mix(maxTess, minTess, clamp(dist1/maxDist, 0.0, 1.0)));
+	int tess2 = int(mix(maxTess, minTess, clamp(dist2/maxDist, 0.0, 1.0)));
+	int tess3 = int(mix(maxTess, minTess, clamp(dist3/maxDist, 0.0, 1.0)));
+
+	gl_TessLevelOuter[0] = tess3; // Left
+	gl_TessLevelOuter[1] = tess0; // Top
+	gl_TessLevelOuter[2] = tess1; // Right
+	gl_TessLevelOuter[3] = tess2; // Bottom
+
+	gl_TessLevelInner[0] = max(tess0, tess2);
+	gl_TessLevelInner[1] = max(tess1, tess3);
+}
