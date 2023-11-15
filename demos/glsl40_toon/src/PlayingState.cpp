@@ -27,18 +27,22 @@ void PlayingState::OnStart()
 {
 	camera = new Camera(window, vec3(128, 200, 128));
 	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)windowWidth/(float)windowHeight, 0.1f, 500.0f);
-	worldLight = new WorldLight(vec3(1, 1, 1), vec3(133, 200, 129));
+	worldLight = new WorldLight(vec3(1, 1, 1), vec3(0, 200, 0));
 
 	InitializeGL();
 	InitializeTerrain();
 
 	srand((unsigned)time(NULL));
 
-	entities.push_back(new PlayerCube(vec3(133, 200, 129), vec3(0, 0, 0), vec3(1)));
+	PlayerCube* cube = new PlayerCube(vec3(133, 200, 129), vec3(0, 0, 0), vec3(1.1));
+	cube->worldLight = worldLight;
+	entities.push_back(cube);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
 
-	entities.push_back(new PlayerCube(vec3(133, 200, 127), vec3(0, 0, 0), vec3(1)));
+	PlayerCube* cube2 = new PlayerCube(vec3(133, 200, 127), vec3(0, 0, 0), vec3(1));
+	cube2->worldLight = worldLight;
+	entities.push_back(cube2);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
 
@@ -135,7 +139,7 @@ void PlayingState::InitializeTerrain()
 	terrainGenerator.WriteNormalMapToPNG(normalMapPath);
 
 	int dimensions = (int)pow(2, mapSize) + 1;
-	terrain = new Terrain(dimensions, dimensions, 2, camera, heightMapPath, normalMapPath);
+	terrain = new Terrain(dimensions, dimensions, 1, camera, heightMapPath, normalMapPath);
 	terrain->worldLight = worldLight;
 	terrain->Initialize();
 	entities.push_back(terrain);

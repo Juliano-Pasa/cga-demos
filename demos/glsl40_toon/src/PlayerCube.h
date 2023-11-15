@@ -3,6 +3,7 @@
 #include "glslprogram.h"
 #include "Entity.h"
 #include "Transform.h"
+#include "WorldLight.h"
 #include <vector>
 
 using namespace std;
@@ -26,6 +27,8 @@ private:
 
 public:
 	PlayerCube(vec3 position, vec3 rotation, vec3 scale);
+
+	WorldLight* worldLight;
 
 	void Initialize();
 	void Update(double deltaTime);

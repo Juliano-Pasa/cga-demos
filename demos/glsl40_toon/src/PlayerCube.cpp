@@ -51,7 +51,7 @@ void PlayerCube::Render(mat4 projection, mat4 view)
 	mat3 nm = mat3(glm::inverse(glm::transpose(view * transform.modelMatrix())));
 	shader.setUniform("NormalMatrix", nm);
 	
-	shader.setUniform("LightDir", glm::normalize(lightPos - transform.position()));
+	shader.setUniform("LightDir", glm::normalize(worldLight->GetPosition() - transform.position()));
 
 	glBindVertexArray(vaoID);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (GLubyte*)NULL);
