@@ -1,4 +1,5 @@
 #include "WorldLight.h"
+#include <iostream>
 
 WorldLight::WorldLight(vec3 color, vec3 position) : Entity(position, vec3(0), vec3(1))
 {

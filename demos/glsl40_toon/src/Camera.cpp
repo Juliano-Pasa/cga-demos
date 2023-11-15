@@ -141,6 +141,5 @@ void Camera::InitTransform(vec3 position)
 
 const vec3& Camera::CameraPosition()
 {
-	std::cout << transform.position().y << std::endl;
 	return transform.position();
 }

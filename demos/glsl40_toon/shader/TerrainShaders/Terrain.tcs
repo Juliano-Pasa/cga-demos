@@ -32,12 +32,12 @@ void main()
 
 void Preset()
 {
-	gl_TessLevelOuter[0] = 10;
-	gl_TessLevelOuter[1] = 10;
-	gl_TessLevelOuter[2] = 10;
-	gl_TessLevelOuter[3] = 10;
-	gl_TessLevelInner[0] = 10;
-	gl_TessLevelInner[1] = 10;
+	gl_TessLevelOuter[0] = 100;
+	gl_TessLevelOuter[1] = 100;
+	gl_TessLevelOuter[2] = 100;
+	gl_TessLevelOuter[3] = 100;
+	gl_TessLevelInner[0] = 100;
+	gl_TessLevelInner[1] = 100;
 }
 
 void ReactToCamera()

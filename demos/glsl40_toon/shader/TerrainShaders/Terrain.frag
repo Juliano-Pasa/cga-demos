@@ -19,8 +19,14 @@ void main()
 	else if (intensity > 0.25)
 		changedColor = color * vec3(0.2,0.2,0.2);
 	else
-		changedColor = color * vec3(0.1,0.1,0.1);	
+		changedColor = vec3(1.0, 0.0, 0.0) * vec3(0.1,0.1,0.1);	
 		
-	//changedColor = color * vec3(intensity, intensity, intensity);
+	changedColor = color * vec3(intensity, intensity, intensity);
+
+	if (color.x < 0.35)
+	{
+		changedColor = color;
+	}
+
 	gl_FragColor = vec4(changedColor, 1.0);
 }

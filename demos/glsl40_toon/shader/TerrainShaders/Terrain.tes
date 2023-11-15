@@ -8,7 +8,7 @@ in vec2 tcsTextureCoordinate[];
 
 uniform mat3 NM;
 uniform mat4 MVP;
-uniform vec3 lightPosition;
+uniform vec3 lightPos;
 uniform sampler2D heightMapSampler;
 uniform sampler2D normalMapSampler;
 uniform float maxHeight;
@@ -31,12 +31,12 @@ void main()
 	interpolatedPosition.y = clampedHeight * maxHeight;
 
 	vec3 normal = texture(normalMapSampler, interpolatedTexture).rgb;
-	normal = normal * 2.0 + 1.0;
+	normal = normal * 2.0 - 1.0;
 
-	normalVector = NM * normal;
+	normalVector = normalize(NM * normal);
+	lightDirection = normalize(lightPos - gl_Position.xyz);
+
 	gl_Position = MVP * interpolatedPosition;
-	vec4 homoLightPos = MVP * vec4(lightPosition, 1.0);
-	lightDirection = normalize(gl_Position - homoLightPos).xyz;
 }
 
 vec4 CalculateInterpolatedPosition(float u, float v)

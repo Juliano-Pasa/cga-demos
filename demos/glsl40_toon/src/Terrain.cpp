@@ -90,25 +90,26 @@ void Terrain::GenerateVertices()
 {
 	int heightLimit = height / scaleDown;
 	int widthLimit = width / scaleDown;
+	float size = 50.0f;
 
-	for (int i = 0; i < heightLimit; i++)
+	for (int i = 0; i < scaleDown + 1; i++)
 	{
-		for (int j = 0; j < widthLimit; j++)
+		for (int j = 0; j < scaleDown + 1; j++)
 		{
-			vertices.push_back(vec3(j*15, 0, i*15));
-			texCoords.push_back(vec2(i*scaleDown / (float)(height - 1), j*scaleDown / (float)(width - 1)));
+			vertices.push_back(vec3(j * widthLimit, 0, i * heightLimit));
+			texCoords.push_back(vec2(i / float(scaleDown), j / float(scaleDown)));
 		}
 	}
 
-	for (int i = 0; i < heightLimit - 1; i++)
+	for (int i = 0; i < scaleDown; i++)
 	{
-		for (int j = 0; j < widthLimit - 1; j++)
+		for (int j = 0; j < scaleDown; j++)
 		{
-			int startingPoint = i * widthLimit + j;
+			int startingPoint = i * (scaleDown + 1) + j;
 			indices.push_back(startingPoint);
 			indices.push_back(startingPoint + 1);
-			indices.push_back(startingPoint + widthLimit + 1);
-			indices.push_back(startingPoint + widthLimit);
+			indices.push_back(startingPoint + scaleDown + 2);
+			indices.push_back(startingPoint + scaleDown + 1);
 		}
 	}
 }

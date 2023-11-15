@@ -37,12 +37,10 @@ void TerrainGenerator::GenerateDiamondSquare()
 		{
 			for (size_t j = 0; j < size - 1; j += currentSize - 1)
 			{
-				//cout << "teste";
 				DiamondStep(i, j, currentSize - 1);
 			}
 		}
 
-		//cout << "aaa";
 		int centerOffset = currentSize / 2;
 		int start = centerOffset;
 
@@ -125,33 +123,33 @@ void TerrainGenerator::GenerateNormalMap()
 
 vec3 TerrainGenerator::CalculateNormal(int i, int j)
 {
-	vec3 midPoint = vec3(j, map[i][j], i);
-	vec3 up = midPoint;
-	vec3 down = midPoint;
-	vec3 right = midPoint;
-	vec3 left = midPoint;
+	int midPoint = map[i][j];
+	int up = map[i][j];
+	int  down = map[i][j];
+	int right = map[i][j];
+	int  left = map[i][j];
 
 	if (i - 1 >= 0)
 	{
-		up = vec3(j, map[i - 1][j], i - 1);
+		up = map[i - 1][j];
 	}
 	if (i + 1 < size)
 	{
-		down = vec3(j, map[i + 1][j], i + 1);
+		down = map[i + 1][j];
 	}
 	if (j - 1 >= 0)
 	{
-		left = vec3(j - 1, map[i][j - 1], i);
+		left = map[i][j - 1];
 	}
 	if (j + 1 < size)
 	{
-		right = vec3(j + 1, map[i][j + 1], i);
+		right = map[i][j + 1];
 	}
 
-	vec3 zVec = up - down;
-	vec3 xVec = right - left;
+	int zVec = up - down;
+	int xVec = right - left;
 
-	return glm::normalize(glm::cross(zVec, xVec));
+	return glm::normalize(vec3(2 * xVec, 4, 2 * zVec));
 }
 
 string TerrainGenerator::NormalToString(vec3 normal)
@@ -234,7 +232,7 @@ void TerrainGenerator::WriteNormalMapToPNG(string path)
 		for (size_t j = 0; j < normalMap[i].size(); j++)
 		{
 			vec3 current = normalMap[i][j];
-			current = current * 255.0f;
+			current = (current + vec3(1)) / 2.0f * 255.0f;
 			image.push_back((unsigned char)current.x); // R
 			image.push_back((unsigned char)current.y); // G
 			image.push_back((unsigned char)current.z); // B
