@@ -105,6 +105,16 @@ void TerrainGenerator::SquareStep(int i, int j, int centerOffset)
 
 #pragma endregion
 
+void TerrainGenerator::GenerateTestFunction()
+{
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = 0; j < size; j++)
+		{
+			map[i][j] = (unsigned int) (i + j)/2;
+		}
+	}
+}
 
 #pragma region NormalMapFunctions
 
@@ -149,7 +159,7 @@ vec3 TerrainGenerator::CalculateNormal(int i, int j)
 	int zVec = up - down;
 	int xVec = right - left;
 
-	return glm::normalize(vec3(2 * xVec, 4, 2 * zVec));
+	return glm::normalize(vec3(2 * zVec, 4, 2 * xVec));
 }
 
 string TerrainGenerator::NormalToString(vec3 normal)

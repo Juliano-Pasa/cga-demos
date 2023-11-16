@@ -25,7 +25,7 @@ PlayingState::PlayingState(GLFWwindow* window) : GameState()
 
 void PlayingState::OnStart()
 {
-	camera = new Camera(window, vec3(128, 200, 128));
+	camera = new Camera(window, vec3(0, 200, 0 ));
 	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)windowWidth/(float)windowHeight, 0.1f, 500.0f);
 	worldLight = new WorldLight(vec3(1, 1, 1), vec3(0, 200, 0));
 
@@ -129,17 +129,15 @@ void PlayingState::InitializeGL()
 void PlayingState::InitializeTerrain()
 {
 	int mapSize = 8;
-	TerrainGenerator terrainGenerator = TerrainGenerator(mapSize, vector<unsigned char>{128, 128, 128, 128}, 512, 0.9f, 42);
+	TerrainGenerator terrainGenerator = TerrainGenerator(mapSize, vector<unsigned char>{128, 128, 128, 128}, 256, 0.9f, 42);
 	string heightMapPath = "..\\..\\resources\\heightMap.png";
 	string normalMapPath = "..\\..\\resources\\normalMap.png";
 
 	terrainGenerator.GenerateDiamondSquare();
 	terrainGenerator.WriteHeightMapToPNG(heightMapPath);
-	terrainGenerator.GenerateNormalMap();
-	terrainGenerator.WriteNormalMapToPNG(normalMapPath);
 
 	int dimensions = (int)pow(2, mapSize) + 1;
-	terrain = new Terrain(dimensions, dimensions, 1, camera, heightMapPath, normalMapPath);
+	terrain = new Terrain(dimensions, dimensions, 5, camera, heightMapPath, normalMapPath);
 	terrain->worldLight = worldLight;
 	terrain->Initialize();
 	entities.push_back(terrain);

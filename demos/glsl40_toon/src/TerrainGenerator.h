@@ -28,6 +28,7 @@ public:
 	TerrainGenerator(int power, vector<unsigned char> initialValues, int scale, float smoothness, float seed);
 	void GenerateDiamondSquare();
 	void GenerateNormalMap();
+	void GenerateTestFunction();
 	void PrintMap();
 	void WriteHeightMapToCSV(string path);
 	void WriteNormalMapToCSV(string path);

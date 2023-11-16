@@ -25,8 +25,8 @@ void main()
 
 	if (ID == 0)
 	{
-		//ReactToCamera();
-		Preset();
+		ReactToCamera();
+		//Preset();
 	}
 }
 

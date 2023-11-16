@@ -6,6 +6,7 @@ Entity::Entity(vec3 position, vec3 rotation, vec3 scale)
 	transform.angles(rotation);
 	transform.scale(scale);
 	parent = nullptr;
+	transform.ComputeModelMatrix();
 }
 
 void Entity::AddChild(Entity* entity)

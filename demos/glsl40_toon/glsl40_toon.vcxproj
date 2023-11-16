@@ -58,6 +58,7 @@
       <FileType>Document</FileType>
     </None>
     <None Include="shader\TerrainShaders\Terrain.frag" />
+    <None Include="shader\TerrainShaders\Terrain.geom" />
     <None Include="shader\TerrainShaders\Terrain.tcs" />
     <None Include="shader\TerrainShaders\Terrain.tes" />
     <None Include="shader\TerrainShaders\Terrain.vert" />

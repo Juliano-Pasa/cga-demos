@@ -52,6 +52,8 @@ void PlayerCube::Render(mat4 projection, mat4 view)
 	shader.setUniform("NormalMatrix", nm);
 	
 	shader.setUniform("LightDir", glm::normalize(worldLight->GetPosition() - transform.position()));
+	shader.setUniform("ModelMatrix", transform.modelMatrix());
+	shader.setUniform("lightPos", worldLight->GetPosition());
 
 	glBindVertexArray(vaoID);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (GLubyte*)NULL);
@@ -168,6 +170,15 @@ void PlayerCube::GenSphere() {
 	//init colors
 	for (int i = 0; i < vertices.size(); i++) {
 		colors.push_back(vec3(r, g, b));
+	}
+
+	transform.ComputeModelMatrix();
+	for (size_t i = 0; i < vertices.size(); i++)
+	{
+		vec3 x = vertices[i];
+		vec3 n = normals[i];
+		vec4 model = glm::normalize(vec4(worldLight->GetPosition(), 1) - (transform.modelMatrix() * vec4(x, 1)));
+
 	}
 }
 

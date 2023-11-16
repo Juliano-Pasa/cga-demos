@@ -2,14 +2,14 @@
 
 #version 400
 
-in vec3 lightDirection;
-in vec3 normalVector;
+in vec3 geoLightDirection;
+in vec3 geoNormal;
 
 uniform vec3 color;
 
 void main()
 {
-	float intensity = max(dot(lightDirection, normalVector), 0.0);
+	float intensity = max(dot(geoLightDirection, geoNormal), 0.0);
 	vec3 changedColor = color;
 
 	if (intensity > 0.98)
@@ -20,8 +20,6 @@ void main()
 		changedColor = color * vec3(0.2,0.2,0.2);
 	else
 		changedColor = color * vec3(0.1,0.1,0.1);	
-		
-	changedColor = color * vec3(intensity, intensity, intensity);
 
 	gl_FragColor = vec4(changedColor, 1.0);
 }

@@ -6,15 +6,13 @@ layout(quads, equal_spacing, cw) in;
 
 in vec2 tcsTextureCoordinate[];
 
-uniform mat3 NM;
 uniform mat4 MVP;
+uniform mat4 modelMatrix;
 uniform vec3 lightPos;
 uniform sampler2D heightMapSampler;
-uniform sampler2D normalMapSampler;
 uniform float maxHeight;
 
-out vec3 lightDirection;
-out vec3 normalVector;
+out vec3 tesLightDirection;
 
 vec4 CalculateInterpolatedPosition(float u, float v);
 vec2 CalculateInterpolatedTexture(float u, float v);
@@ -29,14 +27,9 @@ void main()
 
 	float clampedHeight = texture(heightMapSampler, interpolatedTexture).y;
 	interpolatedPosition.y = clampedHeight * maxHeight;
+	tesLightDirection = normalize(lightPos - interpolatedPosition.xyz);
 
-	vec3 normal = texture(normalMapSampler, interpolatedTexture).rgb;
-	normal = normal * 2.0 - 1.0;
-
-	normalVector = normal;
-	lightDirection = normalize(lightPos - interpolatedPosition.xyz);
-
-	gl_Position = MVP * interpolatedPosition;
+	gl_Position = interpolatedPosition;
 }
 
 vec4 CalculateInterpolatedPosition(float u, float v)

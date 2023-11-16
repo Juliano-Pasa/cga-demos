@@ -83,6 +83,9 @@
     <None Include="shader\TerrainShaders\Terrain.vert">
       <Filter>shaders\TerrainShaders</Filter>
     </None>
+    <None Include="shader\TerrainShaders\Terrain.geom">
+      <Filter>shaders\TerrainShaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="shaders">

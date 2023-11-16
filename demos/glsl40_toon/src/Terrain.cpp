@@ -8,7 +8,6 @@ Terrain::Terrain(int width, int height, int scaleDown, Camera* camera, string he
 	this->scaleDown = scaleDown;
 	this->vaoID = 0;
 	this->camera = camera;
-	transform.ComputeModelMatrix();
 }
 
 #pragma region EntityFunctions
@@ -22,6 +21,7 @@ void Terrain::Initialize()
 		shader.compileShader("shader/TerrainShaders/Terrain.vert", GLSLShader::VERTEX);
 		shader.compileShader("shader/TerrainShaders/Terrain.tcs", GLSLShader::TESS_CONTROL);
 		shader.compileShader("shader/TerrainShaders/Terrain.tes", GLSLShader::TESS_EVALUATION);
+		shader.compileShader("shader/TerrainShaders/Terrain.geom", GLSLShader::GEOMETRY);
 		shader.compileShader("shader/TerrainShaders/Terrain.frag", GLSLShader::FRAGMENT);
 
 		shader.link();
@@ -39,23 +39,18 @@ void Terrain::Initialize()
 	glActiveTexture(GL_TEXTURE0);
 	if (!textureManager->LoadTexture("..\\..\\resources\\heightMap.png", 0))
 		cout << "Failed to load texture." << endl;
-
-	glActiveTexture(GL_TEXTURE1);
-	if (!textureManager->LoadTexture("..\\..\\resources\\normalMap.png", 1))
-		cout << "Failed to load texture." << endl;
 }
 
 void Terrain::Update(double deltaTime)
 {
 	shader.use();
-	shader.setUniform("minTess", 4);
-	shader.setUniform("maxTess", 64);
+	shader.setUniform("minTess", 16);
+	shader.setUniform("maxTess", 128);
 	shader.setUniform("maxDist", 100.0f);
 	shader.setUniform("camPos", camera->CameraPosition());
 
 	shader.setUniform("maxHeight", 100.0f);
 	shader.setUniform("heighMapSampler", 0);
-	shader.setUniform("normalMapSampler", 1);
 
 	shader.setUniform("color", vec3(0.36f, 0.96f, 0.6f));
 	shader.setUniform("lightPos", worldLight->GetPosition());

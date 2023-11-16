@@ -5,15 +5,14 @@
 
 in vec3 Color;
 in vec3 Normal;
-
-uniform vec3 LightDir;
+in vec4 lightDir;
 
 void main() 
 {
 	float intensity;
 	vec4 color;
 
-	intensity = max(dot(LightDir, Normal), 0.0); 
+	intensity = max(dot(lightDir, vec4(Normal, 1)), 0.0); 
 	
 	if (intensity > 0.98)
 		color = vec4(Color,1.0) * vec4(0.9,0.9,0.9,1.0);
