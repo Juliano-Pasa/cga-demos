@@ -21,5 +21,7 @@ void main()
 	else
 		changedColor = color * vec3(0.1,0.1,0.1);	
 
+	changedColor = color * vec3(intensity, intensity, intensity);
+
 	gl_FragColor = vec4(changedColor, 1.0);
 }

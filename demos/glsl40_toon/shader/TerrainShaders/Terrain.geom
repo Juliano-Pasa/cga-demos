@@ -7,7 +7,7 @@ layout(triangle_strip, max_vertices = 10) out;
 
 in vec3 tesLightDirection[];
 
-uniform mat4 MVP;
+uniform mat4 VP;
 
 out vec3 geoNormal;
 out vec3 geoLightDirection;
@@ -21,12 +21,12 @@ vec3 CalculateNormal()
 
 void DrawNormal(vec3 normal)
 {
-	gl_Position = MVP * gl_in[0].gl_Position;
+	gl_Position = VP * gl_in[0].gl_Position;
 	geoNormal = normal;
 	geoLightDirection = tesLightDirection[0];
 	EmitVertex();
 
-	gl_Position = MVP * (gl_in[0].gl_Position + vec4(normal, 0.0));
+	gl_Position = VP * (gl_in[0].gl_Position + vec4(normal, 0.0));
 	geoNormal = normal;
 	geoLightDirection = tesLightDirection[0];
 	EmitVertex();
@@ -37,17 +37,17 @@ void main()
 {
 	vec3 normalVector = CalculateNormal();
 
-	gl_Position = MVP * gl_in[0].gl_Position;
+	gl_Position = VP * gl_in[0].gl_Position;
 	geoNormal = normalVector;
 	geoLightDirection = tesLightDirection[0];
 	EmitVertex();
 
-	gl_Position = MVP * gl_in[1].gl_Position;
+	gl_Position = VP * gl_in[1].gl_Position;
 	geoNormal = normalVector;
 	geoLightDirection = tesLightDirection[1];
 	EmitVertex();
 
-	gl_Position = MVP * gl_in[2].gl_Position;
+	gl_Position = VP * gl_in[2].gl_Position;
 	geoNormal = normalVector;
 	geoLightDirection = tesLightDirection[2];
 	EmitVertex();

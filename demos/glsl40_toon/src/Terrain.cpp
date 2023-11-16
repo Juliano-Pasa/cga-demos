@@ -46,7 +46,7 @@ void Terrain::Update(double deltaTime)
 	shader.use();
 	shader.setUniform("minTess", 16);
 	shader.setUniform("maxTess", 128);
-	shader.setUniform("maxDist", 100.0f);
+	shader.setUniform("maxDist", 250.0f);
 	shader.setUniform("camPos", camera->CameraPosition());
 
 	shader.setUniform("maxHeight", 100.0f);
@@ -59,10 +59,11 @@ void Terrain::Update(double deltaTime)
 void Terrain::Render(mat4 projection, mat4 view)
 {
 	shader.use();
-	mat4 MVPMatrix = projection * view * transform.modelMatrix();
+	mat4 VPMatrix = projection * view;
 	mat3 nm = mat3(glm::inverse(glm::transpose(view * transform.modelMatrix())));
 
-	shader.setUniform("MVP", MVPMatrix);
+	shader.setUniform("VP", VPMatrix);
+	shader.setUniform("M", transform.modelMatrix());
 	shader.setUniform("NM", nm);
 
 	glActiveTexture(GL_TEXTURE0);
