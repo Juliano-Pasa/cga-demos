@@ -27,6 +27,8 @@ public:
 	float sensitivity;
 	float smoothness;
 	float speed;
+	float baseSpeed;
+	float acceleration;
 
 	mat4 viewMatrix;
 	

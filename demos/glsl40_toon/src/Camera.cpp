@@ -13,7 +13,9 @@ Camera::Camera(GLFWwindow* window, vec3 position)
 
 	this->sensitivity = 0.5f;
 	this->smoothness = 5.0f;
-	this->speed = 50.0f;
+	this->baseSpeed = 300.0f;
+	this->speed = baseSpeed;
+	this->acceleration = 250.0f;
 	this->freeCamMode = false;
 
 	GenerateViewMatrix();
@@ -69,15 +71,24 @@ void Camera::ReadKeyboardInputs(float deltaTime)
 	{
 		transform.position(transform.position() + speed * deltaTime * glm::normalize(glm::cross(orientation, up)));
 	}
+
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
 		freeCamMode = true;
 	}
-
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE)
 	{
 		freeCamMode = false;
 		firstMouseMove = true;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+	{
+		speed = baseSpeed + acceleration;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+	{
+		speed = baseSpeed - acceleration;
 	}
 }
 

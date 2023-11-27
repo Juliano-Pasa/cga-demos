@@ -1,11 +1,11 @@
 #include "Terrain.h"
 #include <iostream>
 
-Terrain::Terrain(int width, int height, int scaleDown, Camera* camera, string heightMapPath, string normalMapPath) : Entity(vec3(0), vec3(0), vec3(1))
+Terrain::Terrain(int width, int height, int totalPatches, Camera* camera, string heightMapPath, string normalMapPath) : Entity(vec3(0), vec3(0), vec3(1))
 {
 	this->width = width;
 	this->height = height;
-	this->scaleDown = scaleDown;
+	this->totalPatches = totalPatches;
 	this->vaoID = 0;
 	this->camera = camera;
 }
@@ -44,10 +44,7 @@ void Terrain::Initialize()
 void Terrain::Update(double deltaTime)
 {
 	shader.use();
-	shader.setUniform("minTess", 16);
-	shader.setUniform("maxTess", 128);
-	shader.setUniform("maxDist", 250.0f);
-	shader.setUniform("camPos", camera->CameraPosition());
+	shader.setUniform("tessLevel", 64);
 
 	shader.setUniform("maxHeight", 100.0f);
 	shader.setUniform("heighMapSampler", 0);
@@ -60,11 +57,9 @@ void Terrain::Render(mat4 projection, mat4 view)
 {
 	shader.use();
 	mat4 VPMatrix = projection * view;
-	mat3 nm = mat3(glm::inverse(glm::transpose(view * transform.modelMatrix())));
 
 	shader.setUniform("VP", VPMatrix);
 	shader.setUniform("M", transform.modelMatrix());
-	shader.setUniform("NM", nm);
 
 	glActiveTexture(GL_TEXTURE0);
 	textureManager->BindTexture(0);
@@ -84,28 +79,28 @@ void Terrain::Render(mat4 projection, mat4 view)
 
 void Terrain::GenerateVertices()
 {
-	int heightLimit = height / scaleDown;
-	int widthLimit = width / scaleDown;
+	int heightLimit = height / totalPatches;
+	int widthLimit = width / totalPatches;
 	float size = 50.0f;
 
-	for (int i = 0; i < scaleDown + 1; i++)
+	for (int i = 0; i < totalPatches + 1; i++)
 	{
-		for (int j = 0; j < scaleDown + 1; j++)
+		for (int j = 0; j < totalPatches + 1; j++)
 		{
 			vertices.push_back(vec3(j * widthLimit, 0, i * heightLimit));
-			texCoords.push_back(vec2(i / float(scaleDown), j / float(scaleDown)));
+			texCoords.push_back(vec2(i / float(totalPatches + 1), j / float(totalPatches + 1)));
 		}
 	}
 
-	for (int i = 0; i < scaleDown; i++)
+	for (int i = 0; i < totalPatches; i++)
 	{
-		for (int j = 0; j < scaleDown; j++)
+		for (int j = 0; j < totalPatches; j++)
 		{
-			int startingPoint = i * (scaleDown + 1) + j;
+			int startingPoint = i * (totalPatches + 1) + j;
 			indices.push_back(startingPoint);
 			indices.push_back(startingPoint + 1);
-			indices.push_back(startingPoint + scaleDown + 2);
-			indices.push_back(startingPoint + scaleDown + 1);
+			indices.push_back(startingPoint + totalPatches + 2);
+			indices.push_back(startingPoint + totalPatches + 1);
 		}
 	}
 }

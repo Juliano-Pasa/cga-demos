@@ -14,7 +14,7 @@ class Terrain : public Entity
 private:
 	int width;
 	int height;
-	int scaleDown;
+	int totalPatches;
 
 	GLuint vaoID;
 
@@ -31,7 +31,7 @@ private:
 	void GenerateBuffers();
 
 public:
-	Terrain(int width, int height, int scaleDown, Camera* camera, string heightMapPath, string normalMapPath);
+	Terrain(int width, int height, int totalPatches, Camera* camera, string heightMapPath, string normalMapPath);
 
 	void Initialize();
 	void Update(double deltaTime);
