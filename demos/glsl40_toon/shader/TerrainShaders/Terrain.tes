@@ -6,7 +6,6 @@ layout(quads, equal_spacing, cw) in;
 
 in vec2 tcsTextureCoordinate[];
 
-uniform mat4 MVP;
 uniform vec3 lightPos;
 uniform sampler2D heightMapSampler;
 uniform float maxHeight;
@@ -25,7 +24,7 @@ void main()
 	vec2 interpolatedTexture = CalculateInterpolatedTexture(u, v);
 
 	float clampedHeight = texture(heightMapSampler, interpolatedTexture).y;
-	interpolatedPosition.y = clampedHeight * maxHeight;
+	//interpolatedPosition.y = clampedHeight * maxHeight;
 	tesLightDirection = normalize(lightPos - interpolatedPosition.xyz);
 
 	gl_Position = interpolatedPosition;

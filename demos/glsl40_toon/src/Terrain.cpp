@@ -1,5 +1,7 @@
 #include "Terrain.h"
+#include <fstream>
 #include <iostream>
+#include <sstream>
 
 Terrain::Terrain(int width, int height, int totalPatches, Camera* camera, string heightMapPath, string normalMapPath) : Entity(vec3(0), vec3(0), vec3(1))
 {
@@ -44,7 +46,7 @@ void Terrain::Initialize()
 void Terrain::Update(double deltaTime)
 {
 	shader.use();
-	shader.setUniform("tessLevel", 64);
+	shader.setUniform("tessLevel", 8);
 
 	shader.setUniform("maxHeight", 100.0f);
 	shader.setUniform("heighMapSampler", 0);
@@ -79,15 +81,19 @@ void Terrain::Render(mat4 projection, mat4 view)
 
 void Terrain::GenerateVertices()
 {
-	int heightLimit = height / totalPatches;
-	int widthLimit = width / totalPatches;
-	float size = 50.0f;
+	int totalPatches = 256;
+	int heightLimit = (height - 1) / totalPatches;
+	int widthLimit = (width - 1) / totalPatches;
+
+	float size = 10.0f;
+
+	vector<vector<float>> heightMap = ReadHeightMap("..\\..\\resources\\heightMap.csv");
 
 	for (int i = 0; i < totalPatches + 1; i++)
 	{
 		for (int j = 0; j < totalPatches + 1; j++)
 		{
-			vertices.push_back(vec3(j * widthLimit, 0, i * heightLimit));
+			vertices.push_back(vec3(j * widthLimit * size, heightMap[i * heightLimit][j * widthLimit], i * heightLimit * size));
 			texCoords.push_back(vec2(i / float(totalPatches + 1), j / float(totalPatches + 1)));
 		}
 	}
@@ -127,6 +133,36 @@ void Terrain::GenerateBuffers()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), (GLvoid*)&indices[0], GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
+}
+
+#pragma endregion
+
+#pragma region ReadMaps
+
+vector<vector<float>> Terrain::ReadHeightMap(string mapPath)
+{
+	ifstream file;
+	file.open(mapPath);
+
+	vector<vector<float>> map;
+	vector<float> row;
+	string line, word;
+
+	while (getline(file, line))
+	{
+		row.clear();
+
+		stringstream str(line);
+
+		while (getline(str, word, ','))
+		{
+			row.push_back(stof(word));
+		}
+		map.push_back(row);
+	}
+	file.close();
+
+	return map;
 }
 
 #pragma endregion
