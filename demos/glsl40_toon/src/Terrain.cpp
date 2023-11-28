@@ -81,11 +81,11 @@ void Terrain::Render(mat4 projection, mat4 view)
 
 void Terrain::GenerateVertices()
 {
-	int totalPatches = 256;
+	float maxHeight = 255.0f;
+	float size = 1.0f;
+
 	int heightLimit = (height - 1) / totalPatches;
 	int widthLimit = (width - 1) / totalPatches;
-
-	float size = 10.0f;
 
 	vector<vector<float>> heightMap = ReadHeightMap("..\\..\\resources\\heightMap.csv");
 
@@ -93,8 +93,7 @@ void Terrain::GenerateVertices()
 	{
 		for (int j = 0; j < totalPatches + 1; j++)
 		{
-			vertices.push_back(vec3(j * widthLimit * size, heightMap[i * heightLimit][j * widthLimit], i * heightLimit * size));
-			texCoords.push_back(vec2(i / float(totalPatches + 1), j / float(totalPatches + 1)));
+			vertices.push_back(vec3(j * widthLimit * totalPatches, heightMap[i * heightLimit][j * widthLimit] * maxHeight, i * heightLimit * totalPatches));
 		}
 	}
 
@@ -116,20 +115,15 @@ void Terrain::GenerateBuffers()
 	glGenVertexArrays(1, &vaoID);
 	glBindVertexArray(vaoID);
 
-	unsigned int handle[3];
-	glGenBuffers(3, handle);
+	unsigned int handle[2];
+	glGenBuffers(2, handle);
 
 	glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec3), (GLvoid*)&vertices[0], GL_STATIC_DRAW);
 	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
 	glEnableVertexAttribArray(0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
-	glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(vec2), (GLvoid*)&texCoords[0], GL_STATIC_DRAW);
-	glVertexAttribPointer((GLuint)1, 2, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
-	glEnableVertexAttribArray(1);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[2]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[1]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), (GLvoid*)&indices[0], GL_STATIC_DRAW);
 
 	glBindVertexArray(0);

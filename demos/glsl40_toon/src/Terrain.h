@@ -19,8 +19,6 @@ private:
 	GLuint vaoID;
 
 	vector<vec3> vertices;
-	vector<vector<float>> heightMap;
-	vector<vec2> texCoords;
 	vector<unsigned int> indices;
 
 	TextureManager* textureManager;
@@ -32,6 +30,7 @@ private:
 	void GenerateBuffers();
 
 	vector<vector<float>> ReadHeightMap(string mapPath);
+	vector<vector<vec3>> ReadNormalMap(string mapPath);
 
 public:
 	Terrain(int width, int height, int totalPatches, Camera* camera, string heightMapPath, string normalMapPath);

@@ -3,22 +3,25 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
+#include <algorithm>
 #include "lodepng.h"
 
 
-TerrainGenerator::TerrainGenerator(int power, vector<unsigned char> initialValues, int scale, float smoothness, float seed)
+TerrainGenerator::TerrainGenerator(int power, vector<double> initialValues, int scale, float smoothness, float seed)
 {
 	this->scale = scale;
 	this->smoothness = pow(2, -smoothness);
 
 	size = pow(2, power) + 1;
-	map = vector<vector<unsigned char>>(size, vector<unsigned char>(size));
+	map = vector<vector<double>>(size, vector<double>(size));
 
 	srand(seed);
 	SetInitialValues(initialValues);
+	minHeight = *min_element(initialValues.begin(), initialValues.end());
+	maxHeight = *max_element(initialValues.begin(), initialValues.end());
 }
 
-void TerrainGenerator::SetInitialValues(vector<unsigned char> initialValues)
+void TerrainGenerator::SetInitialValues(vector<double> initialValues)
 {
 	map[0][0] = initialValues[0];
 	map[0][size - 1] = initialValues[1];
@@ -60,21 +63,26 @@ void TerrainGenerator::GenerateDiamondSquare()
 			scale = 1;
 		}
 	}
+
+	cout << "min Max: " << minHeight << "  " << maxHeight << endl;
+	NormalizeHeightMap();
+	cout << "min Max: " << minHeight << "  " << maxHeight << endl;
 }
 
 void TerrainGenerator::DiamondStep(int i, int j, int currentSize)
 {
 	int centerOffset = currentSize / 2;
-	int average = (map[i][j] + map[i][j + currentSize] + map[i + currentSize][j] + map[i + currentSize][j + currentSize]) / 4;
-	average += (rand() % scale) - (scale / 2);
+	double average = (map[i][j] + map[i][j + currentSize] + map[i + currentSize][j] + map[i + currentSize][j + currentSize]) / 4;
+	average += static_cast <double> (rand()) / (static_cast <double> (RAND_MAX / scale)) - (scale / 2);
 
-	map[i + centerOffset][j + centerOffset] = UCharClamp(average);
+	map[i + centerOffset][j + centerOffset] = average;
+	UpdateMinMaxHeight(average);
 }
 
 void TerrainGenerator::SquareStep(int i, int j, int centerOffset)
 {
-	int average = 0;
-	int count = 0;
+	double average = 0;
+	double count = 0;
 
 	if (i - centerOffset >= 0)
 	{
@@ -98,9 +106,10 @@ void TerrainGenerator::SquareStep(int i, int j, int centerOffset)
 	}
 
 	average /= count;
-	average += (rand() % scale) - (scale / 2);
+	average += static_cast <double> (rand()) / (static_cast <double> (RAND_MAX / scale)) - (scale / 2);
 
-	map[i][j] = UCharClamp(average);
+	map[i][j] = average;
+	UpdateMinMaxHeight(average);
 }
 
 #pragma endregion
@@ -112,6 +121,30 @@ void TerrainGenerator::GenerateTestFunction()
 		for (int j = 0; j < size; j++)
 		{
 			map[i][j] = (unsigned int) (i + j)/2;
+		}
+	}
+}
+
+void TerrainGenerator::UpdateMinMaxHeight(double value)
+{
+	if (value < minHeight)
+	{
+		minHeight = value;
+	}
+	else if (value > maxHeight)
+	{
+		maxHeight = value;
+	}
+}
+
+void TerrainGenerator::NormalizeHeightMap()
+{
+	float interval = maxHeight - minHeight;
+	for (auto& line : map)
+	{
+		for (int j = 0; j < line.size(); j++)
+		{
+			line[j] = (line[j] - minHeight) / interval;
 		}
 	}
 }
@@ -133,11 +166,10 @@ void TerrainGenerator::GenerateNormalMap()
 
 vec3 TerrainGenerator::CalculateNormal(int i, int j)
 {
-	int midPoint = map[i][j];
-	int up = map[i][j];
-	int  down = map[i][j];
-	int right = map[i][j];
-	int  left = map[i][j];
+	float up = map[i][j];
+	float down = map[i][j];
+	float right = map[i][j];
+	float left = map[i][j];
 
 	if (i - 1 >= 0)
 	{
@@ -156,15 +188,14 @@ vec3 TerrainGenerator::CalculateNormal(int i, int j)
 		right = map[i][j + 1];
 	}
 
-	int zVec = up - down;
-	int xVec = right - left;
+	float zVec = up - down;
+	float xVec = right - left;
 
-	return glm::normalize(vec3(2 * zVec, 4, 2 * xVec));
+	return glm::normalize(vec3(2.0f * zVec, 4, 2.0f * xVec));
 }
 
 string TerrainGenerator::NormalToString(vec3 normal)
 {
-	normal = (normal + 1.0f) / 2.0f;
 	return to_string(normal.x) + ";" + to_string(normal.y) + ";" + to_string(normal.z);
 }
 
@@ -179,7 +210,7 @@ void TerrainGenerator::PrintMap()
 	{
 		for (auto vertex : line)
 		{
-			cout << (int)vertex << " ";
+			cout << vertex << " ";
 		}
 		cout << endl;
 	}
@@ -193,9 +224,9 @@ void TerrainGenerator::WriteHeightMapToCSV(string path)
 	{
 		for (size_t i = 0; i < line.size() - 1; i++)
 		{
-			outputFile << (int)line[i] << ",";
+			outputFile << line[i] << ",";
 		}
-		outputFile << (int)line[line.size() - 1] << "\n";
+		outputFile << line[line.size() - 1] << "\n";
 	}
 	outputFile.close();
 }
@@ -256,16 +287,7 @@ void TerrainGenerator::WriteNormalMapToPNG(string path)
 #pragma endregion
 
 
-
-unsigned char TerrainGenerator::UCharClamp(int value)
+void TerrainGenerator::FreeMap()
 {
-	if (value < 0)
-	{
-		return 0;
-	}
-	if (value > UCHAR_MAX)
-	{
-		return UCHAR_MAX;
-	}
-	return value;
+	map.clear();
 }

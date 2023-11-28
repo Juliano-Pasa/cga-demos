@@ -128,15 +128,14 @@ void PlayingState::InitializeGL()
 
 void PlayingState::InitializeTerrain()
 {
-	int mapSize = 9;
-	TerrainGenerator terrainGenerator = TerrainGenerator(mapSize, vector<unsigned char>{64, 128, 192, 128}, 512, 0.8f, 42);
+	int mapSize = 8;
+	TerrainGenerator terrainGenerator = TerrainGenerator(mapSize, vector<double>{64, 128, 192, 128}, 512, 0.8f, 42);
 	string heightMapPath = "..\\..\\resources\\heightMap.csv";
 	string normalMapPath = "..\\..\\resources\\normalMap.csv";
 
-	//terrainGenerator.GenerateDiamondSquare();
-	//terrainGenerator.WriteHeightMapToCSV(heightMapPath);
-	//terrainGenerator.GenerateNormalMap();
-	//terrainGenerator.WriteNormalMapToCSV(normalMapPath);
+	terrainGenerator.GenerateDiamondSquare();
+	terrainGenerator.WriteHeightMapToCSV(heightMapPath);
+	terrainGenerator.FreeMap();
 
 	int dimensions = (int)pow(2, mapSize) + 1;
 	terrain = new Terrain(dimensions, dimensions, 8, camera, heightMapPath, normalMapPath);
