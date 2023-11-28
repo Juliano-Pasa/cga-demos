@@ -1,18 +1,21 @@
 // TCS Shader //
 
 #version 400
+#define ID gl_InvocationID
 
 layout (vertices = 4) out;
 
 uniform int tessLevel;
+in vec3 vVertexColor[];
 
-#define ID gl_InvocationID
+out vec3 tcsVertexColor[];
 
 void Preset();
 
 void main()
 {
 	gl_out[ID].gl_Position = gl_in[ID].gl_Position;
+	tcsVertexColor[ID] = vVertexColor[ID];
 
 	if (ID == 0)
 	{

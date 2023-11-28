@@ -15,10 +15,12 @@ private:
 	int width;
 	int height;
 	int totalPatches;
+	int patchWidth;
 
 	GLuint vaoID;
 
 	vector<vec3> vertices;
+	vector<vec3> verticesColors;
 	vector<unsigned int> indices;
 
 	TextureManager* textureManager;

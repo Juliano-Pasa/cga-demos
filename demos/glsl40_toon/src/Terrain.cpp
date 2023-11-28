@@ -47,11 +47,12 @@ void Terrain::Update(double deltaTime)
 {
 	shader.use();
 	shader.setUniform("tessLevel", 8);
+	shader.setUniform("patchWidth", patchWidth);
 
 	shader.setUniform("maxHeight", 100.0f);
 	shader.setUniform("heighMapSampler", 0);
 
-	shader.setUniform("color", vec3(0.36f, 0.96f, 0.6f));
+	shader.setUniform("dirtColor", vec3(0.65f, 0.52f, 0.46f));
 	shader.setUniform("lightPos", worldLight->GetPosition());
 }
 
@@ -62,12 +63,6 @@ void Terrain::Render(mat4 projection, mat4 view)
 
 	shader.setUniform("VP", VPMatrix);
 	shader.setUniform("M", transform.modelMatrix());
-
-	glActiveTexture(GL_TEXTURE0);
-	textureManager->BindTexture(0);
-	
-	glActiveTexture(GL_TEXTURE1);
-	textureManager->BindTexture(1);
 
 	glBindVertexArray(vaoID);
 	glPatchParameteri(GL_PATCH_VERTICES, 4);
@@ -87,6 +82,8 @@ void Terrain::GenerateVertices()
 	int heightLimit = (height - 1) / totalPatches;
 	int widthLimit = (width - 1) / totalPatches;
 
+	patchWidth = totalPatches * widthLimit;
+
 	vector<vector<float>> heightMap = ReadHeightMap("..\\..\\resources\\heightMap.csv");
 
 	for (int i = 0; i < totalPatches + 1; i++)
@@ -94,6 +91,7 @@ void Terrain::GenerateVertices()
 		for (int j = 0; j < totalPatches + 1; j++)
 		{
 			vertices.push_back(vec3(j * widthLimit * totalPatches, heightMap[i * heightLimit][j * widthLimit] * maxHeight, i * heightLimit * totalPatches));
+			verticesColors.push_back(vec3(0.36f, 0.96f, 0.6f));
 		}
 	}
 
@@ -115,15 +113,20 @@ void Terrain::GenerateBuffers()
 	glGenVertexArrays(1, &vaoID);
 	glBindVertexArray(vaoID);
 
-	unsigned int handle[2];
-	glGenBuffers(2, handle);
+	unsigned int handle[3];
+	glGenBuffers(3, handle);
 
 	glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec3), (GLvoid*)&vertices[0], GL_STATIC_DRAW);
 	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
 	glEnableVertexAttribArray(0);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
+	glBufferData(GL_ARRAY_BUFFER, verticesColors.size() * sizeof(vec3), (GLvoid*)&verticesColors[0], GL_STATIC_DRAW);
+	glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[2]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), (GLvoid*)&indices[0], GL_STATIC_DRAW);
 
 	glBindVertexArray(0);

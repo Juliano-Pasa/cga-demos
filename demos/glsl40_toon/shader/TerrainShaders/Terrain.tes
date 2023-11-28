@@ -5,21 +5,11 @@
 layout(quads, equal_spacing, cw) in;
 
 uniform vec3 lightPos;
+uniform int tessLevel;
+in vec3 tcsVertexColor[];
 
 out vec3 tesLightDirection;
-
-vec4 CalculateInterpolatedPosition(float u, float v);
-
-void main()
-{
-	float u = gl_TessCoord.x;
-	float v = gl_TessCoord.y;
-
-	vec4 interpolatedPosition = CalculateInterpolatedPosition(u, v);
-	tesLightDirection = normalize(lightPos - interpolatedPosition.xyz);
-
-	gl_Position = interpolatedPosition;
-}
+out vec3 tesVertexColor;
 
 vec4 CalculateInterpolatedPosition(float u, float v)
 {
@@ -32,4 +22,29 @@ vec4 CalculateInterpolatedPosition(float u, float v)
 			p1 * u * (1 - v) +
 			p3 * v * (1 - u) +
 			p2 * u * v;
+}
+
+vec3 CalculateInterpolatedColor(float u, float v)
+{
+	vec3 p0 = tcsVertexColor[0];
+	vec3 p1 = tcsVertexColor[1];
+	vec3 p2 = tcsVertexColor[2];
+	vec3 p3 = tcsVertexColor[3];
+
+	return  p0 * (1 - u) * (1 - v) +
+			p1 * u * (1 - v) +
+			p3 * v * (1 - u) +
+			p2 * u * v;
+}
+
+void main()
+{
+	float u = gl_TessCoord.x;
+	float v = gl_TessCoord.y;
+
+	vec4 interpolatedPosition = CalculateInterpolatedPosition(u, v);
+	tesLightDirection = normalize(lightPos - interpolatedPosition.xyz);
+
+	tesVertexColor = CalculateInterpolatedColor(u, v);
+	gl_Position = interpolatedPosition;
 }

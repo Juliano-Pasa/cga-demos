@@ -26,7 +26,7 @@ PlayingState::PlayingState(GLFWwindow* window) : GameState()
 void PlayingState::OnStart()
 {
 	camera = new Camera(window, vec3(-30, 200, -30));
-	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)windowWidth/(float)windowHeight, 0.1f, 1000.0f);
+	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)windowWidth/(float)windowHeight, 0.1f, 10000.0f);
 	worldLight = new WorldLight(vec3(1, 1, 1), vec3(300, 2000, 300));
 
 	InitializeGL();
