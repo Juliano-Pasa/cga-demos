@@ -6,11 +6,15 @@
 layout (vertices = 4) out;
 
 uniform int tessLevel;
+uniform vec3 camPos;
+uniform float lodLevelSize;
+
 in vec3 vVertexColor[];
 
 out vec3 tcsVertexColor[];
 
 void Preset();
+void ReactToCamera();
 
 void main()
 {
@@ -19,7 +23,7 @@ void main()
 
 	if (ID == 0)
 	{
-		Preset();
+		ReactToCamera();
 	}
 }
 
@@ -32,4 +36,35 @@ void Preset()
 
 	gl_TessLevelInner[0] = tessLevel;
 	gl_TessLevelInner[1] = tessLevel;
+}
+
+void ReactToCamera()
+{
+	vec4 c0 = (gl_in[0].gl_Position + gl_in[1].gl_Position) / 2.0;
+	vec4 c1 = (gl_in[1].gl_Position + gl_in[2].gl_Position) / 2.0;
+	vec4 c2 = (gl_in[2].gl_Position + gl_in[3].gl_Position) / 2.0;
+	vec4 c3 = (gl_in[3].gl_Position + gl_in[0].gl_Position) / 2.0;
+
+	float d0 = length(c0.xyz - camPos);
+	float d1 = length(c1.xyz - camPos);
+	float d2 = length(c2.xyz - camPos);
+	float d3 = length(c3.xyz - camPos);
+
+	int p0 = int(d0 / lodLevelSize);
+	int p1 = int(d1 / lodLevelSize);
+	int p2 = int(d2 / lodLevelSize);
+	int p3 = int(d3 / lodLevelSize);
+
+	int f0 = int(tessLevel / exp2(pow(p0, 7)));
+	int f1 = int(tessLevel / exp2(pow(p1, 7)));
+	int f2 = int(tessLevel / exp2(pow(p2, 7)));
+	int f3 = int(tessLevel / exp2(pow(p3, 7)));
+
+	gl_TessLevelOuter[0] = f0;
+	gl_TessLevelOuter[1] = f1;
+	gl_TessLevelOuter[2] = f2;
+	gl_TessLevelOuter[3] = f3;
+
+	gl_TessLevelInner[0] = max(f0, f2);
+	gl_TessLevelInner[1] = max(f1, f3);
 }

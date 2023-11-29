@@ -124,12 +124,14 @@ void PlayingState::OnExit()
 void PlayingState::InitializeGL()
 {
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 }
 
 void PlayingState::InitializeTerrain()
 {
 	int mapSize = 8;
-	TerrainGenerator terrainGenerator = TerrainGenerator(mapSize, vector<double>{64, 128, 192, 128}, 512, 0.8f, 42);
+	TerrainGenerator terrainGenerator = TerrainGenerator(mapSize, vector<double>{64, 128, 192, 128}, 512, 0.2f, 42);
 	string heightMapPath = "..\\..\\resources\\heightMap.csv";
 	string normalMapPath = "..\\..\\resources\\normalMap.csv";
 
@@ -138,7 +140,7 @@ void PlayingState::InitializeTerrain()
 	terrainGenerator.FreeMap();
 
 	int dimensions = (int)pow(2, mapSize) + 1;
-	terrain = new Terrain(dimensions, dimensions, 8, camera, heightMapPath, normalMapPath);
+	terrain = new Terrain(dimensions, dimensions, 256, camera, heightMapPath, normalMapPath);
 	terrain->worldLight = worldLight;
 	terrain->Initialize();
 	entities.push_back(terrain);

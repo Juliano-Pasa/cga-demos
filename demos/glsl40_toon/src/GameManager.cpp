@@ -1,7 +1,7 @@
 #include "GamerManager.h"
 
-#define WINDOW_WIDTH 600
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
 
 GameManager::GameManager()
 {
@@ -35,7 +35,8 @@ void GameManager::InitializeGLFW()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 
-	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "glsl40_toon", NULL, NULL);
+	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "glsl40_toon", glfwGetPrimaryMonitor(), NULL);
+	//window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "glsl40_toon", NULL, NULL);
 	if (!window)
 	{
 		fprintf(stderr, "Failed to open GLFW window.\n");

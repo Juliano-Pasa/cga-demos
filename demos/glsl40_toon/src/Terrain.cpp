@@ -46,13 +46,13 @@ void Terrain::Initialize()
 void Terrain::Update(double deltaTime)
 {
 	shader.use();
-	shader.setUniform("tessLevel", 8);
+	shader.setUniform("tessLevel", 32);
+	shader.setUniform("lodLevelSize", 2000.0f);
 	shader.setUniform("patchWidth", patchWidth);
-
-	shader.setUniform("maxHeight", 100.0f);
-	shader.setUniform("heighMapSampler", 0);
+	shader.setUniform("patchHeight", patchHeight);
 
 	shader.setUniform("dirtColor", vec3(0.65f, 0.52f, 0.46f));
+	shader.setUniform("camPos", camera->CameraPosition());
 	shader.setUniform("lightPos", worldLight->GetPosition());
 }
 
@@ -77,12 +77,13 @@ void Terrain::Render(mat4 projection, mat4 view)
 void Terrain::GenerateVertices()
 {
 	float maxHeight = 255.0f;
-	float size = 1.0f;
+	float size = 256.0f;
 
-	int heightLimit = (height - 1) / totalPatches;
-	int widthLimit = (width - 1) / totalPatches;
+	int heightDivisions = (height - 1) / totalPatches;
+	int widthDivisions = (width - 1) / totalPatches;
 
-	patchWidth = totalPatches * widthLimit;
+	patchHeight = size;
+	patchWidth = size;
 
 	vector<vector<float>> heightMap = ReadHeightMap("..\\..\\resources\\heightMap.csv");
 
@@ -90,7 +91,7 @@ void Terrain::GenerateVertices()
 	{
 		for (int j = 0; j < totalPatches + 1; j++)
 		{
-			vertices.push_back(vec3(j * widthLimit * totalPatches, heightMap[i * heightLimit][j * widthLimit] * maxHeight, i * heightLimit * totalPatches));
+			vertices.push_back(vec3(j * patchWidth, heightMap[i * heightDivisions][j * widthDivisions] * maxHeight, i * patchHeight));
 			verticesColors.push_back(vec3(0.36f, 0.96f, 0.6f));
 		}
 	}

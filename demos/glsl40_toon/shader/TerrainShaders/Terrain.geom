@@ -10,7 +10,8 @@ in vec3 tesVertexColor[];
 
 uniform mat4 VP;
 uniform vec3 dirtColor;
-uniform int patchWidth;
+uniform float patchWidth;
+uniform float patchHeight;
 uniform int tessLevel;
 
 out vec3 geoNormal;
@@ -37,11 +38,10 @@ vec4 GetTriangleCenter()
 	return newVertex / 3.0f;
 }
 
-void DrawGrassSector(float height, vec3 normal)
+void DrawGrassSector(float height, vec3 normal, float maxLight)
 {
-	float maxLight = 32.0f;
 	float lightAttenuation = height / maxLight;
-	vec4 normalDisplacement = vec4(normal, 0.0) * height;
+	vec4 normalDisplacement = vec4(normal, 0.0) * height * 3;
 
 	gl_Position = VP * (gl_in[0].gl_Position + normalDisplacement);
 	geoNormal = normal;
@@ -65,15 +65,18 @@ void DrawGrassSector(float height, vec3 normal)
 
 void GenerateGrass(vec2 centerPoint, vec3 normal)
 {
-	int iterations = 32;
-	float height = 3.0f;
+	int iterations = 16;
 
-	float rand = RandHash(centerPoint) * (iterations - 1) * height;
+	float heightIncrement = 1.0f;
+	float currentHeight = heightIncrement;
+	float maxGrassHeight = iterations * currentHeight;
 
-	while (rand > height)
+	float rand = RandHash(centerPoint);
+
+	while (rand > (currentHeight / maxGrassHeight))
 	{
-		DrawGrassSector(height, normal);
-		height += 3.0f;
+		DrawGrassSector(currentHeight, normal, maxGrassHeight);
+		currentHeight += heightIncrement;
 	}
 }
 
@@ -102,11 +105,8 @@ void main()
 
 	float squareSize = float(patchWidth) / float(tessLevel);
 
-	if (squareSize > 31)
-	{
 	vec4 triangleCenter = GetTriangleCenter();
 	vec2 roundedCenter = vec2(floor(triangleCenter.x / squareSize), floor(triangleCenter.z / squareSize));
 
-	GenerateGrass(roundedCenter, normalVector);	
-	}
+	GenerateGrass(roundedCenter, normalVector);
 }
