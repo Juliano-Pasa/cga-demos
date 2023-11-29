@@ -16,6 +16,7 @@ Terrain::Terrain(int width, int height, int totalPatches, Camera* camera, string
 
 void Terrain::Initialize()
 {
+	InitializeGrassColors();
 	GenerateVertices();
 	GenerateBuffers();
 
@@ -91,8 +92,9 @@ void Terrain::GenerateVertices()
 	{
 		for (int j = 0; j < totalPatches + 1; j++)
 		{
-			vertices.push_back(vec3(j * patchWidth, heightMap[i * heightDivisions][j * widthDivisions] * maxHeight, i * patchHeight));
-			verticesColors.push_back(vec3(0.36f, 0.96f, 0.6f));
+			float heightMapValue = heightMap[i * heightDivisions][j * widthDivisions];
+			vertices.push_back(vec3(j * patchWidth, heightMapValue * maxHeight, i * patchHeight));
+			verticesColors.push_back(grassColors[int(heightMapValue * 10.0f)]);
 		}
 	}
 
@@ -164,3 +166,18 @@ vector<vector<float>> Terrain::ReadHeightMap(string mapPath)
 }
 
 #pragma endregion
+
+void Terrain::InitializeGrassColors()
+{
+	grassColors.push_back(vec3(0.23137, 0.31372, 0.02352));
+	grassColors.push_back(vec3(0.83137, 0.84705, 0.34901));
+	grassColors.push_back(vec3(0.88235, 0.89803, 0.64705));
+	grassColors.push_back(vec3(0.43921, 0.55686, 0.02745));
+	grassColors.push_back(vec3(0.58039, 0.67843, 0.02745));
+	grassColors.push_back(vec3(0.80784, 0.83921, 0.18823));
+	grassColors.push_back(vec3(0.90588, 0.90980, 0.05490));
+	grassColors.push_back(vec3(0.65882, 0.74117, 0.02352));
+	grassColors.push_back(vec3(0.58431, 0.54509, 0.13725));
+	grassColors.push_back(vec3(0.31372, 0.46666, 0.01960));
+	grassColors.push_back(vec3(0.31372, 0.46666, 0.01960));
+}

@@ -23,6 +23,7 @@ private:
 
 	vector<vec3> vertices;
 	vector<vec3> verticesColors;
+	vector<vec3> grassColors;
 	vector<unsigned int> indices;
 
 	TextureManager* textureManager;
@@ -32,6 +33,8 @@ private:
 
 	void GenerateVertices();
 	void GenerateBuffers();
+
+	void InitializeGrassColors();
 
 	vector<vector<float>> ReadHeightMap(string mapPath);
 
