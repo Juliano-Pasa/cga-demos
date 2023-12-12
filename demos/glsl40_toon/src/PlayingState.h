@@ -8,6 +8,7 @@
 #include "Terrain.h"
 #include "Entity.h"
 #include "WorldLight.h"
+#include "InputManager.h"
 
 #include <vector>
 
@@ -23,7 +24,9 @@ private:
 	vector<Entity*> entities;
 	bool loaded;
 	bool wireframe;
+	bool hiddenCursor;
 
+	InputManager* inputManager;
 	GLFWwindow* window;
 	int windowWidth;
 	int windowHeight;
@@ -32,6 +35,9 @@ private:
 
 	void InitializeGL();
 	void InitializeTerrain();
+	void InitializeInputManager(GLFWwindow* window);
+
+	void ReadKeyboardInput();
 
 public:
 	PlayingState(GLFWwindow* window);

@@ -3,9 +3,9 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include <iostream>
 
-Camera::Camera(GLFWwindow* window, vec3 position)
+Camera::Camera(InputManager* inputManager, vec3 position)
 {
-	this->window = window;
+	this->inputManager = inputManager;
 
 	InitTransform(position);
 	this->orientation = vec3(1.0f, 0.0f, 0.0f);
@@ -55,11 +55,11 @@ void Camera::Update(double deltaTime)
 
 void Camera::ReadKeyboardInputs(float deltaTime)
 {
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	if (inputManager->GetIsKeyDown(GLFW_KEY_LEFT_CONTROL))
 	{
 		freeCamMode = true;
 	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE)
+	if (!inputManager->GetIsKeyDown(GLFW_KEY_LEFT_CONTROL))
 	{
 		freeCamMode = false;
 		firstMouseMove = true;
@@ -73,19 +73,17 @@ void Camera::ReadMouseInputs()
 		return;
 	}
 
-	double xCoord, yCoord;
-	glfwGetCursorPos(window, &xCoord, &yCoord);
+	dvec2 mouseCoords = inputManager->GetMouseCoords();
 
 	if (firstMouseMove)
 	{
-		lastMouseCoords = dvec2(xCoord, yCoord);
+		lastMouseCoords = mouseCoords;
 		firstMouseMove = false;
 		return;
 	}
 
-	dvec2 delta = dvec2(xCoord, yCoord) - lastMouseCoords;
-	lastMouseCoords.x = xCoord;
-	lastMouseCoords.y = yCoord;
+	dvec2 delta = mouseCoords - lastMouseCoords;
+	lastMouseCoords = mouseCoords;
 
 	if (delta.x * delta.x + delta.y * delta.y < 0.001)
 	{

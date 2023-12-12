@@ -2,7 +2,7 @@
 
 #include "glslprogram.h"
 #include "Transform.h"
-#include "GLFW\glfw3.h"
+#include "InputManager.h"
 #include "Entity.h"
 
 class Camera
@@ -24,7 +24,7 @@ private:
 	void GenerateViewMatrix();
 	void ReadMouseInputs();
 
-	GLFWwindow* window;
+	InputManager* inputManager;
 
 public:
 	float sensitivity;
@@ -32,7 +32,7 @@ public:
 
 	mat4 viewMatrix;
 	
-	Camera(GLFWwindow* window, vec3 position);
+	Camera(InputManager* inputManager, vec3 position);
 
 	void Update(double deltaTime);
 	const vec3& CameraAngles();

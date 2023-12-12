@@ -5,7 +5,6 @@
     <ClCompile Include="..\..\utils\GLUtils.cpp" />
     <ClCompile Include="..\..\utils\TextureManager.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\GameManager.cpp" />
     <ClCompile Include="src\Transform.cpp" />
     <ClCompile Include="src\PlayingState.cpp">
       <Filter>GameStateMachine</Filter>
@@ -32,12 +31,17 @@
     <ClCompile Include="src\Duck.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\GameManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InputManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
     <ClInclude Include="..\..\utils\TextureManager.h" />
     <ClInclude Include="src\Transform.h" />
-    <ClInclude Include="src\GamerManager.h" />
     <ClInclude Include="src\GameState.h">
       <Filter>GameStateMachine</Filter>
     </ClInclude>
@@ -68,6 +72,12 @@
     <ClInclude Include="src\WorldLight.h" />
     <ClInclude Include="src\Duck.h">
       <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GamerManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InputManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -123,6 +133,9 @@
     </Filter>
     <Filter Include="Entities">
       <UniqueIdentifier>{83dd857e-d8a8-450e-949a-52d2376a5481}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{d6491525-02dd-4022-b2de-fea229735b35}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

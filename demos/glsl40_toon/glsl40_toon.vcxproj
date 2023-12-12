@@ -26,6 +26,7 @@
     <ClCompile Include="src\Duck.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\GameManager.cpp" />
+    <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\lodepng.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PlayerCube.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\GamerManager.h" />
     <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\InputManager.h" />
     <ClInclude Include="src\lodepng.h" />
     <ClInclude Include="src\PlayerCube.h" />
     <ClInclude Include="src\PlayingState.h" />

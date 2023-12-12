@@ -16,6 +16,7 @@ PlayingState::PlayingState(GLFWwindow* window) : GameState()
 	loaded = false;
 	camera = nullptr;
 	wireframe = false;
+	hiddenCursor = true;
 	entities = vector<Entity*>();
 
 	this->window = window;
@@ -26,8 +27,10 @@ PlayingState::PlayingState(GLFWwindow* window) : GameState()
 
 void PlayingState::OnStart()
 {
-	camera = new Camera(window, vec3(3000, 600, 3000));
-	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)windowWidth/(float)windowHeight, 0.1f, 10000.0f);
+	InitializeInputManager(window);
+
+	camera = new Camera(inputManager, vec3(3000, 600, 3000));
+	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)windowWidth / (float)windowHeight, 0.1f, 10000.0f);
 	worldLight = new WorldLight(vec3(1, 1, 1), vec3(1000, 20000, 1000));
 
 	InitializeGL();
@@ -49,7 +52,8 @@ void PlayingState::OnStart()
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
 
-	Duck* duck = new Duck(camera->CameraPosition(), vec3(40), worldLight, camera, window);
+
+	Duck* duck = new Duck(camera->CameraPosition(), vec3(40), worldLight, camera, inputManager);
 	entities.push_back(duck);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
@@ -71,15 +75,7 @@ void PlayingState::OnPlay()
 	double lastTime = glfwGetTime();
 	do
 	{
-		if (glfwGetKeyOnce(window, 'Q')) {
-			wireframe = !wireframe;
-			if (wireframe) {
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			}
-			else {
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			}
-		}
+		ReadKeyboardInput();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -157,4 +153,35 @@ void PlayingState::InitializeTerrain()
 	entities.push_back(terrain);
 }
 
+void PlayingState::InitializeInputManager(GLFWwindow* window)
+{
+	vector<int> keys = { GLFW_KEY_W, GLFW_KEY_A, GLFW_KEY_S, GLFW_KEY_D, GLFW_KEY_LEFT_SHIFT, GLFW_KEY_LEFT_CONTROL, GLFW_KEY_ESCAPE };
+	inputManager = new InputManager(keys, true);
+	inputManager->SetupInputs(window);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
 #pragma endregion
+
+void PlayingState::ReadKeyboardInput()
+{
+	if (glfwGetKeyOnce(window, 'Q')) {
+		wireframe = !wireframe;
+		if (wireframe) {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+		else {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+	}
+
+	if (glfwGetKeyOnce(window, 'Z')) {
+		hiddenCursor = !hiddenCursor;
+		if (hiddenCursor) {
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+		else {
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+	}
+}

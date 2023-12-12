@@ -6,12 +6,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-Duck::Duck(vec3 position, vec3 scale, WorldLight* worldLight, Camera* camera, GLFWwindow* window) : Entity(position, vec3(0), scale)
+Duck::Duck(vec3 position, vec3 scale, WorldLight* worldLight, Camera* camera, InputManager* inputManager) : Entity(position, vec3(0), scale)
 {
 	vaoID = 0;
 	this->worldLight = worldLight;
 	this->camera = camera;
-	this->window = window;
+	this->inputManager = inputManager;
 
 	this->baseSpeed = 300.0f;
 	this->speed = baseSpeed;
@@ -161,28 +161,28 @@ void Duck::GenerateBuffers()
 
 void Duck::ReadKeyboardInputs(float deltaTime)
 {
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	if (inputManager->GetIsKeyDown(GLFW_KEY_W))
 	{
 		transform.position(transform.position() + speed * deltaTime * camera->CameraOrientation());
 	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	if (inputManager->GetIsKeyDown(GLFW_KEY_S))
 	{
 		transform.position(transform.position() - speed * deltaTime * camera->CameraOrientation());
 	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	if (inputManager->GetIsKeyDown(GLFW_KEY_A))
 	{
 		transform.position(transform.position() - speed * deltaTime * glm::normalize(glm::cross(camera->CameraOrientation(), camera->CameraUp())));
 	}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	if (inputManager->GetIsKeyDown(GLFW_KEY_D))
 	{
 		transform.position(transform.position() + speed * deltaTime * glm::normalize(glm::cross(camera->CameraOrientation(), camera->CameraUp())));
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+	if (inputManager->GetIsKeyDown(GLFW_KEY_LEFT_SHIFT))
 	{
 		speed = baseSpeed + acceleration;
 	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+	if (!inputManager->GetIsKeyDown(GLFW_KEY_LEFT_SHIFT))
 	{
 		speed = baseSpeed - acceleration;
 	}

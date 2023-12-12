@@ -1,10 +1,10 @@
 #pragma once
 
 #include "glslprogram.h"
-#include "GLFW\glfw3.h"
 #include "Entity.h"
 #include "WorldLight.h"
 #include "Camera.h"
+#include "InputManager.h"
 #include <vector>
 
 using namespace std;
@@ -26,15 +26,18 @@ private:
 	GLSLProgram shader;
 	WorldLight* worldLight;
 
-	GLFWwindow* window;
+	InputManager* inputManager;
 	void ReadKeyboardInputs(float deltaTime);
 
 	float speed;
 	float baseSpeed;
 	float acceleration;
 
+
+	vec3 resultingForce;
+
 public:
-	Duck(vec3 position, vec3 scale, WorldLight* worldLight, Camera* camera, GLFWwindow* window);
+	Duck(vec3 position, vec3 scale, WorldLight* worldLight, Camera* camera, InputManager* inputManager);
 
 	void Initialize();
 	void Update(double deltaTime);
