@@ -54,10 +54,8 @@ void Duck::Update(double deltaTime)
 	shader.use();
 	shader.setUniform("lightPos", worldLight->GetPosition());
 
-	float yAngle = camera->CameraAngles().y;
-	transform.angles(vec3(0, yAngle, 0));
-
 	ReadKeyboardInputs((float)deltaTime);
+	ReadMouseInputs();
 	UpdateSelfAndChildren(false);
 }
 
@@ -186,6 +184,46 @@ void Duck::ReadKeyboardInputs(float deltaTime)
 	{
 		speed = baseSpeed - acceleration;
 	}
+
+	if (inputManager->GetIsKeyDown(GLFW_KEY_LEFT_CONTROL))
+	{
+		holdRotation = true;
+		firstMouseMove = true;
+	}
+	if (!inputManager->GetIsKeyDown(GLFW_KEY_LEFT_CONTROL))
+	{
+		holdRotation = false;
+	}
+}
+
+void Duck::ReadMouseInputs()
+{
+	if (holdRotation)
+	{
+		return;
+	}
+
+	dvec2 mouseCoords = inputManager->GetMouseCoords();
+
+	if (firstMouseMove)
+	{
+		lastMouseCoords = mouseCoords;
+		firstMouseMove = false;
+		return;
+	}
+
+	dvec2 delta = mouseCoords - lastMouseCoords;
+	lastMouseCoords = mouseCoords;
+
+	if (delta.x * delta.x < 0.001)
+	{
+		return;
+	}
+
+	vec3 currentAngles = transform.angles();
+	currentAngles.y -= glm::radians((float)delta.x * camera->sensitivity);
+
+	transform.angles(currentAngles);
 }
 
 #pragma endregion

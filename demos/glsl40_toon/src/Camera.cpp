@@ -13,7 +13,11 @@ Camera::Camera(InputManager* inputManager, vec3 position)
 
 	this->sensitivity = 0.5f;
 	this->smoothness = 5.0f;
-	this->freeCamMode = false;
+	this->camDistance = 1000.0f;
+	this->freeCamMode = true;
+
+	this->maxVerticalAngle = glm::radians(-20.0f);
+	this->minVerticalAngle = glm::radians(-90.0f);
 
 	referenceEntity = nullptr;
 
@@ -31,7 +35,7 @@ void Camera::GenerateViewMatrix()
 	vec3 newUp = glm::cross(uVector, orientation);
 	up = glm::normalize(newUp);
 
-	viewMatrix = glm::lookAt(transform.position() - orientation * 100.0f, transform.position(), up);
+	viewMatrix = glm::lookAt(transform.position() - orientation * camDistance, transform.position(), up);
 }
 
 
@@ -55,15 +59,6 @@ void Camera::Update(double deltaTime)
 
 void Camera::ReadKeyboardInputs(float deltaTime)
 {
-	if (inputManager->GetIsKeyDown(GLFW_KEY_LEFT_CONTROL))
-	{
-		freeCamMode = true;
-	}
-	if (!inputManager->GetIsKeyDown(GLFW_KEY_LEFT_CONTROL))
-	{
-		freeCamMode = false;
-		firstMouseMove = true;
-	}
 }
 
 void Camera::ReadMouseInputs()
@@ -94,14 +89,13 @@ void Camera::ReadMouseInputs()
 	currentAngles.x -= glm::radians((float) delta.y * sensitivity);
 	currentAngles.y -= glm::radians((float) delta.x * sensitivity);
 
-	float maxVerticalAngle = glm::radians(90.0f);
 	if (currentAngles.x > maxVerticalAngle)
 	{
 		currentAngles.x = maxVerticalAngle;
 	}
-	else if (currentAngles.x < -maxVerticalAngle)
+	else if (currentAngles.x < minVerticalAngle)
 	{
-		currentAngles.x = -maxVerticalAngle;
+		currentAngles.x = minVerticalAngle;
 	}
 
 	transform.angles(currentAngles);

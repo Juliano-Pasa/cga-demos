@@ -53,12 +53,15 @@ void PlayingState::OnStart()
 	terrain->AddChild(entities.back());
 
 
-	Duck* duck = new Duck(camera->CameraPosition(), vec3(40), worldLight, camera, inputManager);
+	Duck* duck = new Duck(terrain->CenterPosition(), vec3(70), worldLight, camera, inputManager);
 	entities.push_back(duck);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
 
 	camera->SetEntityReference(duck);
+
+	vector<Entity*> collidables = vector<Entity*>{ duck };
+	collisionManager = new CollisionManager(collidables, duck, terrain);
 
 	loaded = true;
 	OnPlay();
@@ -85,6 +88,8 @@ void PlayingState::OnPlay()
 		{
 			entity->Update(deltaTime);
 		}
+
+		collisionManager->CheckCollisions(false);
 		camera->Update(deltaTime);
 
 		lastTime += deltaTime;

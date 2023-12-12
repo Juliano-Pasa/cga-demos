@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "GameState.h"
+#include "CollisionManager.h"
 #include "Camera.h"
 #include "Terrain.h"
 #include "Entity.h"
@@ -25,6 +26,8 @@ private:
 	bool loaded;
 	bool wireframe;
 	bool hiddenCursor;
+
+	CollisionManager* collisionManager;
 
 	InputManager* inputManager;
 	GLFWwindow* window;

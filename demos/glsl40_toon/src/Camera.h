@@ -8,16 +8,19 @@
 class Camera
 {
 private:
-	dvec2 lastMouseCoords;
-
 	Transform transform;
 	vec3 orientation;
 	vec3 up;
 
 	Entity* referenceEntity;
 
+	dvec2 lastMouseCoords;
 	bool firstMouseMove;
 	bool freeCamMode;
+
+	float maxVerticalAngle;
+	float minVerticalAngle;
+
 	void InitTransform(vec3 position);
 
 	void ReadKeyboardInputs(float deltaTime);
@@ -29,6 +32,7 @@ private:
 public:
 	float sensitivity;
 	float smoothness;
+	float camDistance;
 
 	mat4 viewMatrix;
 	

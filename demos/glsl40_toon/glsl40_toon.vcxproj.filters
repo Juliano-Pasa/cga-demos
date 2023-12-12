@@ -13,10 +13,10 @@
       <Filter>CameraModule</Filter>
     </ClCompile>
     <ClCompile Include="src\TerrainGenerator.cpp">
-      <Filter>TerrainModule</Filter>
+      <Filter>Terrain</Filter>
     </ClCompile>
     <ClCompile Include="src\Terrain.cpp">
-      <Filter>TerrainModule</Filter>
+      <Filter>Terrain</Filter>
     </ClCompile>
     <ClCompile Include="src\lodepng.cpp">
       <Filter>LodePNG</Filter>
@@ -37,6 +37,9 @@
     <ClCompile Include="src\InputManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="src\CollisionManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
@@ -55,10 +58,10 @@
       <Filter>CameraModule</Filter>
     </ClInclude>
     <ClInclude Include="src\TerrainGenerator.h">
-      <Filter>TerrainModule</Filter>
+      <Filter>Terrain</Filter>
     </ClInclude>
     <ClInclude Include="src\Terrain.h">
-      <Filter>TerrainModule</Filter>
+      <Filter>Terrain</Filter>
     </ClInclude>
     <ClInclude Include="src\lodepng.h">
       <Filter>LodePNG</Filter>
@@ -77,6 +80,9 @@
       <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="src\InputManager.h">
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CollisionManager.h">
       <Filter>Managers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -119,9 +125,6 @@
     <Filter Include="GameStateMachine">
       <UniqueIdentifier>{6b4b44c4-e8f4-4e0c-95ac-d97732aa24ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TerrainModule">
-      <UniqueIdentifier>{ef9a2760-2db8-4c26-adeb-07c86528916c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="CameraModule">
       <UniqueIdentifier>{b43be6de-139d-45b4-8097-1e7c607a7a2c}</UniqueIdentifier>
     </Filter>
@@ -136,6 +139,9 @@
     </Filter>
     <Filter Include="Managers">
       <UniqueIdentifier>{d6491525-02dd-4022-b2de-fea229735b35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Terrain">
+      <UniqueIdentifier>{ef9a2760-2db8-4c26-adeb-07c86528916c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

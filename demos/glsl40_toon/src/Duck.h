@@ -28,11 +28,15 @@ private:
 
 	InputManager* inputManager;
 	void ReadKeyboardInputs(float deltaTime);
+	void ReadMouseInputs();
 
 	float speed;
 	float baseSpeed;
 	float acceleration;
 
+	bool holdRotation;
+	bool firstMouseMove;
+	dvec2 lastMouseCoords;
 
 	vec3 resultingForce;
 
