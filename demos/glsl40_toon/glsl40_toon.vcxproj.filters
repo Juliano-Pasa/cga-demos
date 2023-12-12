@@ -29,6 +29,9 @@
       <Filter>Entities</Filter>
     </ClCompile>
     <ClCompile Include="src\WorldLight.cpp" />
+    <ClCompile Include="src\Duck.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
@@ -63,6 +66,9 @@
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="src\WorldLight.h" />
+    <ClInclude Include="src\Duck.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\glsl40_toon.frag">
@@ -85,6 +91,15 @@
     </None>
     <None Include="shader\TerrainShaders\Terrain.geom">
       <Filter>shaders\TerrainShaders</Filter>
+    </None>
+    <None Include="shader\Duck.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shader\Duck.geom">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shader\Duck.frag">
+      <Filter>shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

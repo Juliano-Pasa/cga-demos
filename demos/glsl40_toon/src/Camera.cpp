@@ -13,10 +13,9 @@ Camera::Camera(GLFWwindow* window, vec3 position)
 
 	this->sensitivity = 0.5f;
 	this->smoothness = 5.0f;
-	this->baseSpeed = 300.0f;
-	this->speed = baseSpeed;
-	this->acceleration = 250.0f;
 	this->freeCamMode = false;
+
+	referenceEntity = nullptr;
 
 	GenerateViewMatrix();
 }
@@ -32,7 +31,7 @@ void Camera::GenerateViewMatrix()
 	vec3 newUp = glm::cross(uVector, orientation);
 	up = glm::normalize(newUp);
 
-	viewMatrix = glm::lookAt(transform.position(), transform.position() + orientation, up);
+	viewMatrix = glm::lookAt(transform.position() - orientation * 100.0f, transform.position(), up);
 }
 
 
@@ -40,6 +39,7 @@ void Camera::GenerateViewMatrix()
 
 void Camera::Update(double deltaTime)
 {
+	transform.position(referenceEntity->transform.position());
 	ReadKeyboardInputs((float)deltaTime);
 	ReadMouseInputs();
 	if (transform.hasChanged())
@@ -55,23 +55,6 @@ void Camera::Update(double deltaTime)
 
 void Camera::ReadKeyboardInputs(float deltaTime)
 {
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	{
-		transform.position(transform.position() + speed * deltaTime * orientation);
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		transform.position(transform.position() - speed * deltaTime * orientation);
-	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		transform.position(transform.position() - speed * deltaTime * glm::normalize(glm::cross(orientation, up)));
-	}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		transform.position(transform.position() + speed * deltaTime * glm::normalize(glm::cross(orientation, up)));
-	}
-
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
 		freeCamMode = true;
@@ -80,15 +63,6 @@ void Camera::ReadKeyboardInputs(float deltaTime)
 	{
 		freeCamMode = false;
 		firstMouseMove = true;
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-	{
-		speed = baseSpeed + acceleration;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
-	{
-		speed = baseSpeed - acceleration;
 	}
 }
 
@@ -150,7 +124,32 @@ void Camera::InitTransform(vec3 position)
 
 #pragma endregion
 
+#pragma region Getters
+
+const vec3& Camera::CameraAngles()
+{
+	return transform.angles();
+}
+
 const vec3& Camera::CameraPosition()
 {
 	return transform.position();
+}
+
+const vec3& Camera::CameraOrientation()
+{
+	return orientation;
+}
+
+const vec3& Camera::CameraUp()
+{
+	return up;
+}
+
+#pragma endregion
+
+void Camera::SetEntityReference(Entity* reference)
+{
+	referenceEntity = reference;
+	transform.position(referenceEntity->transform.position());
 }

@@ -16,6 +16,9 @@ private:
 	int height;
 	int totalPatches;
 
+	float maxHeight;
+	float size;
+
 	float patchWidth;
 	float patchHeight;
 
@@ -44,6 +47,8 @@ public:
 	void Initialize();
 	void Update(double deltaTime);
 	void Render(mat4 projection, mat4 view);
+
+	vec3 CenterPosition();
 
 	WorldLight* worldLight;
 };

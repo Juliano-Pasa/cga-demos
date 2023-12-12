@@ -47,12 +47,12 @@ void Terrain::Initialize()
 void Terrain::Update(double deltaTime)
 {
 	shader.use();
-	shader.setUniform("tessLevel", 32);
+	shader.setUniform("tessLevel", 16);
 	shader.setUniform("lodLevelSize", 2000.0f);
 	shader.setUniform("patchWidth", patchWidth);
 	shader.setUniform("patchHeight", patchHeight);
 
-	shader.setUniform("dirtColor", vec3(0.65f, 0.52f, 0.46f));
+	shader.setUniform("dirtColor", vec3(0.29411f, 0.20784f, 0.0f));
 	shader.setUniform("camPos", camera->CameraPosition());
 	shader.setUniform("lightPos", worldLight->GetPosition());
 }
@@ -77,8 +77,8 @@ void Terrain::Render(mat4 projection, mat4 view)
 
 void Terrain::GenerateVertices()
 {
-	float maxHeight = 255.0f;
-	float size = 256.0f;
+	maxHeight = 1024.0f;
+	size = 256.0f;
 
 	int heightDivisions = (height - 1) / totalPatches;
 	int widthDivisions = (width - 1) / totalPatches;
@@ -180,4 +180,12 @@ void Terrain::InitializeGrassColors()
 	grassColors.push_back(vec3(0.58431, 0.54509, 0.13725));
 	grassColors.push_back(vec3(0.31372, 0.46666, 0.01960));
 	grassColors.push_back(vec3(0.31372, 0.46666, 0.01960));
+}
+
+vec3 Terrain::CenterPosition()
+{
+	int centerI = totalPatches / 2;
+	int centerJ = totalPatches / 2;
+
+	return vertices[centerI * totalPatches + centerJ];
 }

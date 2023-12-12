@@ -1,5 +1,6 @@
 #include "PlayingState.h"
 #include "PlayerCube.h"
+#include "Duck.h"
 #include "TerrainGenerator.h"
 #include <ctime>
 #include <iostream>
@@ -25,26 +26,35 @@ PlayingState::PlayingState(GLFWwindow* window) : GameState()
 
 void PlayingState::OnStart()
 {
-	camera = new Camera(window, vec3(-30, 200, -30));
+	camera = new Camera(window, vec3(3000, 600, 3000));
 	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)windowWidth/(float)windowHeight, 0.1f, 10000.0f);
 	worldLight = new WorldLight(vec3(1, 1, 1), vec3(1000, 20000, 1000));
 
 	InitializeGL();
 	InitializeTerrain();
 
+	vec3 terrainCenterPosition = terrain->CenterPosition();
+
 	srand((unsigned)time(NULL));
 
-	PlayerCube* cube = new PlayerCube(vec3(-30, 200, -30), vec3(0, 0, 0), vec3(1.1));
+	PlayerCube* cube = new PlayerCube(vec3(-30, 200, -30), vec3(0, 0, 0), vec3(30));
 	cube->worldLight = worldLight;
 	entities.push_back(cube);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
 
-	PlayerCube* cube2 = new PlayerCube(vec3(133, 200, 127), vec3(0, 0, 0), vec3(1));
+	PlayerCube* cube2 = new PlayerCube(vec3(3000, 600, 3000), vec3(0, 0, 0), vec3(30));
 	cube2->worldLight = worldLight;
 	entities.push_back(cube2);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
+
+	Duck* duck = new Duck(camera->CameraPosition(), vec3(40), worldLight, camera, window);
+	entities.push_back(duck);
+	entities.back()->Initialize();
+	terrain->AddChild(entities.back());
+
+	camera->SetEntityReference(duck);
 
 	loaded = true;
 	OnPlay();
@@ -74,12 +84,13 @@ void PlayingState::OnPlay()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		deltaTime = glfwGetTime() - lastTime;
-		camera->Update(deltaTime);
 
 		for (Entity* entity : entities)
 		{
 			entity->Update(deltaTime);
 		}
+		camera->Update(deltaTime);
+
 		lastTime += deltaTime;
 
 		for (Entity* entity : entities)
@@ -123,7 +134,7 @@ void PlayingState::OnExit()
 
 void PlayingState::InitializeGL()
 {
-	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	glClearColor(0.47055f, 0.55289f, 0.86785f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 }
@@ -135,9 +146,9 @@ void PlayingState::InitializeTerrain()
 	string heightMapPath = "..\\..\\resources\\heightMap.csv";
 	string normalMapPath = "..\\..\\resources\\normalMap.csv";
 
-	terrainGenerator.GenerateDiamondSquare();
-	terrainGenerator.WriteHeightMapToCSV(heightMapPath);
-	terrainGenerator.FreeMap();
+	//terrainGenerator.GenerateDiamondSquare();
+	//terrainGenerator.WriteHeightMapToCSV(heightMapPath);
+	//terrainGenerator.FreeMap();
 
 	int dimensions = (int)pow(2, mapSize) + 1;
 	terrain = new Terrain(dimensions, dimensions, 256, camera, heightMapPath, normalMapPath);

@@ -23,6 +23,7 @@
     <ClCompile Include="..\..\utils\GLUtils.cpp" />
     <ClCompile Include="..\..\utils\TextureManager.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Duck.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\GameManager.cpp" />
     <ClCompile Include="src\lodepng.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="..\..\utils\GLUtils.h" />
     <ClInclude Include="..\..\utils\TextureManager.h" />
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Duck.h" />
     <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\GamerManager.h" />
     <ClInclude Include="src\GameState.h" />
@@ -51,6 +53,9 @@
     <ClInclude Include="src\WorldLight.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shader\Duck.frag" />
+    <None Include="shader\Duck.geom" />
+    <None Include="shader\Duck.vert" />
     <None Include="shader\glsl40_toon.frag">
       <FileType>Document</FileType>
     </None>
