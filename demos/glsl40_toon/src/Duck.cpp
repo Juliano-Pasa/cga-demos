@@ -17,7 +17,7 @@ Duck::Duck(vec3 position, vec3 scale, WorldLight* worldLight, Camera* camera, In
 	this->steeringForce = vec3(0);
 	this->resultingForce = vec3(0);
 	this->maxForce = 1000.0f;
-	this->movementStrength = 100.0f;
+	this->movementStrength = 500.0f;
 
 	this->baseSpeed = 250.0f;
 	this->sprintSpeed = 350.0f;
@@ -256,14 +256,14 @@ void Duck::ApplyForces(float deltaTime)
 	currentSpeed = TruncateMagnitude(currentSpeed, maxSpeed);
 	transform.position(transform.position() + currentSpeed * deltaTime);
 
-	if (resultingForce.length() > 1)
+	if (glm::length(resultingForce) > 1.0f)
 	{
-		resultingForce -= resultingForce / 10.0f;
+		resultingForce -= resultingForce / 4.0f;
 		return;
 	}
 
 	resultingForce = vec3(0);
-	if (currentSpeed.length() > 1)
+	if (glm::length(currentSpeed) > 1.0f)
 	{
 		currentSpeed -= currentSpeed / 10.0f;
 		return;
