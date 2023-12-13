@@ -53,7 +53,7 @@ void PlayingState::OnStart()
 	terrain->AddChild(entities.back());
 
 
-	Duck* duck = new Duck(terrain->CenterPosition(), vec3(70), worldLight, camera, inputManager);
+	Duck* duck = new Duck(camera->CameraPosition(), vec3(70), worldLight, camera, inputManager, true);
 	entities.push_back(duck);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
