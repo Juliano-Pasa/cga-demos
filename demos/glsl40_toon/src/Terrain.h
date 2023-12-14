@@ -26,21 +26,18 @@ private:
 
 	vector<vec3> vertices;
 	vector<vec3> verticesColors;
+	vector<vec3> grassColors;
 	vector<unsigned int> indices;
 
-	Camera* camera;
+	TextureManager* textureManager;
 	GLSLProgram shader;
+
+	Camera* camera;
 
 	void GenerateVertices();
 	void GenerateBuffers();
 
-	vec3 dirtColor;
-	vector<vec3> grassColors;
 	void InitializeGrassColors();
-
-	vec3 goalColor;
-	vec3 goalPosition;
-	void SetGoalPosition();
 
 	vector<vector<float>> ReadHeightMap(string mapPath);
 

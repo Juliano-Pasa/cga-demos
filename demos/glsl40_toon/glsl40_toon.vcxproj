@@ -38,7 +38,6 @@
     <ClCompile Include="src\Terrain.cpp" />
     <ClCompile Include="src\TerrainGenerator.cpp" />
     <ClCompile Include="src\Transform.cpp" />
-    <ClCompile Include="src\WindParticle.cpp" />
     <ClCompile Include="src\WorldLight.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -61,7 +60,6 @@
     <ClInclude Include="src\Terrain.h" />
     <ClInclude Include="src\TerrainGenerator.h" />
     <ClInclude Include="src\Transform.h" />
-    <ClInclude Include="src\WindParticle.h" />
     <ClInclude Include="src\WorldLight.h" />
   </ItemGroup>
   <ItemGroup>

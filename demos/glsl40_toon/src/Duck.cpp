@@ -33,6 +33,10 @@ void Duck::Initialize()
 	}
 	shader.printActiveAttribs();
 
+	glEnable(GL_PRIMITIVE_RESTART);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+
 	primitiveRestartIndex = -1;
 	glPrimitiveRestartIndex(primitiveRestartIndex);
 
@@ -53,10 +57,6 @@ void Duck::Update(double deltaTime)
 
 void Duck::Render(mat4 projection, mat4 view)
 {
-	glEnable(GL_PRIMITIVE_RESTART);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-
 	shader.use();
 	mat4 VPMatrix = projection * view;
 

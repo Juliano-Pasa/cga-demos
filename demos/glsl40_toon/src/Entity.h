@@ -2,6 +2,7 @@
 
 #include "Transform.h"
 #include <vector>
+#include <memory>
 
 using namespace std;
 
