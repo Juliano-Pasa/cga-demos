@@ -1,5 +1,7 @@
 #include "Terrain.h"
 #include <fstream>
+#include <time.h>
+#include <random>
 #include <iostream>
 #include <sstream>
 
@@ -36,12 +38,6 @@ void Terrain::Initialize()
 		exit(EXIT_FAILURE);
 	}
 	shader.printActiveAttribs();
-
-	textureManager = TextureManager::Inst();
-
-	glActiveTexture(GL_TEXTURE0);
-	if (!textureManager->LoadTexture("..\\..\\resources\\heightMap.png", 0))
-		cout << "Failed to load texture." << endl;
 }
 
 void Terrain::Update(double deltaTime)
@@ -52,13 +48,16 @@ void Terrain::Update(double deltaTime)
 	shader.setUniform("patchWidth", patchWidth);
 	shader.setUniform("patchHeight", patchHeight);
 
-	shader.setUniform("dirtColor", vec3(0.29411f, 0.20784f, 0.0f));
+	shader.setUniform("dirtColor", dirtColor);
 	shader.setUniform("camPos", camera->CameraPosition());
 	shader.setUniform("lightPos", worldLight->GetPosition());
 }
 
 void Terrain::Render(mat4 projection, mat4 view)
 {
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+
 	shader.use();
 	mat4 VPMatrix = projection * view;
 
@@ -109,6 +108,8 @@ void Terrain::GenerateVertices()
 			indices.push_back(startingPoint + totalPatches + 1);
 		}
 	}
+
+	SetGoalPosition();
 }
 
 void Terrain::GenerateBuffers()
@@ -169,6 +170,9 @@ vector<vector<float>> Terrain::ReadHeightMap(string mapPath)
 
 void Terrain::InitializeGrassColors()
 {
+	dirtColor = vec3(0.29411f, 0.20784f, 0.0f);
+	goalColor = vec3(0.59215f, 0.09019f, 0.90196f);
+
 	grassColors.push_back(vec3(0.23137, 0.31372, 0.02352));
 	grassColors.push_back(vec3(0.83137, 0.84705, 0.34901));
 	grassColors.push_back(vec3(0.88235, 0.89803, 0.64705));
@@ -208,4 +212,24 @@ vector<vec3> Terrain::GetNearbyVertices(vec3 position, int neighbourPatches)
 	}
 
 	return nearbyVertices;
+}
+
+void Terrain::SetGoalPosition()
+{
+	srand(time(NULL));
+	//int goalI = rand() % totalPatches;
+	int goalI = 10;
+	//int goalJ = rand() % totalPatches;
+	int goalJ = 10;
+	
+	int startigPoint = goalI * (totalPatches + 1) + goalJ;
+	verticesColors[startigPoint] = goalColor;
+	verticesColors[startigPoint + 1] = goalColor;
+	verticesColors[startigPoint + totalPatches + 2] = goalColor;
+	verticesColors[startigPoint + totalPatches + 1] = goalColor;
+
+	goalPosition = vertices[startigPoint] + vertices[startigPoint + totalPatches + 2];
+	goalPosition /= 2;
+
+	cout << "Posicao objetivo" << vertices[startigPoint].x << " " << vertices[startigPoint].y << " " << vertices[startigPoint].z << endl;
 }

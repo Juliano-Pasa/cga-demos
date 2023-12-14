@@ -51,6 +51,9 @@
     <ClCompile Include="src\DuckBotControler.cpp">
       <Filter>Controlers</Filter>
     </ClCompile>
+    <ClCompile Include="src\WindParticle.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
@@ -106,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="src\DuckBotControler.h">
       <Filter>Controlers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WindParticle.h">
+      <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
