@@ -11,11 +11,11 @@ CollisionManager::CollisionManager(vector<Entity*> entities, Entity* referenceEn
 
 void CollisionManager::CheckCollisions(bool nearby)
 {
-	vector<vec3> nearbyVertices = terrain->GetNearbyVertices(referenceEntity->transform.position(), 0);
-
 	for (Entity* entity : entities)
 	{
+		vector<vec3> nearbyVertices = terrain->GetNearbyVertices(entity->transform.position(), 0);
 		vec3 entityPosition = entity->transform.position();
+
 		vec3 interpolatedPosition = InterpolatePosition(
 			entityPosition,
 			nearbyVertices[0],

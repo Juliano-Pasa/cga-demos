@@ -3,6 +3,7 @@
 #include "Duck.h"
 #include "TerrainGenerator.h"
 #include "DuckPlayerControler.h"
+#include "DuckBotControler.h"
 #include <ctime>
 #include <iostream>
 
@@ -39,15 +40,7 @@ void PlayingState::OnStart()
 
 	vec3 terrainCenterPosition = terrain->CenterPosition();
 
-	srand((unsigned)time(NULL));
-
-	PlayerCube* cube = new PlayerCube(vec3(-30, 200, -30), vec3(0, 0, 0), vec3(30));
-	cube->worldLight = worldLight;
-	entities.push_back(cube);
-	entities.back()->Initialize();
-	terrain->AddChild(entities.back());
-
-	PlayerCube* cube2 = new PlayerCube(vec3(3000, 600, 3000), vec3(0, 0, 0), vec3(30));
+	PlayerCube* cube2 = new PlayerCube(vec3(3050, 600, 3000), vec3(0, 0, 0), vec3(30));
 	cube2->worldLight = worldLight;
 	entities.push_back(cube2);
 	entities.back()->Initialize();
@@ -56,7 +49,9 @@ void PlayingState::OnStart()
 	Entity* duck = InitializePlayer(inputManager, camera, worldLight);
 	camera->SetEntityReference(duck);
 
-	vector<Entity*> collidables = vector<Entity*>{ duck };
+	InitializeBots(worldLight);
+
+	vector<Entity*> collidables = vector<Entity*>{ duck, entities.back()};
 	collisionManager = new CollisionManager(collidables, duck, terrain);
 
 	loaded = true;
@@ -167,12 +162,23 @@ Entity* PlayingState::InitializePlayer(InputManager* inputManager, Camera* camer
 	DuckPlayerControler* controler = new DuckPlayerControler();
 	controler->Initialize(inputManager, camera, 1000.0f, 500.0f, 250.0f, 350.0f, 1.0f);
 
-	Duck* duck = new Duck(camera->CameraPosition(), vec3(70), worldLight, camera, inputManager, controler);
+	Duck* duck = new Duck(camera->CameraPosition(), vec3(70), worldLight, controler);
 	entities.push_back(duck);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
 
 	return duck;
+}
+
+void PlayingState::InitializeBots(WorldLight* worldLight)
+{
+	DuckBotControler* controler = new DuckBotControler();
+	controler->Initialize(1000.0f, 500.0f, 250.0f, 350.0f, 1.0f);
+
+	Duck* duck = new Duck(camera->CameraPosition(), vec3(70), worldLight, controler);
+	entities.push_back(duck);
+	entities.back()->Initialize();
+	terrain->AddChild(entities.back());
 }
 
 #pragma endregion

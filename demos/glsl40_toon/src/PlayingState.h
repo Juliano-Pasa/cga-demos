@@ -40,6 +40,7 @@ private:
 	void InitializeTerrain();
 	void InitializeInputManager(GLFWwindow* window);
 	Entity* InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight);
+	void InitializeBots(WorldLight* worldLight);
 
 	void ReadKeyboardInput();
 

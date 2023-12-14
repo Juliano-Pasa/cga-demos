@@ -3,7 +3,6 @@
 #include "glslprogram.h"
 #include "Entity.h"
 #include "WorldLight.h"
-#include "Camera.h"
 #include "InputManager.h"
 #include "EntityControler.h"
 #include <vector>
@@ -23,14 +22,12 @@ private:
 	vector<vec3> colors;
 	vector<unsigned int> indices;
 
-	Camera* camera;
 	GLSLProgram shader;
 	WorldLight* worldLight;
 	EntityControler* entityControler;
-	InputManager* inputManager;
 
 public:
-	Duck(vec3 position, vec3 scale, WorldLight* worldLight, Camera* camera, InputManager* inputManager, EntityControler* entityControler);
+	Duck(vec3 position, vec3 scale, WorldLight* worldLight, EntityControler* entityControler);
 
 	void Initialize();
 	void Update(double deltaTime);

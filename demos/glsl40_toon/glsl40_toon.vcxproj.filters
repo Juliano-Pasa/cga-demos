@@ -10,7 +10,7 @@
       <Filter>GameStateMachine</Filter>
     </ClCompile>
     <ClCompile Include="src\Camera.cpp">
-      <Filter>CameraModule</Filter>
+      <Filter>Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\TerrainGenerator.cpp">
       <Filter>Terrain</Filter>
@@ -48,6 +48,9 @@
     <ClCompile Include="src\DuckPlayerControler.cpp">
       <Filter>Controlers</Filter>
     </ClCompile>
+    <ClCompile Include="src\DuckBotControler.cpp">
+      <Filter>Controlers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
@@ -63,7 +66,7 @@
       <Filter>GameStateMachine</Filter>
     </ClInclude>
     <ClInclude Include="src\Camera.h">
-      <Filter>CameraModule</Filter>
+      <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="src\TerrainGenerator.h">
       <Filter>Terrain</Filter>
@@ -99,6 +102,9 @@
       <Filter>Controlers</Filter>
     </ClInclude>
     <ClInclude Include="src\DuckPlayerControler.h">
+      <Filter>Controlers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DuckBotControler.h">
       <Filter>Controlers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -141,9 +147,6 @@
     <Filter Include="GameStateMachine">
       <UniqueIdentifier>{6b4b44c4-e8f4-4e0c-95ac-d97732aa24ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CameraModule">
-      <UniqueIdentifier>{b43be6de-139d-45b4-8097-1e7c607a7a2c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="LodePNG">
       <UniqueIdentifier>{1eb00f5c-0e9e-4625-b371-cdc988989aba}</UniqueIdentifier>
     </Filter>
@@ -161,6 +164,9 @@
     </Filter>
     <Filter Include="Controlers">
       <UniqueIdentifier>{e16572f4-f867-4584-843c-48f9cac17635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{b43be6de-139d-45b4-8097-1e7c607a7a2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

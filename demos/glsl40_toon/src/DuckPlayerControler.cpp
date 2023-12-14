@@ -22,6 +22,7 @@ void DuckPlayerControler::Initialize(InputManager* inputManager, Camera* camera,
 	this->sprintSpeed = sprintSpeed;
 	this->mass = mass;
 
+	this->maxSpeed = baseSpeed;
 	initialized = true;
 }
 
@@ -76,7 +77,6 @@ vec3 DuckPlayerControler::TruncateMagnitude(vec3 vec, float maxMagnitude)
 	{
 		return vec;
 	}
-
 	return glm::normalize(vec) * maxMagnitude;
 }
 

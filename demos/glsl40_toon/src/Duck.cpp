@@ -6,12 +6,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-Duck::Duck(vec3 position, vec3 scale, WorldLight* worldLight, Camera* camera, InputManager* inputManager, EntityControler* entityControler) : Entity(position, vec3(0), scale)
+Duck::Duck(vec3 position, vec3 scale, WorldLight* worldLight, EntityControler* entityControler) : Entity(position, vec3(0), scale)
 {
 	vaoID = 0;
 	this->worldLight = worldLight;
-	this->camera = camera;
-	this->inputManager = inputManager;
 	this->entityControler = entityControler;
 	this->entityControler->SetEntity(this);
 }
