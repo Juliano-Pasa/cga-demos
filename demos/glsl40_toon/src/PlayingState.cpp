@@ -2,6 +2,7 @@
 #include "PlayerCube.h"
 #include "Duck.h"
 #include "TerrainGenerator.h"
+#include "DuckPlayerControler.h"
 #include <ctime>
 #include <iostream>
 
@@ -52,12 +53,7 @@ void PlayingState::OnStart()
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
 
-
-	Duck* duck = new Duck(camera->CameraPosition(), vec3(70), worldLight, camera, inputManager, true);
-	entities.push_back(duck);
-	entities.back()->Initialize();
-	terrain->AddChild(entities.back());
-
+	Entity* duck = InitializePlayer(inputManager, camera, worldLight);
 	camera->SetEntityReference(duck);
 
 	vector<Entity*> collidables = vector<Entity*>{ duck };
@@ -164,6 +160,19 @@ void PlayingState::InitializeInputManager(GLFWwindow* window)
 	inputManager = new InputManager(keys, true);
 	inputManager->SetupInputs(window);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+Entity* PlayingState::InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight)
+{
+	DuckPlayerControler* controler = new DuckPlayerControler();
+	controler->Initialize(inputManager, camera, 1000.0f, 500.0f, 250.0f, 350.0f, 1.0f);
+
+	Duck* duck = new Duck(camera->CameraPosition(), vec3(70), worldLight, camera, inputManager, controler);
+	entities.push_back(duck);
+	entities.back()->Initialize();
+	terrain->AddChild(entities.back());
+
+	return duck;
 }
 
 #pragma endregion

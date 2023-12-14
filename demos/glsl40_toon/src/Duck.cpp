@@ -6,27 +6,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
-Duck::Duck(vec3 position, vec3 scale, WorldLight* worldLight, Camera* camera, InputManager* inputManager, bool playerControled) : Entity(position, vec3(0), scale)
+Duck::Duck(vec3 position, vec3 scale, WorldLight* worldLight, Camera* camera, InputManager* inputManager, EntityControler* entityControler) : Entity(position, vec3(0), scale)
 {
 	vaoID = 0;
 	this->worldLight = worldLight;
 	this->camera = camera;
 	this->inputManager = inputManager;
-	this->playerControled = playerControled;
-
-	this->steeringForce = vec3(0);
-	this->resultingForce = vec3(0);
-	this->maxForce = 1000.0f;
-	this->movementStrength = 500.0f;
-
-	this->baseSpeed = 250.0f;
-	this->sprintSpeed = 350.0f;
-	this->maxSpeed = baseSpeed;
-	this->currentSpeed = vec3(0);
-
-	this->holdRotation = false;
-
-	this->mass = 1.0f;
+	this->entityControler = entityControler;
+	this->entityControler->SetEntity(this);
 }
 
 #pragma region EntityFunctions
@@ -65,12 +52,7 @@ void Duck::Update(double deltaTime)
 	shader.use();
 	shader.setUniform("lightPos", worldLight->GetPosition());
 
-	if (playerControled)
-	{
-		ReadMouseInputs();
-		ReadKeyboardInputs((float) deltaTime);
-		ApplyForces((float) deltaTime);
-	}
+	entityControler->Update((float)deltaTime);
 	
 	UpdateSelfAndChildren(false);
 }
@@ -170,121 +152,3 @@ void Duck::GenerateBuffers()
 
 
 #pragma endregion
-
-#pragma region InputFunctions
-
-void Duck::ReadKeyboardInputs(float deltaTime)
-{
-	if (inputManager->GetIsKeyDown(GLFW_KEY_W))
-	{
-		resultingForce += movementStrength * orientation;
-	}
-	if (inputManager->GetIsKeyDown(GLFW_KEY_S))
-	{
-		resultingForce -= movementStrength * orientation;
-	}
-	if (inputManager->GetIsKeyDown(GLFW_KEY_A))
-	{
-		resultingForce -= movementStrength * sideOrientation;
-	}
-	if (inputManager->GetIsKeyDown(GLFW_KEY_D))
-	{
-		resultingForce += movementStrength * sideOrientation;
-	}
-
-	if (inputManager->GetIsKeyDown(GLFW_KEY_LEFT_SHIFT))
-	{
-		maxSpeed = sprintSpeed;
-	}
-	if (!inputManager->GetIsKeyDown(GLFW_KEY_LEFT_SHIFT))
-	{
-		maxSpeed = baseSpeed;
-	}
-
-	if (inputManager->GetIsKeyDown(GLFW_KEY_LEFT_CONTROL))
-	{
-		holdRotation = true;
-		firstMouseMove = true;
-	}
-	if (!inputManager->GetIsKeyDown(GLFW_KEY_LEFT_CONTROL))
-	{
-		holdRotation = false;
-	}
-}
-
-void Duck::ReadMouseInputs()
-{
-	if (holdRotation)
-	{
-		return;
-	}
-
-	dvec2 mouseCoords = inputManager->GetMouseCoords();
-
-	if (firstMouseMove)
-	{
-		lastMouseCoords = mouseCoords;
-		firstMouseMove = false;
-		return;
-	}
-
-	dvec2 delta = mouseCoords - lastMouseCoords;
-	lastMouseCoords = mouseCoords;
-
-	if (delta.x * delta.x < 0.001)
-	{
-		return;
-	}
-
-	vec3 currentAngles = transform.angles();
-	currentAngles.y -= glm::radians((float)delta.x * camera->sensitivity);
-
-	transform.angles(currentAngles);
-
-	CalculateOrientation();
-}
-
-#pragma endregion
-
-void Duck::ApplyForces(float deltaTime)
-{
-	resultingForce = TruncateMagnitude(resultingForce, maxForce);
-
-	vec3 acceleration = resultingForce / mass;
-	currentSpeed += (acceleration * deltaTime);
-
-	currentSpeed = TruncateMagnitude(currentSpeed, maxSpeed);
-	transform.position(transform.position() + currentSpeed * deltaTime);
-
-	if (glm::length(resultingForce) > 1.0f)
-	{
-		resultingForce -= resultingForce / 4.0f;
-		return;
-	}
-
-	resultingForce = vec3(0);
-	if (glm::length(currentSpeed) > 1.0f)
-	{
-		currentSpeed -= currentSpeed / 10.0f;
-		return;
-	}
-	currentSpeed = vec3(0);
-}
-
-void Duck::CalculateOrientation()
-{
-	vec3 newOrientation = glm::rotateY(vec3(1.0f, 0.0f, 0.0f), transform.angles().y);
-	orientation = glm::normalize(newOrientation);
-
-	sideOrientation = glm::rotateY(orientation, glm::radians(-90.0f));
-}
-
-vec3 Duck::TruncateMagnitude(vec3 vec, float maxMagnitude)
-{	
-	if (glm::length(vec) <= maxMagnitude)
-	{
-		return vec;
-	}
-
-	return glm::normalize(vec) * maxMagnitude;
-}

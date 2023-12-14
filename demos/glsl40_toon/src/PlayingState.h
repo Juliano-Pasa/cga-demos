@@ -39,6 +39,7 @@ private:
 	void InitializeGL();
 	void InitializeTerrain();
 	void InitializeInputManager(GLFWwindow* window);
+	Entity* InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight);
 
 	void ReadKeyboardInput();
 

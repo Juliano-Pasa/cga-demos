@@ -25,7 +25,9 @@
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\CollisionManager.cpp" />
     <ClCompile Include="src\Duck.cpp" />
+    <ClCompile Include="src\DuckPlayerControler.cpp" />
     <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\EntityControler.cpp" />
     <ClCompile Include="src\GameManager.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\lodepng.cpp" />
@@ -43,7 +45,9 @@
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\CollisionManager.h" />
     <ClInclude Include="src\Duck.h" />
+    <ClInclude Include="src\DuckPlayerControler.h" />
     <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\EntityControler.h" />
     <ClInclude Include="src\GamerManager.h" />
     <ClInclude Include="src\GameState.h" />
     <ClInclude Include="src\InputManager.h" />

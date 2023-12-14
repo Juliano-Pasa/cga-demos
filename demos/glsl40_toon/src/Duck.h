@@ -5,6 +5,7 @@
 #include "WorldLight.h"
 #include "Camera.h"
 #include "InputManager.h"
+#include "EntityControler.h"
 #include <vector>
 
 using namespace std;
@@ -25,38 +26,11 @@ private:
 	Camera* camera;
 	GLSLProgram shader;
 	WorldLight* worldLight;
-
+	EntityControler* entityControler;
 	InputManager* inputManager;
-	void ReadKeyboardInputs(float deltaTime);
-	void ReadMouseInputs();
-
-
-	bool holdRotation;
-	bool firstMouseMove;
-	dvec2 lastMouseCoords;
-	bool playerControled;
-
-	vec3 steeringForce;
-	vec3 resultingForce;
-	float maxForce;
-	float movementStrength;
-
-	float maxSpeed;
-	float baseSpeed;
-	float sprintSpeed;
-	vec3 currentSpeed;
-
-	float mass;
-
-	vec3 orientation;
-	vec3 sideOrientation;
-
-	void ApplyForces(float deltaTime);
-	void CalculateOrientation();
-	vec3 TruncateMagnitude(vec3 vec, float maxMagnitude);
 
 public:
-	Duck(vec3 position, vec3 scale, WorldLight* worldLight, Camera* camera, InputManager* inputManager, bool playerControled);
+	Duck(vec3 position, vec3 scale, WorldLight* worldLight, Camera* camera, InputManager* inputManager, EntityControler* entityControler);
 
 	void Initialize();
 	void Update(double deltaTime);

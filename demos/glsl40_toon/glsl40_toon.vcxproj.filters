@@ -27,7 +27,6 @@
     <ClCompile Include="src\Entity.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="src\WorldLight.cpp" />
     <ClCompile Include="src\Duck.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
@@ -39,6 +38,15 @@
     </ClCompile>
     <ClCompile Include="src\CollisionManager.cpp">
       <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WorldLight.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EntityControler.cpp">
+      <Filter>Controlers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuckPlayerControler.cpp">
+      <Filter>Controlers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -72,7 +80,6 @@
     <ClInclude Include="src\Entity.h">
       <Filter>Entities</Filter>
     </ClInclude>
-    <ClInclude Include="src\WorldLight.h" />
     <ClInclude Include="src\Duck.h">
       <Filter>Entities</Filter>
     </ClInclude>
@@ -84,6 +91,15 @@
     </ClInclude>
     <ClInclude Include="src\CollisionManager.h">
       <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WorldLight.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EntityControler.h">
+      <Filter>Controlers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DuckPlayerControler.h">
+      <Filter>Controlers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +158,9 @@
     </Filter>
     <Filter Include="Terrain">
       <UniqueIdentifier>{ef9a2760-2db8-4c26-adeb-07c86528916c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controlers">
+      <UniqueIdentifier>{e16572f4-f867-4584-843c-48f9cac17635}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

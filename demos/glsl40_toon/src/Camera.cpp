@@ -11,7 +11,7 @@ Camera::Camera(InputManager* inputManager, vec3 position)
 	this->orientation = vec3(1.0f, 0.0f, 0.0f);
 	this->up = vec3(0.0f, 1.0f, 0.0f);
 
-	this->sensitivity = 0.5f;
+	this->sensitivity = 0.25f;
 	this->smoothness = 5.0f;
 	this->camDistance = 1000.0f;
 	this->freeCamMode = true;
