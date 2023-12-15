@@ -4,6 +4,7 @@
 #include "TerrainGenerator.h"
 #include "DuckPlayerControler.h"
 #include "DuckBotControler.h"
+#include "Wind.h"
 #include <ctime>
 #include <iostream>
 
@@ -49,9 +50,14 @@ void PlayingState::OnStart()
 	Entity* duck = InitializePlayer(inputManager, camera, worldLight);
 	camera->SetEntityReference(duck);
 
+	Entity* wind = new Wind(camera->CameraPosition(), vec3(70));
+	entities.push_back(wind);
+	entities.back()->Initialize();
+	terrain->AddChild(entities.back());
+
 	InitializeBots(worldLight);
 
-	vector<Entity*> collidables = vector<Entity*>{ duck, entities.back()};
+	vector<Entity*> collidables = vector<Entity*>{ duck, entities.back(), wind};
 	collisionManager = new CollisionManager(collidables, duck, terrain);
 
 	loaded = true;

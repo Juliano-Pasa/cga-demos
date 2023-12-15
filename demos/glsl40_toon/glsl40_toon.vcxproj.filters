@@ -51,7 +51,7 @@
     <ClCompile Include="src\DuckBotControler.cpp">
       <Filter>Controlers</Filter>
     </ClCompile>
-    <ClCompile Include="src\WindParticle.cpp">
+    <ClCompile Include="src\Wind.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,7 +110,7 @@
     <ClInclude Include="src\DuckBotControler.h">
       <Filter>Controlers</Filter>
     </ClInclude>
-    <ClInclude Include="src\WindParticle.h">
+    <ClInclude Include="src\Wind.h">
       <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
@@ -143,6 +143,12 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shader\Duck.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shader\Wind.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shader\Wind.frag">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>
