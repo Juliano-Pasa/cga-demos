@@ -230,6 +230,9 @@ void Terrain::SetGoalPosition()
 
 	goalPosition = vertices[startigPoint] + vertices[startigPoint + totalPatches + 2];
 	goalPosition /= 2;
+}
 
-	cout << "Posicao objetivo" << vertices[startigPoint].x << " " << vertices[startigPoint].y << " " << vertices[startigPoint].z << endl;
+vec3 Terrain::GoalPosition()
+{
+	return goalPosition;
 }

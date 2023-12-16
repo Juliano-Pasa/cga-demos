@@ -7,6 +7,7 @@
 #include "CollisionManager.h"
 #include "Camera.h"
 #include "Terrain.h"
+#include "Wind.h"
 #include "Entity.h"
 #include "WorldLight.h"
 #include "InputManager.h"
@@ -27,6 +28,11 @@ private:
 	bool wireframe;
 	bool hiddenCursor;
 
+	float windSpawnTime;
+	double windSpawnCooldown;
+	Wind* wind;
+
+	vec3 goalPosition;
 	CollisionManager* collisionManager;
 
 	InputManager* inputManager;
@@ -39,9 +45,11 @@ private:
 	void InitializeGL();
 	void InitializeTerrain();
 	void InitializeInputManager(GLFWwindow* window);
-	Entity* InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight);
 	void InitializeBots(WorldLight* worldLight);
+	Entity* InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight);
 
+
+	void SpawnNewWind();
 	void ReadKeyboardInput();
 
 public:

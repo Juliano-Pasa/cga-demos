@@ -52,6 +52,7 @@ public:
 	void Render(mat4 projection, mat4 view);
 
 	vec3 CenterPosition();
+	vec3 GoalPosition();
 	vector<vec3> GetNearbyVertices(vec3 position, int neighbourPatches);
 
 	WorldLight* worldLight;

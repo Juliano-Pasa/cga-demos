@@ -91,11 +91,11 @@ void Camera::ReadMouseInputs()
 
 	if (currentAngles.x > maxVerticalAngle)
 	{
-		currentAngles.x = maxVerticalAngle;
+		//currentAngles.x = maxVerticalAngle;
 	}
 	else if (currentAngles.x < minVerticalAngle)
 	{
-		currentAngles.x = minVerticalAngle;
+		//currentAngles.x = minVerticalAngle;
 	}
 
 	transform.angles(currentAngles);

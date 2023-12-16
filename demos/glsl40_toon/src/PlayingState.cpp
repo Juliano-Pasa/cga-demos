@@ -4,7 +4,6 @@
 #include "TerrainGenerator.h"
 #include "DuckPlayerControler.h"
 #include "DuckBotControler.h"
-#include "Wind.h"
 #include <ctime>
 #include <iostream>
 
@@ -21,6 +20,9 @@ PlayingState::PlayingState(GLFWwindow* window) : GameState()
 	wireframe = false;
 	hiddenCursor = true;
 	entities = vector<Entity*>();
+
+	windSpawnTime = 10.0f;
+	windSpawnCooldown = windSpawnTime;
 
 	this->window = window;
 	glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
@@ -50,14 +52,14 @@ void PlayingState::OnStart()
 	Entity* duck = InitializePlayer(inputManager, camera, worldLight);
 	camera->SetEntityReference(duck);
 
-	Entity* wind = new Wind(camera->CameraPosition(), vec3(70));
+	wind = new Wind(camera->CameraPosition() + vec3(0, 200, 0), vec3(10));
 	entities.push_back(wind);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
 
 	InitializeBots(worldLight);
 
-	vector<Entity*> collidables = vector<Entity*>{ duck, entities.back(), wind};
+	vector<Entity*> collidables = vector<Entity*>{ duck, entities.back()};
 	collisionManager = new CollisionManager(collidables, duck, terrain);
 
 	loaded = true;
@@ -80,6 +82,14 @@ void PlayingState::OnPlay()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		deltaTime = glfwGetTime() - lastTime;
+		windSpawnCooldown -= deltaTime;
+
+		cout << "Spawn Cooldown: " << windSpawnCooldown << endl;
+
+		if (windSpawnCooldown < 0)
+		{
+			SpawnNewWind();
+		}
 
 		for (Entity* entity : entities)
 		{
@@ -153,6 +163,8 @@ void PlayingState::InitializeTerrain()
 	terrain->worldLight = worldLight;
 	terrain->Initialize();
 	entities.push_back(terrain);
+
+	goalPosition = terrain->GoalPosition();
 }
 
 void PlayingState::InitializeInputManager(GLFWwindow* window)
@@ -210,4 +222,19 @@ void PlayingState::ReadKeyboardInput()
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		}
 	}
+}
+
+void PlayingState::SpawnNewWind()
+{
+	int randomRange = 1000;
+	int randomX = (rand() % randomRange) - randomRange / 2;
+	int randomY = (rand() % randomRange) - randomRange / 2;
+
+	vec3 positionVector = camera->CameraPosition() + vec3(randomX, 200, randomY);
+	vec3 directionVector = goalPosition - positionVector;
+
+	float angle = atan2(directionVector.x, directionVector.z);
+
+	wind->SetNewSpawn(positionVector, vec3(0, angle, 0));
+	windSpawnCooldown = windSpawnTime;
 }
