@@ -33,9 +33,11 @@ private:
 	Wind* wind;
 
 	vec3 goalPosition;
-	CollisionManager* collisionManager;
+	Entity* player;
 
 	InputManager* inputManager;
+	CollisionManager* collisionManager;
+
 	GLFWwindow* window;
 	int windowWidth;
 	int windowHeight;
@@ -47,7 +49,6 @@ private:
 	void InitializeInputManager(GLFWwindow* window);
 	void InitializeBots(WorldLight* worldLight);
 	Entity* InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight);
-
 
 	void SpawnNewWind();
 	void ReadKeyboardInput();

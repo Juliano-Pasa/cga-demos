@@ -15,6 +15,7 @@ Wind::Wind(vec3 position, vec3 scale) : Entity (position, vec3(0), scale)
 	this->windColor = vec3(1);
 
 	SetNewSpawn(position, vec3(0));
+	this->render = false;
 }
 
 float Wind::GetLoopingRotation(double animationKey)

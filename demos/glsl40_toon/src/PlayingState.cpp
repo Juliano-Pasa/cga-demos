@@ -49,8 +49,8 @@ void PlayingState::OnStart()
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
 
-	Entity* duck = InitializePlayer(inputManager, camera, worldLight);
-	camera->SetEntityReference(duck);
+	player = InitializePlayer(inputManager, camera, worldLight);
+	camera->SetEntityReference(player);
 
 	wind = new Wind(camera->CameraPosition() + vec3(0, 200, 0), vec3(10));
 	entities.push_back(wind);
@@ -59,8 +59,8 @@ void PlayingState::OnStart()
 
 	InitializeBots(worldLight);
 
-	vector<Entity*> collidables = vector<Entity*>{ duck, entities.back()};
-	collisionManager = new CollisionManager(collidables, duck, terrain);
+	vector<Entity*> collidables = vector<Entity*>{ player, entities.back()};
+	collisionManager = new CollisionManager(collidables, player, terrain);
 
 	loaded = true;
 	OnPlay();
@@ -83,8 +83,6 @@ void PlayingState::OnPlay()
 		
 		deltaTime = glfwGetTime() - lastTime;
 		windSpawnCooldown -= deltaTime;
-
-		cout << "Spawn Cooldown: " << windSpawnCooldown << endl;
 
 		if (windSpawnCooldown < 0)
 		{
@@ -228,12 +226,14 @@ void PlayingState::SpawnNewWind()
 {
 	int randomRange = 1000;
 	int randomX = (rand() % randomRange) - randomRange / 2;
-	int randomY = (rand() % randomRange) - randomRange / 2;
+	int randomZ = (rand() % randomRange) - randomRange / 2;
+	vec3 positionVector = player->transform.position() + vec3(randomX, 200, randomZ);
 
-	vec3 positionVector = camera->CameraPosition() + vec3(randomX, 200, randomY);
+	randomRange = 200;
+	randomX = (rand() % randomRange) - randomRange / 2;
+	randomZ = (rand() % randomRange) - randomRange / 2;
 	vec3 directionVector = goalPosition - positionVector;
-
-	float angle = atan2(directionVector.x, directionVector.z);
+	float angle = atan2(directionVector.x + randomX, directionVector.z + randomZ);
 
 	wind->SetNewSpawn(positionVector, vec3(0, angle, 0));
 	windSpawnCooldown = windSpawnTime;
