@@ -153,25 +153,30 @@ DuckBotState DuckBotControler::GetCurrentState(float deltaTime)
 	{
 		if (currentSeekTime < seekDuration)
 		{
+			maxSpeed = sprintSpeed;
 			currentSeekTime += deltaTime;
 			return SEEKING;
 		}
 
 		currentSeekTime = 0.0f;
+		maxSpeed = baseSpeed;
 		return WANDERING;
 	}
 
 	if (!wind->render)
 	{
+		maxSpeed = baseSpeed;
 		return WANDERING;
 	}
 
 	float distanceFromWind = glm::length(wind->transform.position() - entity->transform.position());
 	if (distanceFromWind > maxDistanceFromWind)
 	{
+		maxSpeed = baseSpeed;
 		return WANDERING;
 	}
 
+	maxSpeed = sprintSpeed;
 	return SEEKING;
 }
 
