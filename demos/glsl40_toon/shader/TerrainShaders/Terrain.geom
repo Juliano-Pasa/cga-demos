@@ -65,7 +65,7 @@ void DrawGrassSector(float height, vec3 normal, float maxLight)
 
 void GenerateGrass(vec2 centerPoint, vec3 normal)
 {
-	int iterations = 16;
+	int iterations = 8;
 
 	float heightIncrement = 1.0f;
 	float currentHeight = heightIncrement;

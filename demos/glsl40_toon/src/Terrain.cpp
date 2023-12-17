@@ -222,7 +222,7 @@ vector<vec3> Terrain::GetNearbyVertices(vec3 position)
 void Terrain::SetRenderedPatches()
 {
 	vec3 cameraPosition = camera->CameraPosition();
-	int neighbourPatches = 15;
+	int neighbourPatches = 10;
 
 	int patchI = cameraPosition.z / patchHeight;
 	int patchJ = cameraPosition.x / patchWidth;
@@ -233,6 +233,15 @@ void Terrain::SetRenderedPatches()
 	{
 		for (int j = -neighbourPatches; j < neighbourPatches + 1; j++)
 		{
+			if (i + patchI < 0 || i + patchI >= totalPatches)
+			{
+				continue;
+			}
+			if (j + patchJ < 0 || j + patchJ >= totalPatches)
+			{
+				continue;
+			}
+
 			int startingPoint = (i + patchI) * (totalPatches + 1) + (j + patchJ);
 
 			indices.push_back(startingPoint);

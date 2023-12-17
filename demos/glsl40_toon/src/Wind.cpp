@@ -7,6 +7,7 @@
 Wind::Wind(vec3 position, vec3 scale) : Entity (position, vec3(0), scale)
 {
 	this->totalAnimationDuration = 4.5f;
+	this->currentDuration = 0.0;
 
 	this->totalSequences = 3;
 	this->totalParticles = 100;
@@ -14,7 +15,9 @@ Wind::Wind(vec3 position, vec3 scale) : Entity (position, vec3(0), scale)
 	this->particleSpacement = 1;
 	this->windColor = vec3(1);
 
-	SetNewSpawn(position, vec3(0));
+	this->firstWindParticle = 0;
+	this->lastWindParticle = firstWindParticle - maxVisibleParticles;
+
 	this->render = false;
 }
 
@@ -52,6 +55,8 @@ void Wind::SetNewSpawn(vec3 position, vec3 angles)
 
 	firstWindParticle = 0;
 	lastWindParticle = firstWindParticle - maxVisibleParticles;
+
+	UpdateParticleIndices();
 	render = true;
 }
 
@@ -68,7 +73,7 @@ void Wind::UpdateParticleIndices()
 	}
 
 	int firstIndex = lastWindParticle * 24 * totalSequences;
-	int totalSize = (adjustedFirstParticle - lastWindParticle + 1) * 24 * totalSequences;
+	totalSize = (adjustedFirstParticle - lastWindParticle + 1) * 24 * totalSequences;
 
 	glBindVertexArray(vaoID);
 
@@ -186,6 +191,7 @@ void Wind::Initialize()
 
 	GenerateVertices();
 	GenerateBuffers();
+	UpdateParticleIndices();
 }
 
 void Wind::Update(double deltaTime)
@@ -199,6 +205,8 @@ void Wind::Update(double deltaTime)
 	{
 		animationUpdateCount = 0.0;
 		firstWindParticle = 0;
+		lastWindParticle = firstWindParticle - maxVisibleParticles;
+		currentDuration = 0.0;
 		render = false;
 		return;
 	}
@@ -218,6 +226,7 @@ void Wind::Update(double deltaTime)
 	UpdateSelfAndChildren(false);
 
 	animationUpdateCount += deltaTime;
+	currentDuration += deltaTime;
 }
 
 void Wind::Render(mat4 projection, mat4 view)
@@ -237,7 +246,7 @@ void Wind::Render(mat4 projection, mat4 view)
 	shader.setUniform("MVP", MVPMatrix);
 
 	glBindVertexArray(vaoID);
-	glDrawElements(GL_TRIANGLE_FAN, maxVisibleParticles * 24 * totalSequences, GL_UNSIGNED_INT, (GLubyte*)NULL);
+	glDrawElements(GL_TRIANGLE_FAN, totalSize, GL_UNSIGNED_INT, (GLubyte*)NULL);
 	glBindVertexArray(0);
 }
 

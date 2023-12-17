@@ -10,10 +10,12 @@ private:
 	float animationStep;
 	double animationUpdateCount;
 	float totalAnimationDuration;
+	double currentDuration;
 
 	int firstWindParticle;
 	int lastWindParticle;
 	int maxVisibleParticles;
+	int totalSize;
 
 	int totalParticles;
 	float particleSpacement;
