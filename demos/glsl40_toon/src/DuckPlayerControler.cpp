@@ -71,23 +71,20 @@ void DuckPlayerControler::ApplyForces(float deltaTime)
 	currentSpeed = TruncateMagnitude(currentSpeed, maxSpeed);
 	entity->transform.position(entity->transform.position() + currentSpeed * deltaTime);
 
-	cout << "Aceleracao : " << glm::length(acceleration) << endl;
-	cout << "Velocidade nova: " << glm::length(currentSpeed) << endl;
-
 	if (glm::length(newForce) > 0)
 	{
 		return;
 	}
-	if (glm::length(resultingForce) > 1)
+	if (glm::length(resultingForce) > maxForce / 100.0f)
 	{
-		resultingForce -= glm::normalize(resultingForce) * maxForce * deltaTime * 16.0f;
+		resultingForce -= resultingForce * deltaTime * 16.0f;
 		return;
 	}
 
 	resultingForce = vec3(0);
-	if (glm::length(currentSpeed) > 0.0009765625f)
+	if (glm::length(currentSpeed) > maxSpeed / 100.0f)
 	{
-		currentSpeed -= glm::normalize(currentSpeed) * maxSpeed * deltaTime * 16.0f;
+		currentSpeed -= currentSpeed * deltaTime * 16.0f;
 		return;
 	}
 	currentSpeed = vec3(0);
