@@ -41,17 +41,10 @@ void PlayingState::OnStart()
 	InitializeGL();
 	InitializeTerrain();
 
-
 	vec3 terrainCenterPosition = terrain->CenterPosition();
 	worldLight->transform.position(terrainCenterPosition + vec3(0, 100000, 0));
 
-	PlayerCube* cube2 = new PlayerCube(vec3(3050, 600, 3000), vec3(0, 0, 0), vec3(30));
-	cube2->worldLight = worldLight;
-	entities.push_back(cube2);
-	entities.back()->Initialize();
-	terrain->AddChild(entities.back());
-
-	player = InitializePlayer(inputManager, camera, worldLight);
+	player = InitializePlayer(inputManager, camera, worldLight, terrainCenterPosition);
 	camera->SetEntityReference(player);
 
 	wind = new Wind(camera->CameraPosition() + vec3(0, 200, 0), vec3(10));
@@ -59,7 +52,7 @@ void PlayingState::OnStart()
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
 
-	InitializeBots(worldLight);
+	InitializeBots(worldLight, terrainCenterPosition);
 
 	vector<Entity*> collidables = vector<Entity*>{ player, entities.back()};
 	collisionManager = new CollisionManager(collidables, player, terrain);
@@ -175,12 +168,12 @@ void PlayingState::InitializeInputManager(GLFWwindow* window)
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
-Entity* PlayingState::InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight)
+Entity* PlayingState::InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight, vec3 position)
 {
 	DuckPlayerControler* controler = new DuckPlayerControler();
 	controler->Initialize(inputManager, camera, 1000.0f, 500.0f, 350.0f, 550.0f, 1.0f);
 
-	Duck* duck = new Duck(camera->CameraPosition(), vec3(20), worldLight, controler);
+	Duck* duck = new Duck(position, vec3(20), worldLight, controler);
 	entities.push_back(duck);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
@@ -188,12 +181,12 @@ Entity* PlayingState::InitializePlayer(InputManager* inputManager, Camera* camer
 	return duck;
 }
 
-void PlayingState::InitializeBots(WorldLight* worldLight)
+void PlayingState::InitializeBots(WorldLight* worldLight, vec3 position)
 {
 	DuckBotControler* controler = new DuckBotControler();
 	controler->Initialize(1000.0f, 500.0f, 350.0f, 450.0f, 1.0f, goalPosition, wind);
 
-	Duck* duck = new Duck(camera->CameraPosition(), vec3(20), worldLight, controler);
+	Duck* duck = new Duck(position, vec3(20), worldLight, controler);
 	entities.push_back(duck);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());

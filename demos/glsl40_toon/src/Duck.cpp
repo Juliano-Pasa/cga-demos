@@ -36,7 +36,7 @@ void Duck::Initialize()
 	primitiveRestartIndex = -1;
 	glPrimitiveRestartIndex(primitiveRestartIndex);
 
-	LoadModel("..\\..\\resources\\DuckModel.obj");
+	LoadModel("..\\..\\resources\\DuckModel2.obj");
 	GenerateBuffers();
 }
 

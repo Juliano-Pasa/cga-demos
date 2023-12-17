@@ -221,10 +221,8 @@ vector<vec3> Terrain::GetNearbyVertices(vec3 position)
 void Terrain::SetGoalPosition()
 {
 	srand(time(NULL));
-	//int goalI = rand() % totalPatches;
-	int goalI = 10;
-	//int goalJ = rand() % totalPatches;
-	int goalJ = 10;
+	int goalI = rand() % totalPatches;
+	int goalJ = rand() % totalPatches;
 	
 	int startigPoint = goalI * (totalPatches + 1) + goalJ;
 	verticesColors[startigPoint] = goalColor;

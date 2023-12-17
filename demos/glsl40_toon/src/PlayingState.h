@@ -47,8 +47,8 @@ private:
 	void InitializeGL();
 	void InitializeTerrain();
 	void InitializeInputManager(GLFWwindow* window);
-	void InitializeBots(WorldLight* worldLight);
-	Entity* InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight);
+	void InitializeBots(WorldLight* worldLight, vec3 position);
+	Entity* InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight, vec3 position);
 
 	void SpawnNewWind();
 	void ReadKeyboardInput();
