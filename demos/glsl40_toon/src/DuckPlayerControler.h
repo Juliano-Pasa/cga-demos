@@ -15,6 +15,7 @@ class DuckPlayerControler : public EntityControler
 	bool firstMouseMove;
 	dvec2 lastMouseCoords;
 
+	vec3 newForce;
 	vec3 resultingForce;
 	float maxForce;
 	float movementStrength;

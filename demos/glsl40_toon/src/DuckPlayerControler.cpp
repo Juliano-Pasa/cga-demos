@@ -8,6 +8,7 @@ DuckPlayerControler::DuckPlayerControler() : EntityControler()
 	holdRotation = false;
 	firstMouseMove = true;
 
+	newForce = vec3(0);
 	resultingForce = vec3(0);
 	currentSpeed = vec3(0);
 
@@ -39,6 +40,8 @@ void DuckPlayerControler::Update(float deltaTime)
 		return;
 	}
 
+	newForce = vec3(0);
+
 	ReadMouseInputs();
 	ReadKeyboardInputs();
 	ApplyForces(deltaTime);
@@ -58,6 +61,8 @@ void DuckPlayerControler::Update(float deltaTime)
 
 void DuckPlayerControler::ApplyForces(float deltaTime)
 {
+	newForce *= deltaTime * 16;
+	resultingForce += newForce;
 	resultingForce = TruncateMagnitude(resultingForce, maxForce);
 
 	vec3 acceleration = resultingForce / mass;
@@ -66,16 +71,23 @@ void DuckPlayerControler::ApplyForces(float deltaTime)
 	currentSpeed = TruncateMagnitude(currentSpeed, maxSpeed);
 	entity->transform.position(entity->transform.position() + currentSpeed * deltaTime);
 
-	if (glm::length(resultingForce) > 1.0f)
+	cout << "Aceleracao : " << glm::length(acceleration) << endl;
+	cout << "Velocidade nova: " << glm::length(currentSpeed) << endl;
+
+	if (glm::length(newForce) > 0)
 	{
-		resultingForce -= resultingForce / 4.0f;
+		return;
+	}
+	if (glm::length(resultingForce) > 1)
+	{
+		resultingForce -= glm::normalize(resultingForce) * maxForce * deltaTime * 16.0f;
 		return;
 	}
 
 	resultingForce = vec3(0);
-	if (glm::length(currentSpeed) > 1.0f)
+	if (glm::length(currentSpeed) > 0.0009765625f)
 	{
-		currentSpeed -= currentSpeed / 10.0f;
+		currentSpeed -= glm::normalize(currentSpeed) * maxSpeed * deltaTime * 16.0f;
 		return;
 	}
 	currentSpeed = vec3(0);
@@ -115,22 +127,22 @@ void DuckPlayerControler:: ReadKeyboardInputs()
 {
 	if (inputManager->GetIsKeyDown(GLFW_KEY_W))
 	{
-		resultingForce += movementStrength * orientation;
+		newForce += maxForce * orientation;
 		wobble = true;
 	}
 	if (inputManager->GetIsKeyDown(GLFW_KEY_S))
 	{
-		resultingForce -= movementStrength * orientation;
+		newForce -= maxForce * orientation;
 		wobble = true;
 	}
 	if (inputManager->GetIsKeyDown(GLFW_KEY_A))
 	{
-		resultingForce -= movementStrength * sideOrientation;
+		newForce -= maxForce * sideOrientation;
 		wobble = true;
 	}
 	if (inputManager->GetIsKeyDown(GLFW_KEY_D))
 	{
-		resultingForce += movementStrength * sideOrientation;
+		newForce += maxForce * sideOrientation;
 		wobble = true;
 	}
 
