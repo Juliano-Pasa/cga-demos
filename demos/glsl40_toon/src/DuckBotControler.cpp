@@ -12,7 +12,7 @@ DuckBotControler::DuckBotControler() : EntityControler()
 	orientation = vec3(1, 0, 0);
 }
 
-void DuckBotControler::Initialize(float maxForce, float movementStrength, float baseSpeed, float sprintSpeed, float mass)
+void DuckBotControler::Initialize(float maxForce, float movementStrength, float baseSpeed, float sprintSpeed, float mass, vec3 goalPosition, Wind* wind)
 {
 	this->maxForce = maxForce;
 	this->movementStrength = movementStrength;
@@ -21,12 +21,19 @@ void DuckBotControler::Initialize(float maxForce, float movementStrength, float 
 	this->mass = mass;
 
 	this->maxSpeed = baseSpeed;
+	this->goalPosition = goalPosition;
+
+	this->wind = wind;
+	this->maxDistanceFromWind = 1000.0f;
+
+	this->currentSeekTime = 0.0f;
+	this->seekDuration = 6.0f;
 
 	this->wanderRadius = 50.0f;
 	this->wanderDistance = 1.0f;
-	this->wanderJitter = 0.5f;
 	this->wanderAngle = glm::half_pi<float>();
 
+	this->currentState = WANDERING;
 
 	srand(time(NULL));
 	this->initialized = true;
@@ -97,6 +104,15 @@ vec3 DuckBotControler::Wander()
 	return target;
 }
 
+vec3 DuckBotControler::Seek()
+{
+	vec3 desiredVelocity = goalPosition - entity->transform.position();
+	desiredVelocity.y = 0;
+	desiredVelocity = TruncateMagnitude(desiredVelocity, maxSpeed);
+
+	return desiredVelocity - currentSpeed;
+}
+
 #pragma endregion
 
 void DuckBotControler::Update(float deltaTime)
@@ -106,8 +122,53 @@ void DuckBotControler::Update(float deltaTime)
 		return;
 	}
 
+	currentState = GetCurrentState(deltaTime);
+
 	CalculateOrientation();
-	resultingForce += Wander();
+	resultingForce += CalculateCurrentForce();
 
 	ApplyForces(deltaTime);
+}
+
+DuckBotState DuckBotControler::GetCurrentState(float deltaTime)
+{
+	if (currentState == SEEKING)
+	{
+		if (currentSeekTime < seekDuration)
+		{
+			currentSeekTime += deltaTime;
+			return SEEKING;
+		}
+
+		currentSeekTime = 0.0f;
+		return WANDERING;
+	}
+
+	if (!wind->render)
+	{
+		return WANDERING;
+	}
+
+	float distanceFromWind = glm::length(wind->transform.position() - entity->transform.position());
+	if (distanceFromWind > maxDistanceFromWind)
+	{
+		return WANDERING;
+	}
+
+	return SEEKING;
+}
+
+vec3 DuckBotControler::CalculateCurrentForce()
+{
+	switch (currentState)
+	{
+	case WANDERING: 
+		return Wander();
+		break;
+	case SEEKING:
+		return Seek();
+		break;
+	default:
+		return Wander();			
+	}
 }

@@ -6,9 +6,6 @@
     <ClCompile Include="..\..\utils\TextureManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Transform.cpp" />
-    <ClCompile Include="src\PlayingState.cpp">
-      <Filter>GameStateMachine</Filter>
-    </ClCompile>
     <ClCompile Include="src\Camera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
@@ -54,20 +51,14 @@
     <ClCompile Include="src\Wind.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\PlayingState.cpp">
+      <Filter>StateMachines\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\GLUtils.h" />
     <ClInclude Include="..\..\utils\TextureManager.h" />
     <ClInclude Include="src\Transform.h" />
-    <ClInclude Include="src\GameState.h">
-      <Filter>GameStateMachine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameStates.h">
-      <Filter>GameStateMachine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PlayingState.h">
-      <Filter>GameStateMachine</Filter>
-    </ClInclude>
     <ClInclude Include="src\Camera.h">
       <Filter>Camera</Filter>
     </ClInclude>
@@ -113,6 +104,15 @@
     <ClInclude Include="src\Wind.h">
       <Filter>Entities</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameState.h">
+      <Filter>StateMachines\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameStates.h">
+      <Filter>StateMachines\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlayingState.h">
+      <Filter>StateMachines\GameStates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\glsl40_toon.frag">
@@ -156,9 +156,6 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{9694a283-b4d6-4ff3-affc-701e7ca3e73b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameStateMachine">
-      <UniqueIdentifier>{6b4b44c4-e8f4-4e0c-95ac-d97732aa24ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="LodePNG">
       <UniqueIdentifier>{1eb00f5c-0e9e-4625-b371-cdc988989aba}</UniqueIdentifier>
     </Filter>
@@ -179,6 +176,12 @@
     </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{b43be6de-139d-45b4-8097-1e7c607a7a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachines">
+      <UniqueIdentifier>{6b4b44c4-e8f4-4e0c-95ac-d97732aa24ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachines\GameStates">
+      <UniqueIdentifier>{f9c3f649-7302-4e25-a675-639eefae7b3e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -7,7 +7,6 @@
 class Wind : public Entity
 {
 private:
-
 	float animationStep;
 	double animationUpdateCount;
 	float totalAnimationDuration;

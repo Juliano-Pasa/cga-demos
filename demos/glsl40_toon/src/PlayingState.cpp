@@ -41,7 +41,9 @@ void PlayingState::OnStart()
 	InitializeGL();
 	InitializeTerrain();
 
+
 	vec3 terrainCenterPosition = terrain->CenterPosition();
+	worldLight->transform.position(terrainCenterPosition + vec3(0, 100000, 0));
 
 	PlayerCube* cube2 = new PlayerCube(vec3(3050, 600, 3000), vec3(0, 0, 0), vec3(30));
 	cube2->worldLight = worldLight;
@@ -189,7 +191,7 @@ Entity* PlayingState::InitializePlayer(InputManager* inputManager, Camera* camer
 void PlayingState::InitializeBots(WorldLight* worldLight)
 {
 	DuckBotControler* controler = new DuckBotControler();
-	controler->Initialize(1000.0f, 500.0f, 250.0f, 350.0f, 1.0f);
+	controler->Initialize(1000.0f, 500.0f, 250.0f, 350.0f, 1.0f, goalPosition, wind);
 
 	Duck* duck = new Duck(camera->CameraPosition(), vec3(70), worldLight, controler);
 	entities.push_back(duck);
