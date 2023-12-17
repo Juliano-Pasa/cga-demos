@@ -11,16 +11,18 @@ void main()
 	float intensity = max(dot(gLightDirection, gNormal), 0.0);
 	vec3 changedColor = gVertexColor;
 
-	if (intensity > 0.98)
-		changedColor = gVertexColor * vec3(0.9,0.9,0.9);
-	else if (intensity > 0.5)
-		changedColor = gVertexColor * vec3(0.4,0.4,0.4);	
-	else if (intensity > 0.25)
-		changedColor = gVertexColor * vec3(0.2,0.2,0.2);
+	if (intensity > 0.75)
+		changedColor = gVertexColor * vec3(1);
+	else if (intensity > 0.60)
+		changedColor = gVertexColor * vec3(0.9);	
+	else if (intensity > 0.45)
+		changedColor = gVertexColor * vec3(0.8);
+	else if (intensity > 0.30)
+		changedColor = gVertexColor * vec3(0.7);
+	else if (intensity > 0.15)
+		changedColor = gVertexColor * vec3(0.6);
 	else
-		changedColor = gVertexColor * vec3(0.1,0.1,0.1);	
-
-	changedColor = gVertexColor * vec3(intensity, intensity, intensity);
+		changedColor = gVertexColor * vec3(0.5);
 
 	gl_FragColor = vec4(changedColor, 1.0);
 }

@@ -180,7 +180,7 @@ Entity* PlayingState::InitializePlayer(InputManager* inputManager, Camera* camer
 	DuckPlayerControler* controler = new DuckPlayerControler();
 	controler->Initialize(inputManager, camera, 1000.0f, 500.0f, 250.0f, 350.0f, 1.0f);
 
-	Duck* duck = new Duck(camera->CameraPosition(), vec3(70), worldLight, controler);
+	Duck* duck = new Duck(camera->CameraPosition(), vec3(20), worldLight, controler);
 	entities.push_back(duck);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
@@ -193,7 +193,7 @@ void PlayingState::InitializeBots(WorldLight* worldLight)
 	DuckBotControler* controler = new DuckBotControler();
 	controler->Initialize(1000.0f, 500.0f, 250.0f, 350.0f, 1.0f, goalPosition, wind);
 
-	Duck* duck = new Duck(camera->CameraPosition(), vec3(70), worldLight, controler);
+	Duck* duck = new Duck(camera->CameraPosition(), vec3(20), worldLight, controler);
 	entities.push_back(duck);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());

@@ -18,13 +18,16 @@ private:
 	GLuint primitiveRestartIndex;
 	GLuint vaoID;
 
-	vector<vec3> vertices;
 	vector<vec3> colors;
+	vector<vec3> normals;
+	vector<vec3> vertices;
 	vector<unsigned int> indices;
 
 	GLSLProgram shader;
 	WorldLight* worldLight;
 	EntityControler* entityControler;
+
+	void LoadModel(string path);
 
 public:
 	Duck(vec3 position, vec3 scale, WorldLight* worldLight, EntityControler* entityControler);

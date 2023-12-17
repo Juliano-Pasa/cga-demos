@@ -23,7 +23,7 @@ void CollisionManager::CheckCollisions(bool nearby)
 			nearbyVertices[3],
 			nearbyVertices[2]);
 
-		entityPosition.y = interpolatedPosition.y + 20.0f;
+		entityPosition.y = interpolatedPosition.y + 10.0f;
 		entity->transform.position(entityPosition);
 	}
 }

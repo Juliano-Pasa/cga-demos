@@ -36,7 +36,7 @@ void Duck::Initialize()
 	primitiveRestartIndex = -1;
 	glPrimitiveRestartIndex(primitiveRestartIndex);
 
-	GenerateModel();
+	LoadModel("..\\..\\resources\\DuckModel.obj");
 	GenerateBuffers();
 }
 
@@ -64,7 +64,7 @@ void Duck::Render(mat4 projection, mat4 view)
 	shader.setUniform("M", transform.modelMatrix());
 
 	glBindVertexArray(vaoID);
-	glDrawElements(GL_TRIANGLE_FAN, indices.size(), GL_UNSIGNED_INT, (GLubyte*)NULL);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, (GLubyte*)NULL);
 	glBindVertexArray(0);
 }
 
@@ -150,3 +150,54 @@ void Duck::GenerateBuffers()
 
 
 #pragma endregion
+
+
+void Duck::LoadModel(string path)
+{
+	vector<unsigned int> vertexIndices, colorIndices, normalIndices;
+	vector<vec3> tempNormals;
+
+	vertices.clear();
+	indices.clear();
+	colors.clear();
+
+	FILE* file = fopen(path.data(), "r");
+	if (file == NULL) {
+		printf("Impossible to open the model file!\n");
+		return;
+	}
+
+	while (1) {
+		char lineHeader[128];
+
+		int res = fscanf(file, "%s", lineHeader);
+		if (res == EOF)
+			break;
+
+		if (strcmp(lineHeader, "v") == 0) {
+			vec3 vertex;
+			vec3 color;
+
+			fscanf(file, "%f %f %f %f %f %f\n", &vertex.x, &vertex.y, &vertex.z, &color.x, &color.y, &color.z);
+
+			vertices.push_back(vertex);
+			colors.push_back(color);
+		}
+		else if (strcmp(lineHeader, "vn") == 0) {
+			vec3 normal;
+
+			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
+
+			tempNormals.push_back(normal);
+		}
+		else if (strcmp(lineHeader, "f") == 0) {
+			unsigned int vertexIndex[3], normalIndex[3];
+
+			int matches = fscanf(file, "%d//%d %d//%d %d//%d\n", &vertexIndex[0], &normalIndex[0], &vertexIndex[1], &normalIndex[1], &vertexIndex[2], &normalIndex[2]);
+
+			indices.push_back(vertexIndex[0] - 1);
+			indices.push_back(vertexIndex[1] - 1);
+			indices.push_back(vertexIndex[2] - 1);
+		}
+	}
+}
