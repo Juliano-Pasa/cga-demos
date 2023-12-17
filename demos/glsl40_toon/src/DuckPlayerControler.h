@@ -26,6 +26,11 @@ class DuckPlayerControler : public EntityControler
 
 	float mass;
 
+	bool wobble;
+	float wobbleAngle;
+	float maxWobble;
+	float wobbleSpeed;
+
 	vec3 orientation;
 	vec3 sideOrientation;
 
@@ -33,6 +38,7 @@ class DuckPlayerControler : public EntityControler
 
 	void CalculateOrientation();
 	void ApplyForces(float deltaTime);
+	void ApplyWobble(float deltaTime);
 	vec3 TruncateMagnitude(vec3 vec, float maxMagnitude);
 
 public:

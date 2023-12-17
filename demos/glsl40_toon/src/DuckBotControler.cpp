@@ -10,6 +10,11 @@ DuckBotControler::DuckBotControler() : EntityControler()
 	resultingForce = vec3(0);
 	currentSpeed = vec3(0);
 	orientation = vec3(1, 0, 0);
+
+	this->wobbleAngle = 0.0f;
+	this->wobble = true;
+	this->maxWobble = glm::radians(10.0f);
+	this->wobbleSpeed = glm::pi<float>() * 6;
 }
 
 void DuckBotControler::Initialize(float maxForce, float movementStrength, float baseSpeed, float sprintSpeed, float mass, vec3 goalPosition, Wind* wind)
@@ -88,6 +93,17 @@ void DuckBotControler::ApplyForces(float deltaTime)
 	currentSpeed = vec3(0);
 }
 
+void DuckBotControler::ApplyWobble(float deltaTime)
+{
+	float rotation = sin(wobbleAngle);
+
+	vec3 currentAngles = entity->transform.angles();
+	currentAngles.x = rotation * maxWobble;
+	entity->transform.angles(currentAngles);
+
+	wobbleAngle += deltaTime * wobbleSpeed;
+}
+
 #pragma region SteeringBehaviour
 
 vec3 DuckBotControler::Wander()
@@ -128,6 +144,7 @@ void DuckBotControler::Update(float deltaTime)
 	resultingForce += CalculateCurrentForce();
 
 	ApplyForces(deltaTime);
+	ApplyWobble(deltaTime);
 }
 
 DuckBotState DuckBotControler::GetCurrentState(float deltaTime)

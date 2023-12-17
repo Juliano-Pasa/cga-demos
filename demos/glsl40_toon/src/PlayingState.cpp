@@ -178,7 +178,7 @@ void PlayingState::InitializeInputManager(GLFWwindow* window)
 Entity* PlayingState::InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight)
 {
 	DuckPlayerControler* controler = new DuckPlayerControler();
-	controler->Initialize(inputManager, camera, 1000.0f, 500.0f, 250.0f, 350.0f, 1.0f);
+	controler->Initialize(inputManager, camera, 1000.0f, 500.0f, 350.0f, 550.0f, 1.0f);
 
 	Duck* duck = new Duck(camera->CameraPosition(), vec3(20), worldLight, controler);
 	entities.push_back(duck);
@@ -191,7 +191,7 @@ Entity* PlayingState::InitializePlayer(InputManager* inputManager, Camera* camer
 void PlayingState::InitializeBots(WorldLight* worldLight)
 {
 	DuckBotControler* controler = new DuckBotControler();
-	controler->Initialize(1000.0f, 500.0f, 250.0f, 350.0f, 1.0f, goalPosition, wind);
+	controler->Initialize(1000.0f, 500.0f, 350.0f, 450.0f, 1.0f, goalPosition, wind);
 
 	Duck* duck = new Duck(camera->CameraPosition(), vec3(20), worldLight, controler);
 	entities.push_back(duck);

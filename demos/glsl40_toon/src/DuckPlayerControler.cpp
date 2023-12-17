@@ -1,6 +1,7 @@
 #include "DuckPlayerControler.h"
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 DuckPlayerControler::DuckPlayerControler() : EntityControler()
 {
@@ -9,6 +10,11 @@ DuckPlayerControler::DuckPlayerControler() : EntityControler()
 
 	resultingForce = vec3(0);
 	currentSpeed = vec3(0);
+
+	this->wobbleAngle = 0.0f;
+	this->wobble = false;
+	this->maxWobble = glm::radians(10.0f);
+	this->wobbleSpeed = glm::pi<float>() * 6;
 }
 
 void DuckPlayerControler::Initialize(InputManager* inputManager, Camera* camera, float maxForce, float movementStrength, float baseSpeed, float sprintSpeed, float mass)
@@ -36,6 +42,18 @@ void DuckPlayerControler::Update(float deltaTime)
 	ReadMouseInputs();
 	ReadKeyboardInputs();
 	ApplyForces(deltaTime);
+
+	if (wobble)
+	{
+		ApplyWobble(deltaTime);
+		wobble = false;
+	}
+	else
+	{
+		wobbleAngle = 0.0;
+		ApplyWobble(deltaTime);
+		wobbleAngle = 0.0;
+	}
 }
 
 void DuckPlayerControler::ApplyForces(float deltaTime)
@@ -63,6 +81,17 @@ void DuckPlayerControler::ApplyForces(float deltaTime)
 	currentSpeed = vec3(0);
 }
 
+void DuckPlayerControler::ApplyWobble(float deltaTime)
+{
+	float rotation = sin(wobbleAngle);
+
+	vec3 currentAngles = entity->transform.angles();
+	currentAngles.x = rotation * maxWobble;
+	entity->transform.angles(currentAngles);
+
+	wobbleAngle += deltaTime * wobbleSpeed;
+}
+
 void DuckPlayerControler::CalculateOrientation()
 {
 	vec3 newOrientation = glm::rotateY(vec3(1.0f, 0.0f, 0.0f), entity->transform.angles().y);
@@ -87,18 +116,22 @@ void DuckPlayerControler:: ReadKeyboardInputs()
 	if (inputManager->GetIsKeyDown(GLFW_KEY_W))
 	{
 		resultingForce += movementStrength * orientation;
+		wobble = true;
 	}
 	if (inputManager->GetIsKeyDown(GLFW_KEY_S))
 	{
 		resultingForce -= movementStrength * orientation;
+		wobble = true;
 	}
 	if (inputManager->GetIsKeyDown(GLFW_KEY_A))
 	{
 		resultingForce -= movementStrength * sideOrientation;
+		wobble = true;
 	}
 	if (inputManager->GetIsKeyDown(GLFW_KEY_D))
 	{
 		resultingForce += movementStrength * sideOrientation;
+		wobble = true;
 	}
 
 	if (inputManager->GetIsKeyDown(GLFW_KEY_LEFT_SHIFT))

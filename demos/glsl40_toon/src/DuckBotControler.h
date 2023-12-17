@@ -26,6 +26,11 @@ private:
 	vec3 orientation;
 	vec3 goalPosition;
 
+	bool wobble;
+	float wobbleAngle;
+	float maxWobble;
+	float wobbleSpeed;
+
 	float wanderAngle;
 	float wanderDistance;
 	float wanderRadius;
@@ -40,6 +45,7 @@ private:
 	void CalculateOrientation();
 	vec3 TruncateMagnitude(vec3 vec, float maxMagnitude);
 	void ApplyForces(float deltaTime);
+	void ApplyWobble(float deltaTime);
 
 	vec3 Wander();
 	vec3 Seek();

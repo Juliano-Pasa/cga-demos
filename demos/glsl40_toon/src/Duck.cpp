@@ -72,86 +72,6 @@ void Duck::Render(mat4 projection, mat4 view)
 
 #pragma region GenerateFunctions
 
-void Duck::GenerateModel()
-{
-	vertices.push_back(vec3(-0.5, 0.5, -0.5));
-	vertices.push_back(vec3(0.5, 0.5, -0.5));
-	vertices.push_back(vec3(0.5, 0.5, 0.5));
-	vertices.push_back(vec3(-0.5, 0.5, 0.5));
-
-	vertices.push_back(vec3(-0.5, -0.5, 0.5));
-	vertices.push_back(vec3(-0.5, -0.5, -0.5));
-	vertices.push_back(vec3(0.5, -0.5, -0.5));
-	vertices.push_back(vec3(0.5, -0.5, 0.5));
-
-	colors.push_back(vec3(0, 0, 0));
-	colors.push_back(vec3(0, 0, 1));
-	colors.push_back(vec3(0, 1, 0));
-	colors.push_back(vec3(0, 1, 1));
-	colors.push_back(vec3(1, 0, 0));
-	colors.push_back(vec3(1, 0, 1));
-	colors.push_back(vec3(1, 1, 0));
-	colors.push_back(vec3(1, 1, 1));
-
-	indices.push_back(0);
-	indices.push_back(3);
-	indices.push_back(1);
-	indices.push_back(5);
-	indices.push_back(3);
-
-	indices.push_back(primitiveRestartIndex);
-
-	indices.push_back(4);
-	indices.push_back(5);
-	indices.push_back(7);
-	indices.push_back(3);
-	indices.push_back(5);
-
-	indices.push_back(primitiveRestartIndex);
-
-	indices.push_back(2);
-	indices.push_back(1);
-	indices.push_back(3);
-	indices.push_back(7);
-	indices.push_back(1);
-
-	indices.push_back(primitiveRestartIndex);
-
-	indices.push_back(6);
-	indices.push_back(7);
-	indices.push_back(5);
-	indices.push_back(1);
-	indices.push_back(7);
-}
-
-void Duck::GenerateBuffers()
-{
-	glGenVertexArrays(1, &vaoID);
-	glBindVertexArray(vaoID);
-
-	unsigned int handle[3];
-	glGenBuffers(3, handle);
-
-	glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec3), (GLvoid*)&vertices[0], GL_STATIC_DRAW);
-	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
-	glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(vec3), (GLvoid*)&colors[0], GL_STATIC_DRAW);
-	glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
-	glEnableVertexAttribArray(1);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[2]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), (GLvoid*)&indices[0], GL_STATIC_DRAW);
-
-	glBindVertexArray(0);
-}
-
-
-#pragma endregion
-
-
 void Duck::LoadModel(string path)
 {
 	vector<unsigned int> vertexIndices, colorIndices, normalIndices;
@@ -201,3 +121,30 @@ void Duck::LoadModel(string path)
 		}
 	}
 }
+
+
+void Duck::GenerateBuffers()
+{
+	glGenVertexArrays(1, &vaoID);
+	glBindVertexArray(vaoID);
+
+	unsigned int handle[3];
+	glGenBuffers(3, handle);
+
+	glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vec3), (GLvoid*)&vertices[0], GL_STATIC_DRAW);
+	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, handle[1]);
+	glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(vec3), (GLvoid*)&colors[0], GL_STATIC_DRAW);
+	glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[2]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), (GLvoid*)&indices[0], GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
+}
+
+#pragma endregion
