@@ -14,6 +14,8 @@ protected:
 
 	bool _hasChanged = true;
 
+	vec3 ClampAngles(const vec3& angles);
+
 public:
 	const vec3& position() const { return _position; }
 	void position(const vec3& position) { _position = position; _hasChanged = true; }
@@ -22,10 +24,10 @@ public:
 	void scale(const vec3& scale) { _scale = scale; _hasChanged = true; }
 
 	const vec3& angles() const { return _angles; }
-	void angles(const vec3& angles) { _angles = angles; _hasChanged = true; }
+	void angles(const vec3& angles) { _angles = ClampAngles(angles); _hasChanged = true; _rotation = quat(angles); }
 
 	const quat& rotation() const { return _rotation; }
-	void rotation(const quat& rotation) { _rotation = rotation; _hasChanged = true; }
+	void rotation(const quat& rotation) { _rotation = rotation; _hasChanged = true; _angles = glm::eulerAngles(rotation); }
 
 	const mat4& modelMatrix() const { return _modelMatrix; }
 	const bool hasChanged() const { return _hasChanged; }

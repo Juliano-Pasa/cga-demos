@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <glm/gtc/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <iostream>
@@ -14,7 +15,11 @@ Camera::Camera(InputManager* inputManager, vec3 position)
 	this->sensitivity = 0.25f;
 	this->smoothness = 5.0f;
 	this->camDistance = 1000.0f;
-	this->freeCamMode = true;
+
+	this->freeCam = false;
+	this->slerpMode = false;
+	this->slerpDuration = 0.25;
+	this->currentSlerpStep = 0.0;
 
 	this->maxVerticalAngle = glm::radians(-20.0f);
 	this->minVerticalAngle = glm::radians(-90.0f);
@@ -44,8 +49,17 @@ void Camera::GenerateViewMatrix()
 void Camera::Update(double deltaTime)
 {
 	transform.position(referenceEntity->transform.position());
-	ReadKeyboardInputs((float)deltaTime);
-	ReadMouseInputs();
+
+	if (slerpMode)
+	{
+		SlerpQuaternion(deltaTime);
+	}
+	else
+	{
+		ReadKeyboardInputs();
+		ReadMouseInputs();
+	}
+
 	if (transform.hasChanged())
 	{
 		GenerateViewMatrix();
@@ -57,17 +71,20 @@ void Camera::Update(double deltaTime)
 
 #pragma region InputFunctions
 
-void Camera::ReadKeyboardInputs(float deltaTime)
+void Camera::ReadKeyboardInputs()
 {
+	if (inputManager->GetIsKeyDown(GLFW_KEY_LEFT_CONTROL))
+	{
+		freeCam = true;
+	}
+	else if (freeCam && !slerpMode)
+	{
+		SetupSlerp();
+	}
 }
 
 void Camera::ReadMouseInputs()
 {
-	if (!freeCamMode)
-	{
-		return;
-	}
-
 	dvec2 mouseCoords = inputManager->GetMouseCoords();
 
 	if (firstMouseMove)
@@ -91,11 +108,11 @@ void Camera::ReadMouseInputs()
 
 	if (currentAngles.x > maxVerticalAngle)
 	{
-		//currentAngles.x = maxVerticalAngle;
+		currentAngles.x = maxVerticalAngle;
 	}
 	else if (currentAngles.x < minVerticalAngle)
 	{
-		//currentAngles.x = minVerticalAngle;
+		currentAngles.x = minVerticalAngle;
 	}
 
 	transform.angles(currentAngles);
@@ -144,4 +161,43 @@ void Camera::SetEntityReference(Entity* reference)
 {
 	referenceEntity = reference;
 	transform.position(referenceEntity->transform.position());
+}
+
+void Camera::SlerpQuaternion(double deltaTime)
+{
+	float interpolationValue = glm::sin(glm::pi<float>() * currentSlerpStep / 2.0);
+	float newYAngle = initialSlerpY * (1 - interpolationValue) + finalSlerpY * interpolationValue;
+
+	vec3 currentAngles = transform.angles();
+	currentAngles.y = newYAngle;
+	transform.angles(currentAngles);
+
+	currentSlerpStep += deltaTime / slerpDuration;
+
+	if (currentSlerpStep >= 1.0f)
+	{
+		currentSlerpStep = 0.0;
+		slerpMode = false;
+	}
+}
+
+void Camera::SetupSlerp()
+{
+	initialSlerpY = transform.angles().y;
+	finalSlerpY = referenceEntity->transform.angles().y;
+
+	if (abs(finalSlerpY - initialSlerpY) > glm::pi<float>())
+	{
+		if (initialSlerpY < 0)
+		{
+			initialSlerpY += glm::two_pi<float>();
+		}
+		else if (finalSlerpY < 0)
+		{
+			finalSlerpY += glm::two_pi<float>();
+		}
+	}
+
+	slerpMode = true;
+	freeCam = false;
 }

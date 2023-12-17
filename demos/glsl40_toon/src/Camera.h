@@ -16,14 +16,27 @@ private:
 
 	dvec2 lastMouseCoords;
 	bool firstMouseMove;
-	bool freeCamMode;
+
+	bool freeCam;
+	bool slerpMode;
+	float slerpDuration;
+	double currentSlerpStep;
+
+	float initialSlerpY;
+	float finalSlerpY;
+
+	vec3 initialAngles;
+	quat initialRotation;
+	quat finalRotation;
 
 	float maxVerticalAngle;
 	float minVerticalAngle;
 
 	void InitTransform(vec3 position);
+	void SetupSlerp();
+	void SlerpQuaternion(double deltaTime);
 
-	void ReadKeyboardInputs(float deltaTime);
+	void ReadKeyboardInputs();
 	void GenerateViewMatrix();
 	void ReadMouseInputs();
 

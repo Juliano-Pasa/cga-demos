@@ -156,7 +156,7 @@ void Wind::GenerateBuffers()
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[1]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), (GLvoid*)&indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int), (GLvoid*)&indices[0], GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
 }
