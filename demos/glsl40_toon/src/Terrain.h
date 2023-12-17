@@ -53,7 +53,7 @@ public:
 
 	vec3 CenterPosition();
 	vec3 GoalPosition();
-	vector<vec3> GetNearbyVertices(vec3 position, int neighbourPatches);
+	vector<vec3> GetNearbyVertices(vec3 position);
 
 	WorldLight* worldLight;
 };

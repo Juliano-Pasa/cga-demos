@@ -13,9 +13,15 @@ void CollisionManager::CheckCollisions(bool nearby)
 {
 	for (Entity* entity : entities)
 	{
-		vector<vec3> nearbyVertices = terrain->GetNearbyVertices(entity->transform.position(), 0);
-		vec3 entityPosition = entity->transform.position();
+		vector<vec3> nearbyVertices = terrain->GetNearbyVertices(entity->transform.position());
 
+		if (nearbyVertices.size() == 0)
+		{
+			entity->transform.position(terrain->CenterPosition() + 10.0f);
+			continue;
+		}
+
+		vec3 entityPosition = entity->transform.position();
 		vec3 interpolatedPosition = InterpolatePosition(
 			entityPosition,
 			nearbyVertices[0],

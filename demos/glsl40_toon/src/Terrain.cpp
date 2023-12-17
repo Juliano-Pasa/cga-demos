@@ -194,19 +194,23 @@ vec3 Terrain::CenterPosition()
 	return vertices[centerI * (totalPatches + 1) + centerJ];
 }
 
-vector<vec3> Terrain::GetNearbyVertices(vec3 position, int neighbourPatches)
+vector<vec3> Terrain::GetNearbyVertices(vec3 position)
 {
 	int patchI = position.z / patchHeight;
 	int patchJ = position.x / patchWidth;
-	int startingPoint = (patchI - neighbourPatches) * (totalPatches + 1) + patchJ - neighbourPatches;
+	int startingPoint = (patchI) * (totalPatches + 1) + patchJ;
 
 	vector<vec3> nearbyVertices;
 
-	for (int i = 0; i < 2 + neighbourPatches * 2; i++)
+	for (int i = 0; i < 2; i++)
 	{
-		for (int j = 0; j < 2 + neighbourPatches * 2; j++)
+		for (int j = 0; j < 2; j++)
 		{
 			int index = startingPoint + i * (totalPatches + 1) + j;
+			if (index < 0 || index >= vertices.size())
+			{
+				return vector<vec3>();
+			}
 			nearbyVertices.push_back(vertices[index]);
 		}
 	}
