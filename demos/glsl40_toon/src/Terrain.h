@@ -23,6 +23,7 @@ private:
 	float patchHeight;
 
 	GLuint vaoID;
+	unsigned int handle[3];
 
 	vector<vec3> vertices;
 	vector<vec3> verticesColors;
@@ -42,6 +43,7 @@ private:
 	vec3 goalPosition;
 	void SetGoalPosition();
 
+	void SetRenderedPatches();
 	vector<vector<float>> ReadHeightMap(string mapPath);
 
 public:

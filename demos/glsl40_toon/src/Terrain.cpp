@@ -51,6 +51,8 @@ void Terrain::Update(double deltaTime)
 	shader.setUniform("dirtColor", dirtColor);
 	shader.setUniform("camPos", camera->CameraPosition());
 	shader.setUniform("lightPos", worldLight->GetPosition());
+
+	SetRenderedPatches();
 }
 
 void Terrain::Render(mat4 projection, mat4 view)
@@ -117,7 +119,6 @@ void Terrain::GenerateBuffers()
 	glGenVertexArrays(1, &vaoID);
 	glBindVertexArray(vaoID);
 
-	unsigned int handle[3];
 	glGenBuffers(3, handle);
 
 	glBindBuffer(GL_ARRAY_BUFFER, handle[0]);
@@ -216,6 +217,37 @@ vector<vec3> Terrain::GetNearbyVertices(vec3 position)
 	}
 
 	return nearbyVertices;
+}
+
+void Terrain::SetRenderedPatches()
+{
+	vec3 cameraPosition = camera->CameraPosition();
+	int neighbourPatches = 15;
+
+	int patchI = cameraPosition.z / patchHeight;
+	int patchJ = cameraPosition.x / patchWidth;
+
+	indices.clear();
+
+	for (int i = -neighbourPatches; i < neighbourPatches + 1; i++)
+	{
+		for (int j = -neighbourPatches; j < neighbourPatches + 1; j++)
+		{
+			int startingPoint = (i + patchI) * (totalPatches + 1) + (j + patchJ);
+
+			indices.push_back(startingPoint);
+			indices.push_back(startingPoint + 1);
+			indices.push_back(startingPoint + totalPatches + 2);
+			indices.push_back(startingPoint + totalPatches + 1);
+		}
+	}
+
+	glBindVertexArray(vaoID);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle[2]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), (GLvoid*)&indices[0], GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
 }
 
 void Terrain::SetGoalPosition()
