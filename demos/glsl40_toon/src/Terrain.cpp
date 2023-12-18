@@ -175,8 +175,8 @@ void Terrain::InitializeGrassColors()
 	goalColor = vec3(0.59215f, 0.09019f, 0.90196f);
 
 	grassColors.push_back(vec3(0.23137, 0.31372, 0.02352));
-	grassColors.push_back(vec3(0.83137, 0.84705, 0.34901));
-	grassColors.push_back(vec3(0.88235, 0.89803, 0.64705));
+	grassColors.push_back(vec3(0.65882, 0.74117, 0.02352));
+	grassColors.push_back(vec3(0.90588, 0.90980, 0.05490));
 	grassColors.push_back(vec3(0.43921, 0.55686, 0.02745));
 	grassColors.push_back(vec3(0.58039, 0.67843, 0.02745));
 	grassColors.push_back(vec3(0.80784, 0.83921, 0.18823));

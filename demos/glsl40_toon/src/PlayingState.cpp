@@ -36,13 +36,17 @@ void PlayingState::OnStart()
 
 	camera = new Camera(inputManager, vec3(3000, 600, 3000));
 	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)windowWidth / (float)windowHeight, 0.1f, 1000.0f);
-	worldLight = new WorldLight(vec3(1, 1, 1), vec3(1000, 20000, 1000));
+	worldLight = new WorldLight(vec3(1, 1, 1), vec3(1000, 10000, 1000));
 
 	InitializeGL();
 	InitializeTerrain();
 
 	vec3 terrainCenterPosition = terrain->CenterPosition();
-	worldLight->transform.position(terrainCenterPosition + vec3(0, 100000, 0));
+
+	int randomRange = 5000;
+	int randomX = (rand() % randomRange) - randomRange / 2;
+	int randomY = (rand() % randomRange) - randomRange / 2;
+	worldLight->transform.position(terrainCenterPosition + vec3(randomX, 10000, randomY));
 
 	player = InitializePlayer(inputManager, camera, worldLight, terrainCenterPosition);
 	camera->SetEntityReference(player);
@@ -142,14 +146,19 @@ void PlayingState::InitializeGL()
 
 void PlayingState::InitializeTerrain()
 {
+	srand(time(NULL));
+
 	int mapSize = 8;
-	TerrainGenerator terrainGenerator = TerrainGenerator(mapSize, vector<double>{64, 128, 192, 128}, 512, 0.2f, 42);
+	int randomRange = 1000;
+	int seed = rand() % 1000;
+
+	TerrainGenerator terrainGenerator = TerrainGenerator(mapSize, vector<double>{64, 128, 192, 128}, 1024, 0.2f, seed);
 	string heightMapPath = "..\\..\\resources\\heightMap.csv";
 	string normalMapPath = "..\\..\\resources\\normalMap.csv";
 
-	//terrainGenerator.GenerateDiamondSquare();
-	//terrainGenerator.WriteHeightMapToCSV(heightMapPath);
-	//terrainGenerator.FreeMap();
+	terrainGenerator.GenerateDiamondSquare();
+	terrainGenerator.WriteHeightMapToCSV(heightMapPath);
+	terrainGenerator.FreeMap();
 
 	int dimensions = (int)pow(2, mapSize) + 1;
 	terrain = new Terrain(dimensions, dimensions, 256, camera, heightMapPath, normalMapPath);
