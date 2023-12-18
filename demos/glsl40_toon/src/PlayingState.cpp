@@ -35,7 +35,7 @@ void PlayingState::OnStart()
 	InitializeInputManager(window);
 
 	camera = new Camera(inputManager, vec3(3000, 600, 3000));
-	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)windowWidth / (float)windowHeight, 0.1f, 5000.0f);
+	projectionMatrix = glm::perspective(glm::radians(60.0f), (float)windowWidth / (float)windowHeight, 0.1f, 1000.0f);
 	worldLight = new WorldLight(vec3(1, 1, 1), vec3(1000, 20000, 1000));
 
 	InitializeGL();
@@ -47,7 +47,7 @@ void PlayingState::OnStart()
 	player = InitializePlayer(inputManager, camera, worldLight, terrainCenterPosition);
 	camera->SetEntityReference(player);
 
-	wind = new Wind(camera->CameraPosition() + vec3(0, 200, 0), vec3(10));
+	wind = new Wind(camera->CameraPosition() + vec3(0, 100, 0), vec3(5));
 	entities.push_back(wind);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
@@ -171,9 +171,9 @@ void PlayingState::InitializeInputManager(GLFWwindow* window)
 Entity* PlayingState::InitializePlayer(InputManager* inputManager, Camera* camera, WorldLight* worldLight, vec3 position)
 {
 	DuckPlayerControler* controler = new DuckPlayerControler();
-	controler->Initialize(inputManager, camera, 1000.0f, 500.0f, 350.0f, 550.0f, 1.0f);
+	controler->Initialize(inputManager, camera, 1000.0f, 500.0f, 200.0f, 300.0f, 1.0f);
 
-	Duck* duck = new Duck(position, vec3(20), worldLight, controler);
+	Duck* duck = new Duck(position, vec3(10), worldLight, controler);
 	entities.push_back(duck);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
@@ -184,9 +184,9 @@ Entity* PlayingState::InitializePlayer(InputManager* inputManager, Camera* camer
 void PlayingState::InitializeBots(WorldLight* worldLight, vec3 position)
 {
 	DuckBotControler* controler = new DuckBotControler();
-	controler->Initialize(1000.0f, 500.0f, 350.0f, 450.0f, 1.0f, goalPosition, wind);
+	controler->Initialize(1000.0f, 500.0f, 150.0f, 250.0f, 1.0f, goalPosition, wind);
 
-	Duck* duck = new Duck(position, vec3(20), worldLight, controler);
+	Duck* duck = new Duck(position, vec3(10), worldLight, controler);
 	entities.push_back(duck);
 	entities.back()->Initialize();
 	terrain->AddChild(entities.back());
@@ -219,10 +219,10 @@ void PlayingState::ReadKeyboardInput()
 
 void PlayingState::SpawnNewWind()
 {
-	int randomRange = 1000;
+	int randomRange = 500;
 	int randomX = (rand() % randomRange) - randomRange / 2;
 	int randomZ = (rand() % randomRange) - randomRange / 2;
-	vec3 positionVector = player->transform.position() + vec3(randomX, 200, randomZ);
+	vec3 positionVector = player->transform.position() + vec3(randomX, 100, randomZ);
 
 	randomRange = 200;
 	randomX = (rand() % randomRange) - randomRange / 2;

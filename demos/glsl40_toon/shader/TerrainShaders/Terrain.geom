@@ -41,7 +41,7 @@ vec4 GetTriangleCenter()
 void DrawGrassSector(float height, vec3 normal, float maxLight)
 {
 	float lightAttenuation = height / maxLight;
-	vec4 normalDisplacement = vec4(normal, 0.0) * height * 3;
+	vec4 normalDisplacement = vec4(normal, 0.0) * height * 2;
 
 	gl_Position = VP * (gl_in[0].gl_Position + normalDisplacement);
 	geoNormal = normal;
@@ -65,7 +65,7 @@ void DrawGrassSector(float height, vec3 normal, float maxLight)
 
 void GenerateGrass(vec2 centerPoint, vec3 normal)
 {
-	int iterations = 8;
+	int iterations = 16;
 
 	float heightIncrement = 1.0f;
 	float currentHeight = heightIncrement;

@@ -17,7 +17,7 @@ void CollisionManager::CheckCollisions(bool nearby)
 
 		if (nearbyVertices.size() == 0)
 		{
-			entity->transform.position(terrain->CenterPosition() + 10.0f);
+			entity->transform.position(terrain->CenterPosition() + 1.0f);
 			continue;
 		}
 
@@ -29,7 +29,7 @@ void CollisionManager::CheckCollisions(bool nearby)
 			nearbyVertices[3],
 			nearbyVertices[2]);
 
-		entityPosition.y = interpolatedPosition.y + 10.0f;
+		entityPosition.y = interpolatedPosition.y + 1.0f;
 		entity->transform.position(entityPosition);
 	}
 }

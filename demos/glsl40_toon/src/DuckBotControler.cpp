@@ -29,7 +29,7 @@ void DuckBotControler::Initialize(float maxForce, float movementStrength, float 
 	this->goalPosition = goalPosition;
 
 	this->wind = wind;
-	this->maxDistanceFromWind = 1000.0f;
+	this->maxDistanceFromWind = 500.0f;
 
 	this->currentSeekTime = 0.0f;
 	this->seekDuration = 6.0f;

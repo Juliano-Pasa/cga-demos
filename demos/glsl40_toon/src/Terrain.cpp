@@ -43,7 +43,7 @@ void Terrain::Initialize()
 void Terrain::Update(double deltaTime)
 {
 	shader.use();
-	shader.setUniform("tessLevel", 16);
+	shader.setUniform("tessLevel", 8);
 	shader.setUniform("lodLevelSize", 2000.0f);
 	shader.setUniform("patchWidth", patchWidth);
 	shader.setUniform("patchHeight", patchHeight);
@@ -78,8 +78,8 @@ void Terrain::Render(mat4 projection, mat4 view)
 
 void Terrain::GenerateVertices()
 {
-	maxHeight = 1024.0f;
-	size = 256.0f;
+	maxHeight = 256.0f;
+	size = 64.0f;
 
 	int heightDivisions = (height - 1) / totalPatches;
 	int widthDivisions = (width - 1) / totalPatches;
@@ -222,7 +222,7 @@ vector<vec3> Terrain::GetNearbyVertices(vec3 position)
 void Terrain::SetRenderedPatches()
 {
 	vec3 cameraPosition = camera->CameraPosition();
-	int neighbourPatches = 10;
+	int neighbourPatches = 11;
 
 	int patchI = cameraPosition.z / patchHeight;
 	int patchJ = cameraPosition.x / patchWidth;

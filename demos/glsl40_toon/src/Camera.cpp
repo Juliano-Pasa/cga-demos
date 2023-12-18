@@ -14,7 +14,7 @@ Camera::Camera(InputManager* inputManager, vec3 position)
 
 	this->sensitivity = 0.25f;
 	this->smoothness = 5.0f;
-	this->camDistance = 1000.0f;
+	this->camDistance = 500.0f;
 
 	this->freeCam = false;
 	this->slerpMode = false;
